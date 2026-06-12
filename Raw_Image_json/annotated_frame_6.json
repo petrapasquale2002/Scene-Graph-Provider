@@ -1,0 +1,50 @@
+{
+    "frame_id": 6,
+    "labels": [
+        "person",
+        "dining table",
+        "chair",
+        "chair",
+        "chair"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "bounding_boxes": [
+        {
+            "label": "person",
+            "x_min": 780,
+            "y_min": 265,
+            "x_max": 1030,
+            "y_max": 1064,
+            "person_pose": "standing"
+        },
+        {
+            "label": "dining table",
+            "x_min": 680,
+            "y_min": 635,
+            "x_max": 1920,
+            "y_max": 670
+        },
+        {
+            "label": "chair",
+            "x_min": 1410,
+            "y_min": 695,
+            "x_max": 1660,
+            "y_max": 908
+        },
+        {
+            "label": "chair",
+            "x_min": 1410,
+            "y_min": 695,
+            "x_max": 1660,
+            "y_max": 908
+        },
+        {
+            "label": "chair",
+            "x_min": 1660,
+            "y_min": 660,
+            "x_max": 1920,
+            "y_max": 930
+        }
+    ]
+}
