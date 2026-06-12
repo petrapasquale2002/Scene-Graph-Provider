@@ -1,0 +1,87 @@
+{
+    "frame_id": 3,
+    "timestamp_sec": 1779358823,
+    "timestamp_nanosec": 199629973,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "states": [
+                    "static",
+                    "moving"
+                ],
+                "action description": "standing"
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static",
+                    "clean"
+                ]
+            },
+            {
+                "id": 2,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static",
+                    "clean"
+                ]
+            },
+            {
+                "id": 3,
+                "label": "kitchen_island",
+                "states": [
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 4,
+                "label": "dining_table",
+                "states": [
+                    "clean",
+                    "static",
+                    "empty"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 4
+            },
+            {
+                "subject_id": 2,
+                "predicate": "next_to",
+                "object_id": 4
+            },
+            {
+                "subject_id": 1,
+                "predicate": "near",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "near",
+                "object_id": 3
+            },
+            {
+                "subject_id": 3,
+                "predicate": "near",
+                "object_id": 4
+            }
+        ]
+    }
+}

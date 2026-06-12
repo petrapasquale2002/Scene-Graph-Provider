@@ -1,0 +1,52 @@
+{
+    "frame_id": 1,
+    "timestamp_sec": 1779358822,
+    "timestamp_nanosec": 235723696,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "states": [
+                    "moving"
+                ],
+                "action description": "gesturing"
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static"
+                ]
+            },
+            {
+                "id": 2,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 2
+            }
+        ]
+    }
+}

@@ -1,0 +1,103 @@
+{
+    "frame_id": 6,
+    "timestamp_sec": 1779358827,
+    "timestamp_nanosec": 201973874,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "stove",
+                "states": [
+                    "static",
+                    "closed",
+                    "cold"
+                ]
+            },
+            {
+                "id": 1,
+                "label": "pan",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static",
+                    "reachable"
+                ]
+            },
+            {
+                "id": 2,
+                "label": "spatula",
+                "states": [
+                    "clean",
+                    "reachable",
+                    "static"
+                ]
+            },
+            {
+                "id": 3,
+                "label": "person",
+                "states": [
+                    "moving",
+                    "static"
+                ],
+                "action description": "stirring"
+            },
+            {
+                "id": 4,
+                "label": "stove burner",
+                "states": [
+                    "static",
+                    "off"
+                ]
+            },
+            {
+                "id": 5,
+                "label": "kitchen_counter",
+                "states": [
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 6,
+                "label": "kitchen_wall",
+                "states": [
+                    "static"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "holding",
+                "object_id": 2
+            },
+            {
+                "subject_id": 3,
+                "predicate": "near",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "part_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 4,
+                "predicate": "part_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 5,
+                "predicate": "next_to",
+                "object_id": 6
+            }
+        ]
+    }
+}

@@ -1,0 +1,88 @@
+{
+    "frame_id": 2,
+    "timestamp_sec": 1779358822,
+    "timestamp_nanosec": 431834638,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "states": [
+                    "static",
+                    "moving"
+                ],
+                "action description": "standing, gesturing"
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static"
+                ]
+            },
+            {
+                "id": 2,
+                "label": "chair",
+                "states": [
+                    "empty",
+                    "static"
+                ]
+            },
+            {
+                "id": 3,
+                "label": "kitchen_island",
+                "states": [
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 4,
+                "label": "back_counter",
+                "states": [
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 5,
+                "label": "stove",
+                "states": [
+                    "closed",
+                    "static",
+                    "cold"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "next_to",
+                "object_id": 3
+            },
+            {
+                "subject_id": 3,
+                "predicate": "part_of",
+                "object_id": 4
+            },
+            {
+                "subject_id": 5,
+                "predicate": "part_of",
+                "object_id": 4
+            }
+        ]
+    }
+}

@@ -1,0 +1,119 @@
+{
+    "frame_id": 10,
+    "timestamp_sec": 1779358833,
+    "timestamp_nanosec": 836046442,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "stove",
+                "states": [
+                    "static",
+                    "cold"
+                ]
+            },
+            {
+                "id": 1,
+                "label": "pot",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 2,
+                "label": "spatula",
+                "states": [
+                    "static"
+                ]
+            },
+            {
+                "id": 3,
+                "label": "pot",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static"
+                ]
+            },
+            {
+                "id": 4,
+                "label": "vase",
+                "states": [
+                    "static",
+                    "empty"
+                ]
+            },
+            {
+                "id": 5,
+                "label": "person",
+                "states": [
+                    "moving"
+                ],
+                "action description": "filling pot with water"
+            },
+            {
+                "id": 6,
+                "label": "spoon",
+                "states": [
+                    "static"
+                ]
+            },
+            {
+                "id": 7,
+                "label": "spoon",
+                "states": [
+                    "static"
+                ]
+            },
+            {
+                "id": 8,
+                "label": "sink",
+                "states": [
+                    "static",
+                    "empty"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "inside",
+                "object_id": 1
+            },
+            {
+                "subject_id": 5,
+                "predicate": "holding",
+                "object_id": 6
+            },
+            {
+                "subject_id": 5,
+                "predicate": "near",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "next_to",
+                "object_id": 0
+            },
+            {
+                "subject_id": 8,
+                "predicate": "next_to",
+                "object_id": 0
+            }
+        ]
+    }
+}

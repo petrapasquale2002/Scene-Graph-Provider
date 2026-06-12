@@ -1,0 +1,65 @@
+{
+    "frame_id": 7,
+    "timestamp_sec": 1779358830,
+    "timestamp_nanosec": 166572075,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "oven",
+                "states": [
+                    "open",
+                    "static"
+                ]
+            },
+            {
+                "id": 1,
+                "label": "person",
+                "states": [
+                    "moving",
+                    "static"
+                ],
+                "action description": "opening oven"
+            },
+            {
+                "id": 2,
+                "label": "oven handle",
+                "states": [
+                    "static"
+                ]
+            },
+            {
+                "id": 3,
+                "label": "kitchen cabinet",
+                "states": [
+                    "static",
+                    "closed"
+                ]
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1,
+                "predicate": "holding",
+                "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "part_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 0,
+                "predicate": "part_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "near",
+                "object_id": 3
+            }
+        ]
+    }
+}
