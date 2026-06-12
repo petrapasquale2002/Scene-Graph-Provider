@@ -1,0 +1,130 @@
+{
+    "frame_id": 6,
+    "timestamp_sec": 1779358793,
+    "timestamp_nanosec": 202693509,
+    "width": 853,
+    "height": 480,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "states": [
+                    "static",
+                    "standing"
+                ],
+                "bounding_box": {
+                    "x_min": 386,
+                    "y_min": 84,
+                    "x_max": 530,
+                    "y_max": 853
+                },
+                "action description": "standing and gesturing"
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "bounding_box": {
+                    "x_min": 619,
+                    "y_min": 443,
+                    "x_max": 754,
+                    "y_max": 853
+                }
+            },
+            {
+                "id": 2,
+                "label": "chair",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "bounding_box": {
+                    "x_min": 754,
+                    "y_min": 443,
+                    "x_max": 886,
+                    "y_max": 853
+                }
+            },
+            {
+                "id": 3,
+                "label": "clock",
+                "states": [
+                    "static"
+                ],
+                "bounding_box": {
+                    "x_min": 805,
+                    "y_min": 50,
+                    "x_max": 853,
+                    "y_max": 182
+                }
+            },
+            {
+                "id": 4,
+                "label": "kitchen island",
+                "states": [
+                    "static"
+                ],
+                "bounding_box": {
+                    "x_min": 207,
+                    "y_min": 396,
+                    "x_max": 619,
+                    "y_max": 480
+                }
+            },
+            {
+                "id": 5,
+                "label": "table",
+                "states": [
+                    "static"
+                ],
+                "bounding_box": {
+                    "x_min": 619,
+                    "y_min": 443,
+                    "x_max": 886,
+                    "y_max": 480
+                }
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "standing near",
+                "object_id": 4
+            },
+            {
+                "subject_id": 0,
+                "predicate": "facing",
+                "object_id": 5
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 2,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 1,
+                "predicate": "part_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 2,
+                "predicate": "part_of",
+                "object_id": 5
+            }
+        ]
+    }
+}
