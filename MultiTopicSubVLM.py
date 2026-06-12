@@ -98,27 +98,25 @@ class MultiTopicListener(Node):
                     pixels_width, pixels_height = img.size
                 
                 #original size of the image
-                orig_width, orig_height = pixels_width, pixels_height
+                #orig_width, orig_height = pixels_width, pixels_height
 
                 # Reduce image size but maintain the aspect ratio, to reduce visual tokens sent
-                pixels_height = 480
-                scale_factor = pixels_height / orig_height
-                pixels_width = int(orig_width * scale_factor)
+                #scale_factor = 1.0
                     
                 # Resize
-                img_resized = img.resize((pixels_width, pixels_height), Image.Resampling.LANCZOS)
+                #img_resized = img.resize((pixels_width, pixels_height), Image.Resampling.LANCZOS)
                 
                 # Save the resized image in bytes to be sent to the VLM
-                buffer = BytesIO()
-                img_resized.save(buffer, format="JPEG")
-                image_bytes = buffer.getvalue()
+                #buffer = BytesIO()
+                #img_resized.save(buffer, format="JPEG")
+                #image_bytes = buffer.getvalue()
 
                 # Convert it to base64 for groq
                 if self.use_groq:
                     # Convert the image bytes to a base64 string for Groq
                     image_base64 = base64.b64encode(image_bytes).decode('utf-8')
 
-                self.get_logger().info(f"Resized image to {pixels_height} successfully ({pixels_width}x{pixels_height}). Scale factor: {scale_factor:.2f}")
+                #self.get_logger().info(f"Resized image to {pixels_height} successfully ({pixels_width}x{pixels_height}). Scale factor: {scale_factor:.2f}")
 
                 # create a string representation of the entity information from entity_msg
                 entities_info = "List of entities detcted in this frame (make reference to these exact bounding boxes):\n"
@@ -127,16 +125,16 @@ class MultiTopicListener(Node):
                     entities_info += "No entities detected in this frame.\n"
                 else:
                     for entity in entity_msg.entity_array:
-                        bbox = entity.bbox_xyxy
+                        #bbox = entity.bbox_xyxy
 
                         # Rescale bounding box coordinates according to the new image size.
-                        x_min = int(bbox.xmin * scale_factor)
-                        y_min = int(bbox.ymin * scale_factor)
-                        x_max = int(bbox.xmax * scale_factor)
-                        y_max = int(bbox.ymax * scale_factor)
+                        #x_min = int(bbox.xmin * scale_factor)
+                        #y_min = int(bbox.ymin * scale_factor)
+                        #x_max = int(bbox.xmax * scale_factor)
+                        #y_max = int(bbox.ymax * scale_factor)
 
                         # Build phrase with id, label and bounding box.
-                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, Bounding Box: [xmin: {x_min}, ymin: {y_min}, xmax: {x_max}, ymax: {y_max}]\n"
+                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}\n"
                 
                 # create a string representation of the human bodies information from human_msg
                 human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
@@ -145,16 +143,16 @@ class MultiTopicListener(Node):
                     human_info += "No human bodies detected in this frame.\n"
                 else:
                     for human in human_msg.entity_array:
-                        bbox = human.bbox_xyxy
+                        #bbox = human.bbox_xyxy
 
                         # Rescale bounding box coordinates according to the new image size.
-                        x_min = int(bbox.xmin * scale_factor)
-                        y_min = int(bbox.ymin * scale_factor)
-                        x_max = int(bbox.xmax * scale_factor)
-                        y_max = int(bbox.ymax * scale_factor)
+                        #x_min = int(bbox.xmin * scale_factor)
+                        #y_min = int(bbox.ymin * scale_factor)
+                        #x_max = int(bbox.xmax * scale_factor)
+                        #y_max = int(bbox.ymax * scale_factor)
 
                         # Build phrase with id, label and bounding box.
-                        human_info += f"- ID: {human.track_id}, Label: {human.label}, Bounding Box: [xmin: {x_min}, ymin: {y_min}, xmax: {x_max}, ymax: {y_max}]\n"
+                        human_info += f"- ID: {human.track_id}, Label: {human.label}\n"
 
                 # 4. Prepare the Scene Graph prompt
                 task = "Construct a detailed Scene Graph from the image and skeleton data."
@@ -163,18 +161,73 @@ class MultiTopicListener(Node):
                 Image Dimensions: {pixels_width} x {pixels_height}
 
 
-                Use the visual details of the raw image combined with the entity information {entities_info} and human information {human_info} to boundary box all the entities, both inanimated and humans, classify their states, and deduce relationships.
+                Use the visual details of the raw image combined with the entity information {entities_info} and human information {human_info} to classify their states, and deduce relationships.
 
-                ---
-
-                Allowed States for Entities (Select all that apply for each entity):
+                ------------------------------------------------------------------------
+                ALLOWED STATES:
                 [open, closed, empty, full, dirty, clean, reachable, occluded, held, static, moving, unknown, hot, cold]
 
-                Allowed Relationship Types (Directed edge: Subject -> Relationship -> Object):
+                ALLOWED RELATIONSHIPS:
                 [on_top_of, inside, next_to, near, held_by, holding, pointed_by, facing, occluding, part_of, same_instance_as]
+                ------------------------------------------------------------------------
 
-                ---
+                ========================================================================
+                LAYOUT: KITCHEN WITH ISLAND (Open-concept configuration)
+                ========================================================================
+                Description:
+                A main back counter against the wall holding the major appliances (stove, oven, 
+                refrigerator, sink), and a large central kitchen island used for food prep 
+                and informal dining, with bar stools placed next to it.
 
+                Typical Entities:
+                - back_counter (states: clean, static)
+                - island_counter (states: clean, static)
+                - main_sink (states: empty, clean, static)
+                - stove (states: closed, static, cold)
+                - pan (states: empty, clean, reachable, static)
+                - refrigerator (states: closed, clean, static)
+                - fruit_bowl (states: full, clean, reachable, static)
+                - apple (states: clean, reachable, static)
+                - bar_stool_1 (states: empty, clean, reachable, static)
+                - bar_stool_2 (states: empty, clean, reachable, static)
+
+                Typical Relationships:
+                - main_sink -> part_of -> back_counter
+                - stove -> next_to -> main_sink
+                - pan -> on_top_of -> stove
+                - fruit_bowl -> on_top_of -> island_counter
+                - apple -> inside -> fruit_bowl
+                - bar_stool_1 -> next_to -> island_counter
+                - bar_stool_2 -> next_to -> island_counter
+                - island_counter -> facing -> back_counter
+                - refrigerator -> near -> island_counter
+
+                Example Scene Graph JSON:
+                {{
+                "entities": [
+                    {{"id": 0, "label": "back_counter", "states": ["clean", "static"]}},
+                    {{"id": 1, "label": "island_counter", "states": ["clean", "static"]}},
+                    {{"id": 2, "label": "main_sink", "states": ["empty", "clean", "static"]}},
+                    {{"id": 3, "label": "stove", "states": ["closed", "static", "cold"]}},
+                    {{"id": 4, "label": "pan", "states": ["empty", "clean", "reachable", "static"]}},
+                    {{"id": 5, "label": "refrigerator", "states": ["closed", "clean", "static"]}},
+                    {{"id": 6, "label": "fruit_bowl", "states": ["full", "clean", "reachable", "static"]}},
+                    {{"id": 7, "label": "apple", "states": ["clean", "reachable", "static"]}},
+                    {{"id": 8, "label": "bar_stool_1", "states": ["empty", "clean", "reachable", "static"]}},
+                    {{"id": 9, "label": "bar_stool_2", "states": ["empty", "clean", "reachable", "static"]}}
+                ],
+                "relationships": [
+                    {{"subject_id": 2, "predicate": "part_of", "object_id": 0}},
+                    {{"subject_id": 3, "predicate": "next_to", "object_id": 2}},
+                    {{"subject_id": 4, "predicate": "on_top_of", "object_id": 3}},
+                    {{"subject_id": 6, "predicate": "on_top_of", "object_id": 1}},
+                    {{"subject_id": 7, "predicate": "inside", "object_id": 6}},
+                    {{"subject_id": 8, "predicate": "next_to", "object_id": 1}},
+                    {{"subject_id": 9, "predicate": "next_to", "object_id": 1}},
+                    {{"subject_id": 1, "predicate": "facing", "object_id": 0}},
+                    {{"subject_id": 5, "predicate": "near", "object_id": 1}}
+                ]
+                }}
                 Instructions:
                 1. Identify all key entities in the scene (objects, humans, body parts).
                 2. Assign relevant states to each entity from the "Allowed States" list above. Remember that the scenes are based onreality, which means that you will not find entities in unusual places, for example: humans or chairs will be not placed the table, but rather placed or standing on the floor. Use this reasoning for classification of states and relationships.
@@ -188,12 +241,6 @@ class MultiTopicListener(Node):
                     "id": <int: unique ID starting from 0>,
                     "label": "<string: name of the entity>",
                     "states": [<string: list of states chosen from allowed states>],
-                    "bounding_box": {{
-                        "x_min": <int: pixel coordinate>,
-                        "y_min": <int: pixel coordinate>,
-                        "x_max": <int: pixel coordinate>,
-                        "y_max": <int: pixel coordinate>
-                    }}
                     "action description": "<string: only if the entity is a human performing a recognizable action, such as standing, talking, pointing, picking up, cutting ect, otherwise omit this field>"
                     }}
                 ],
@@ -235,24 +282,24 @@ class MultiTopicListener(Node):
 
                 # 7. Draw bounding boxes
                 # Map the VLM response format's "bounding_box" key to the "coordinates" key expected by _draw_bbs
-                drawing_boxes = []
-                for ent in response_data.get("entities", []):
-                    if "bounding_box" in ent:
-                        drawing_boxes.append({
-                            "label": ent.get("label", ""),
-                            "coordinates": ent["bounding_box"]
-                        })
-                    else:
-                        drawing_boxes.append(ent)
+                #drawing_boxes = []
+                #for ent in response_data.get("entities", []):
+                #    if "bounding_box" in ent:
+                #        drawing_boxes.append({
+                #            "label": ent.get("label", ""),
+                #            "coordinates": ent["bounding_box"]
+                #        })
+                #    else:
+                #        drawing_boxes.append(ent)
 
-                with Image.open(BytesIO(image_bytes)) as img:
-                    annotated_img = self.vlm._draw_bbs(drawing_boxes, img, print=False)
+                #with Image.open(BytesIO(image_bytes)) as img:
+                #    annotated_img = self.vlm._draw_bbs(drawing_boxes, img, print=False)
 
                 # 8. Save the annotated image
-                image_pool_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_Image_pool")
-                os.makedirs(image_pool_dir, exist_ok=True)
-                output_path = os.path.join(image_pool_dir, f"annotated_frame_{self.counter_}.jpg")
-                annotated_img.save(output_path)
+                #image_pool_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_Image_pool")
+                #os.makedirs(image_pool_dir, exist_ok=True)
+                #output_path = os.path.join(image_pool_dir, f"annotated_frame_{self.counter_}.jpg")
+                #annotated_img.save(output_path)
 
                 # 9. Save the Scene Graph JSON metadata
                 json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_json")
@@ -295,4 +342,5 @@ def main(args=None):
 
 
 if __name__ == "__main__":
+
     main()

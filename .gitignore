@@ -219,6 +219,7 @@ __marimo__/
 
 GroqAPI.env
 NebiusAPI.env
+fireCrawlKey.env
 lib/
 lib64/
 bin/
