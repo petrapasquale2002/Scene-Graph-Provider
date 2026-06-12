@@ -233,8 +233,6 @@ Raw_image_json/
 Raw_Image_json/
 Raw_image_pool/
 Raw_Image_pool/
-Scene_Graph_Image_pool/
-Scene_Graph_json/
 BodySubVLM.py
 EntitySubVLM.py
 MinimalSub_entityDetected.py
