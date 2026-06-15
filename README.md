@@ -11,7 +11,7 @@ The system subscribes to incoming sensory data streams, processes the visual fra
 ---
 
 ## 👁️ System Architecture & Workflow
-
+![System Architecture Flowchart](Gemini_Generated_Image_t9zu7bt9zu7bt9zu.png)
 The internal data flow follows an asynchronous, event-driven pipeline divided into three main phases:
 
 ### 1. Topic Subscription & Temporal Synchronization (Data Ingestion)
