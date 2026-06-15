@@ -14,16 +14,18 @@ The system subscribes to incoming sensory data streams, processes the visual fra
 
 The internal data flow follows an asynchronous, event-driven pipeline divided into three main phases:
 
-### 1. Topic Subscription (Data Ingestion)
+### 1. Topic Subscription & Temporal Synchronization (Data Ingestion)
 The module actively listens to specific communication channels (such as ROS/ROS2 topics or distributed video streams). It continuously captures incoming messages, which typically include:
 * Raw video frames or images from onboard cameras (`sensor_msgs/Image`).
-* Any associated synchronization metadata or spatial telemetry.
+* Associated synchronization metadata, multi-modal sensor inputs, or spatial telemetry.
+
+> ⏱️ **Timestamp Alignment Feature:** To ensure high accuracy, the system incorporates a message filtering synchronization mechanism (e.g., MessageFilters ApproximateTime Synchronizer). It matches and pairs incoming data packets from separate topics only if they share a **highly similar timestamp**. This prevents lagging telemetry or misaligned sensor states from being combined with newer video frames, guaranteeing that the context provided to the VLM represents a single, cohesive moment in time.
 
 ### 2. Vision-Language Model Analysis (VLM Inference)
-Whenever a new frame is received from the subscribed topics, it is forwarded to the **VLM** inference engine (e.g., CLIP, LLaVA, BLIP, or similar models configured in the environment). 
+Whenever a synchronized, timestamp-aligned packet is received, the valid visual frame and its corresponding temporal metadata are forwarded to the **VLM** inference engine (e.g., CLIP, LLaVA, BLIP, or similar models configured in the environment). 
 The model performs an integrated visual-textual analysis:
 * **Object Detection & Grounding:** It identifies objects within the scene and extracts their semantic boundaries.
-* **Contextual Understanding:** It leverages the "Language" capability of the model to interpret complex properties that traditional computer vision algorithms struggle to capture (e.g., the state of an object, room context).
+* **Contextual Understanding:** It leverages the "Language" capability of the model to interpret complex properties that traditional computer vision algorithms struggle to capture (e.g., the state of an object, room context, or multi-modal attributes collected at that specific timestamp).
 
 ### 3. Scene Graph Generation & Publication
 The VLM's output is structured into a graph data structure (Scene Graph):
@@ -41,6 +43,7 @@ The standard communication interfaces utilized by this component are detailed be
 | Topic Name | Message Type / Structure | Direction | Description |
 | :--- | :--- | :--- | :--- |
 | `/camera/rgb/image_raw` | `sensor_msgs/Image` | **Input** (Subscription) | Video stream coming from the camera sensor or simulation environment. |
+| `/sensor/telemetry` | `custom_interfaces/Telemetry` | **Input** (Subscription) | Secondary sensor data synchronized via similar timestamps to enrich VLM context. |
 | `/scene_graph` | `custom_interfaces/SceneGraph` | **Output** (Publication) | Structured graph format containing the nodes and relations of the current scene. |
 
 ---
