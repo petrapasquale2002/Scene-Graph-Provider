@@ -198,37 +198,37 @@ class MultiTopicListener(Node):
                 "entities": [
                     {{
                     "id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [200, 100, 500, 600], "rel_distance_meters": 2.0}}, 
+                    "spatial_info": {{"box_2d": [200, 100, 500, 600]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [150, 600, 400, 900], "rel_distance_meters": 3.5}}, 
+                    "spatial_info": {{"box_2d": [150, 600, 400, 900]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [210, 250, 260, 350], "rel_distance_meters": 1.9}}, 
+                    "spatial_info": {{"box_2d": [210, 250, 260, 350]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [215, 360, 225, 420], "rel_distance_meters": 1.9}}, 
+                    "spatial_info": {{"box_2d": [215, 360, 225, 420]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [220, 280, 250, 320], "rel_distance_meters": 1.85}}, 
+                    "spatial_info": {{"box_2d": [220, 280, 250, 320]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 5, "label": "book", "type": "object", "states": ["closed", "static", "reachable"], 
-                    "spatial_info": {{"box_2d": [180, 650, 220, 720], "rel_distance_meters": 3.4}}, 
+                    "spatial_info": {{"box_2d": [180, 650, 220, 720]}}, 
                     "action_description": null
                     }},
                     {{
                     "id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"], 
-                    "spatial_info": {{"box_2d": [100, 150, 450, 300], "rel_distance_meters": 1.5}}, 
+                    "spatial_info": {{"box_2d": [100, 150, 450, 300]}}, 
                     "action_description": "sitting at the table and reaching for the apple"
                     }}
                 ],
@@ -263,8 +263,7 @@ class MultiTopicListener(Node):
                     "type": "<string: 'object' | 'human' | 'structural'>",
                     "states": [<string: chosen from allowed states>],
                     "spatial_info": {{
-                        "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>], 
-                        "rel_distance_meters": <float: estimated distance from camera, null if unknown>
+                        "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>]
                     }},
                     "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork'), otherwise null>"
                     }}
