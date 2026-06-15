@@ -160,94 +160,119 @@ class MultiTopicListener(Node):
                 Task: {task}
                 Image Dimensions: {pixels_width} x {pixels_height}
 
+                Analyze the raw image using the provided contextual data (Entity Info: {entities_info}, Human Info: {human_info}). Your goal is to generate a comprehensive, physically-grounded Scene Graph. 
 
-                Use the visual details of the raw image combined with the entity information {entities_info} and human information {human_info} to classify their states, and deduce relationships.
+                The output must serve as a deterministic spatial and semantic map for a downstream LLM decision-making agent designed for social robotics and human-robot interaction.
 
                 ------------------------------------------------------------------------
-                ALLOWED STATES:
-                [open, closed, empty, full, dirty, clean, reachable, occluded, held, static, moving, unknown, hot, cold]
-
-                ALLOWED RELATIONSHIPS:
-                [on_top_of, inside, next_to, near, held_by, holding, pointed_by, facing, occluding, part_of, same_instance_as]
+                ALLOWED STATES
                 ------------------------------------------------------------------------
+                [Object/Inanimate States]: open, closed, empty, full, dirty, clean, hot, cold, turned_on, turned_off, stable, unstable, broken
+                [Human/Agent States]: standing, sitting, walking, reaching, looking_at, interacting, neutral, gesturing
+                [Shared States]: reachable, occluded, held_by, static, moving, unknown
+
+                ------------------------------------------------------------------------
+                ALLOWED RELATIONSHIPS (Strictly Directed: Subject -> Predicate -> Object)
+                ------------------------------------------------------------------------
+                [Topological / Contact]: on_top_of, inside, part_of, touching, not_touching, embedded_in
+                [Relative Spatial / Proximity]: next_to, near, above, below, in_front_of, behind, on_the_left_of, on_the_right_of, facing, occluding
+                [Agent / Interaction]: holding, held_by, pointed_by, looking_at, operating
 
                 ========================================================================
-                LAYOUT: KITCHEN WITH ISLAND (Open-concept configuration)
+                LAYOUT CONFIGURATION Context: DOMESTIC LIVING SPACE (Living Room & Dining Area)
                 ========================================================================
                 Description:
-                A main back counter against the wall holding the major appliances (stove, oven, 
-                refrigerator, sink), and a large central kitchen island used for food prep 
-                and informal dining, with bar stools placed next to it.
+                A cozy domestic environment designed for daily living and social interaction. It features a dining table used for meals, a comfortable sofa for reading and relaxing, and everyday household items scattered around, including dishes, utensils, food, and books. A human user is present, interacting naturally with the environment and the objects.
 
-                Typical Entities:
-                - back_counter (states: clean, static)
-                - island_counter (states: clean, static)
-                - main_sink (states: empty, clean, static)
-                - stove (states: closed, static, cold)
-                - pan (states: empty, clean, reachable, static)
-                - refrigerator (states: closed, clean, static)
-                - fruit_bowl (states: full, clean, reachable, static)
-                - apple (states: clean, reachable, static)
-                - bar_stool_1 (states: empty, clean, reachable, static)
-                - bar_stool_2 (states: empty, clean, reachable, static)
-
-                Typical Relationships:
-                - main_sink -> part_of -> back_counter
-                - stove -> next_to -> main_sink
-                - pan -> on_top_of -> stove
-                - fruit_bowl -> on_top_of -> island_counter
-                - apple -> inside -> fruit_bowl
-                - bar_stool_1 -> next_to -> island_counter
-                - bar_stool_2 -> next_to -> island_counter
-                - island_counter -> facing -> back_counter
-                - refrigerator -> near -> island_counter
+                Typical Entities & Scene Commonsense:
+                - dining_table (type: structural, states: clean, static)
+                - sofa (type: structural, states: clean, static)
+                - plate (type: object, states: clean, empty, reachable, static | relationship: on_top_of -> dining_table)
+                - fork (type: object, states: clean, reachable, static | relationship: next_to -> plate)
+                - apple (type: object, states: clean, reachable, static | relationship: inside -> plate)
+                - book (type: object, states: closed, static, reachable | relationship: on_top_of -> sofa)
+                - human_user (type: human, states: sitting, interacting | relationship: near -> dining_table)
 
                 Example Scene Graph JSON:
                 {{
                 "entities": [
-                    {{"id": 0, "label": "back_counter", "states": ["clean", "static"]}},
-                    {{"id": 1, "label": "island_counter", "states": ["clean", "static"]}},
-                    {{"id": 2, "label": "main_sink", "states": ["empty", "clean", "static"]}},
-                    {{"id": 3, "label": "stove", "states": ["closed", "static", "cold"]}},
-                    {{"id": 4, "label": "pan", "states": ["empty", "clean", "reachable", "static"]}},
-                    {{"id": 5, "label": "refrigerator", "states": ["closed", "clean", "static"]}},
-                    {{"id": 6, "label": "fruit_bowl", "states": ["full", "clean", "reachable", "static"]}},
-                    {{"id": 7, "label": "apple", "states": ["clean", "reachable", "static"]}},
-                    {{"id": 8, "label": "bar_stool_1", "states": ["empty", "clean", "reachable", "static"]}},
-                    {{"id": 9, "label": "bar_stool_2", "states": ["empty", "clean", "reachable", "static"]}}
+                    {{
+                    "id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"], 
+                    "spatial_info": {{"box_2d": [200, 100, 500, 600], "rel_distance_meters": 2.0}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"], 
+                    "spatial_info": {{"box_2d": [150, 600, 400, 900], "rel_distance_meters": 3.5}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable", "static"], 
+                    "spatial_info": {{"box_2d": [210, 250, 260, 350], "rel_distance_meters": 1.9}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable", "static"], 
+                    "spatial_info": {{"box_2d": [215, 360, 225, 420], "rel_distance_meters": 1.9}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable", "static"], 
+                    "spatial_info": {{"box_2d": [220, 280, 250, 320], "rel_distance_meters": 1.85}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 5, "label": "book", "type": "object", "states": ["closed", "static", "reachable"], 
+                    "spatial_info": {{"box_2d": [180, 650, 220, 720], "rel_distance_meters": 3.4}}, 
+                    "action_description": null
+                    }},
+                    {{
+                    "id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"], 
+                    "spatial_info": {{"box_2d": [100, 150, 450, 300], "rel_distance_meters": 1.5}}, 
+                    "action_description": "sitting at the table and reaching for the apple"
+                    }}
                 ],
                 "relationships": [
-                    {{"subject_id": 2, "predicate": "part_of", "object_id": 0}},
+                    {{"subject_id": 2, "predicate": "on_top_of", "object_id": 0}},
+                    {{"subject_id": 3, "predicate": "on_top_of", "object_id": 0}},
                     {{"subject_id": 3, "predicate": "next_to", "object_id": 2}},
-                    {{"subject_id": 4, "predicate": "on_top_of", "object_id": 3}},
-                    {{"subject_id": 6, "predicate": "on_top_of", "object_id": 1}},
-                    {{"subject_id": 7, "predicate": "inside", "object_id": 6}},
-                    {{"subject_id": 8, "predicate": "next_to", "object_id": 1}},
-                    {{"subject_id": 9, "predicate": "next_to", "object_id": 1}},
-                    {{"subject_id": 1, "predicate": "facing", "object_id": 0}},
-                    {{"subject_id": 5, "predicate": "near", "object_id": 1}}
+                    {{"subject_id": 4, "predicate": "inside", "object_id": 2}},
+                    {{"subject_id": 5, "predicate": "on_top_of", "object_id": 1}},
+                    {{"subject_id": 6, "predicate": "near", "object_id": 0}},
+                    {{"subject_id": 6, "predicate": "looking_at", "object_id": 4}}
                 ]
                 }}
-                Instructions:
-                1. Identify all key entities in the scene (objects, humans, body parts).
-                2. Assign relevant states to each entity from the "Allowed States" list above. Remember that the scenes are based onreality, which means that you will not find entities in unusual places, for example: humans or chairs will be not placed the table, but rather placed or standing on the floor. Use this reasoning for classification of states and relationships.
-                3. Establish directed relationships between entities using ONLY the relationship types listed in the "Allowed Relationship Types" list above.
-                4. Ensure the output strictly follows the JSON format below. Do not include any markdown block formatting (like ```json), explanations, or trailing text.
 
-                Output JSON Format:
+                ------------------------------------------------------------------------
+                INSTRUCTIONS
+                ------------------------------------------------------------------------
+                1. Entity Identification: Detect all key entities (everyday objects, household architectural elements, humans, specific body parts if heavily interacting).
+                2. Physical Commonsense & Grounding: Ground your reasoning in physical reality. Furniture sits on the floor; food goes on plates or tables; humans sit on chairs/sofas or stand on the floor. Do not hallucinate floating or physically impossible states.
+                3. State Assignment: Apply states based on the entity type (Inanimate vs Human vs Shared). Pay special attention to human social cues (gesturing, interacting, looking_at).
+                4. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
+                5. JSON Formatting: Output MUST be a single, valid JSON object. Do not include any markdown block formatting (like ```json), explanations, or trailing text.
+
+                ------------------------------------------------------------------------
+                OUTPUT JSON FORMAT
+                ------------------------------------------------------------------------
                 {{
                 "entities": [
                     {{
                     "id": <int: unique ID starting from 0>,
-                    "label": "<string: name of the entity>",
-                    "states": [<string: list of states chosen from allowed states>],
-                    "action description": "<string: only if the entity is a human performing a recognizable action, such as standing, talking, pointing, picking up, cutting ect, otherwise omit this field>"
+                    "label": "<string: entity_name>",
+                    "type": "<string: 'object' | 'human' | 'structural'>",
+                    "states": [<string: chosen from allowed states>],
+                    "spatial_info": {{
+                        "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>], 
+                        "rel_distance_meters": <float: estimated distance from camera, null if unknown>
+                    }},
+                    "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork'), otherwise null>"
                     }}
                 ],
                 "relationships": [
                     {{
                     "subject_id": <int: ID of the subject entity>,
-                    "predicate": "<string: relationship type chosen from allowed relationship types>",
+                    "predicate": "<string: predicate from allowed relationships>",
                     "object_id": <int: ID of the object entity>
                     }}
                 ]
