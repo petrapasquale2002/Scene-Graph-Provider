@@ -1,7 +1,7 @@
 {
     "frame_id": 7,
-    "timestamp_sec": 1779358830,
-    "timestamp_nanosec": 166572075,
+    "timestamp_sec": 1779358829,
+    "timestamp_nanosec": 668340350,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -9,56 +9,94 @@
             {
                 "id": 0,
                 "label": "oven",
+                "type": "object",
                 "states": [
-                    "open",
+                    "closed",
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        550,
+                        250,
+                        750,
+                        550
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 1,
-                "label": "person",
+                "label": "cabinet",
+                "type": "structural",
                 "states": [
-                    "moving",
                     "static"
                 ],
-                "action description": "opening oven"
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        1080,
+                        1920
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 2,
-                "label": "oven handle",
+                "label": "marble_countertop",
+                "type": "structural",
                 "states": [
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        200,
+                        1920
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 3,
-                "label": "kitchen cabinet",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "static",
-                    "closed"
-                ]
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        400,
+                        200,
+                        600
+                    ]
+                },
+                "action_description": "opening the oven"
             }
         ],
         "relationships": [
             {
-                "subject_id": 1,
-                "predicate": "holding",
-                "object_id": 2
+                "subject_id": 3,
+                "predicate": "near",
+                "object_id": 0
             },
             {
-                "subject_id": 2,
-                "predicate": "part_of",
+                "subject_id": 3,
+                "predicate": "interacting",
                 "object_id": 0
             },
             {
                 "subject_id": 0,
                 "predicate": "part_of",
-                "object_id": 3
+                "object_id": 1
             },
             {
-                "subject_id": 1,
-                "predicate": "near",
-                "object_id": 3
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 1
             }
         ]
     }

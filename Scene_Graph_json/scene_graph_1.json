@@ -9,26 +9,54 @@
             {
                 "id": 0,
                 "label": "person",
+                "type": "human",
                 "states": [
-                    "moving"
+                    "standing",
+                    "gesturing"
                 ],
-                "action description": "gesturing"
+                "spatial_info": {
+                    "box_2d": [
+                        453,
+                        792,
+                        554,
+                        964
+                    ]
+                },
+                "action_description": "gesturing with hands"
             },
             {
                 "id": 1,
                 "label": "chair",
+                "type": "object",
                 "states": [
-                    "empty",
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        747,
+                        595,
+                        882,
+                        870
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 2,
                 "label": "chair",
+                "type": "object",
                 "states": [
-                    "empty",
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        882,
+                        592,
+                        999,
+                        791
+                    ]
+                },
+                "action_description": null
             }
         ],
         "relationships": [

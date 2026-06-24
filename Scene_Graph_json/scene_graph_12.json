@@ -1,14 +1,14 @@
 {
-    "frame_id": 9,
-    "timestamp_sec": 1779358832,
-    "timestamp_nanosec": 500681582,
+    "frame_id": 12,
+    "timestamp_sec": 1779358771,
+    "timestamp_nanosec": 969700669,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "person",
+                "label": "human",
                 "type": "human",
                 "states": [
                     "standing",
@@ -16,54 +16,16 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        792,
-                        84,
-                        999,
-                        363
+                        0,
+                        0,
+                        1080,
+                        1920
                     ]
                 },
-                "action_description": "filling a pot with water"
+                "action_description": "pouring a substance into a pot"
             },
             {
                 "id": 1,
-                "label": "spoon",
-                "type": "object",
-                "states": [
-                    "clean",
-                    "reachable",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        816,
-                        365,
-                        839,
-                        437
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "vase",
-                "type": "object",
-                "states": [
-                    "clean",
-                    "empty",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        880,
-                        468,
-                        932,
-                        601
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
                 "label": "stove",
                 "type": "structural",
                 "states": [
@@ -71,46 +33,80 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
+                        400,
+                        600,
+                        800,
+                        1000
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "pot",
+                "type": "object",
+                "states": [
+                    "filled",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        450,
+                        650,
+                        750
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "countertop",
+                "type": "structural",
+                "states": [
+                    "clean",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
                         0,
                         500,
-                        1920,
-                        1080
+                        1080,
+                        1920
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "pot",
+                "label": "knife_block",
                 "type": "object",
                 "states": [
-                    "empty",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        250,
-                        550,
-                        500,
-                        700
+                        700,
+                        200,
+                        900,
+                        500
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 5,
-                "label": "pot",
+                "label": "bottle",
                 "type": "object",
                 "states": [
-                    "empty",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        550,
-                        550,
-                        800,
-                        700
+                        500,
+                        100,
+                        700,
+                        400
                     ]
                 },
                 "action_description": null
@@ -120,37 +116,32 @@
             {
                 "subject_id": 0,
                 "predicate": "near",
-                "object_id": 4
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 5
+                "object_id": 2
             },
             {
                 "subject_id": 0,
                 "predicate": "holding",
+                "object_id": 5
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
                 "object_id": 1
             },
             {
-                "subject_id": 1,
-                "predicate": "on_the_left_of",
+                "subject_id": 5,
+                "predicate": "in_front_of",
                 "object_id": 2
             },
             {
                 "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 3
+                "predicate": "on_the_right_of",
+                "object_id": 2
             },
             {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 0,
-                "predicate": "looking_at",
-                "object_id": 5
+                "subject_id": 2,
+                "predicate": "on_the_left_of",
+                "object_id": 4
             }
         ]
     }

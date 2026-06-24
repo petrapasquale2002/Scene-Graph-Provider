@@ -1,7 +1,7 @@
 {
-    "frame_id": 2,
-    "timestamp_sec": 1779358822,
-    "timestamp_nanosec": 431834638,
+    "frame_id": 15,
+    "timestamp_sec": 1779358789,
+    "timestamp_nanosec": 507110035,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -12,31 +12,32 @@
                 "type": "human",
                 "states": [
                     "standing",
-                    "gesturing"
+                    "interacting"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        259,
-                        783,
-                        343,
+                        518,
+                        246,
+                        934,
                         972
                     ]
                 },
-                "action_description": "gesturing with hands"
+                "action_description": "standing and gesturing"
             },
             {
                 "id": 1,
-                "label": "kitchen_island",
+                "label": "couch",
                 "type": "structural",
                 "states": [
+                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        372,
-                        486,
-                        780,
-                        630
+                        546,
+                        751,
+                        999,
+                        999
                     ]
                 },
                 "action_description": null
@@ -46,14 +47,15 @@
                 "label": "chair",
                 "type": "object",
                 "states": [
+                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        736,
-                        569,
-                        902,
-                        834
+                        716,
+                        592,
+                        837,
+                        848
                     ]
                 },
                 "action_description": null
@@ -63,31 +65,32 @@
                 "label": "chair",
                 "type": "object",
                 "states": [
+                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        856,
-                        572,
-                        999,
-                        844
+                        838,
+                        588,
+                        947,
+                        781
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "dining_table",
-                "type": "structural",
+                "label": "clock",
+                "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        731,
-                        510,
-                        999,
-                        588
+                        935,
+                        260,
+                        963,
+                        329
                     ]
                 },
                 "action_description": null
@@ -101,8 +104,8 @@
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
-                "object_id": 1
+                "predicate": "facing",
+                "object_id": 2
             },
             {
                 "subject_id": 2,
@@ -110,18 +113,13 @@
                 "object_id": 3
             },
             {
-                "subject_id": 2,
-                "predicate": "on_the_left_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "part_of",
-                "object_id": 4
-            },
-            {
                 "subject_id": 3,
-                "predicate": "part_of",
+                "predicate": "on_the_right_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "in_front_of",
                 "object_id": 4
             }
         ]

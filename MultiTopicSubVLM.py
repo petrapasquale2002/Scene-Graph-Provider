@@ -13,15 +13,26 @@ import base64
 
 from std_msgs.msg import String
 
-# Import EntityArray for entity tracking
-from hri_msgs.msg import EntityArray
+# Import EntityArray for entity tracking and Skeleton2DArray for body keypoints
+from hri_msgs.msg import EntityArray, Skeleton2DArray
 
 from src.vlm_client import VLMClient
 
+# Mapping from Skeleton2D keypoint index to human-readable name (OpenPose COCO convention)
+KEYPOINT_NAMES = {
+    0: "NOSE", 1: "NECK",
+    2: "RIGHT_SHOULDER", 3: "RIGHT_ELBOW", 4: "RIGHT_WRIST",
+    5: "LEFT_SHOULDER", 6: "LEFT_ELBOW", 7: "LEFT_WRIST",
+    8: "RIGHT_HIP", 9: "RIGHT_KNEE", 10: "RIGHT_ANKLE",
+    11: "LEFT_HIP", 12: "LEFT_KNEE", 13: "LEFT_ANKLE",
+    14: "LEFT_EYE", 15: "RIGHT_EYE",
+    16: "LEFT_EAR", 17: "RIGHT_EAR",
+}
+
 class MultiTopicListener(Node):
-    # This listener subscribes to both the compressed image topic and the human body skeleton topic.
-    # It synchronizes the incoming messages, extracts their contents, and sends them to the VLM
-    # (Qwen via Nebius) to generate a detailed Scene Graph with relationships and states.
+    # This listener subscribes to the compressed image, entity detection, human detection,
+    # and skeleton keypoint topics. It synchronizes them and sends merged data to the VLM
+    # to generate a detailed Scene Graph with relationships and states.
     def __init__(self):
         super().__init__("multi_listener")
         self.counter_ = 0
@@ -42,16 +53,28 @@ class MultiTopicListener(Node):
             EntityArray,
             "/humans/detected"
         )
+        self.skeleton_sub = Subscriber(
+            self,
+            Skeleton2DArray,
+            "/humans/bodies/detected"
+        )
 
         self.sync = ApproximateTimeSynchronizer(
-            [self.image_sub, self.entity_sub, self.human_sub],
+            [self.image_sub, self.entity_sub, self.human_sub, self.skeleton_sub],
             queue_size=10,
-            slop=0.1
+            slop=0.5
         )
         self.sync.registerCallback(self.synchronized_callback)
-        self.get_logger().info("Subscribed and synchronized image & entity topics.")
+        self.get_logger().info("Subscribed and synchronized image, entity, human & skeleton topics.")
 
-        # 3. Configure and Initialize VLM Client
+        # Create a publisher to send the Scene Graph to the LLM Decision Maker                                                                                                   
+        self.scene_graph_pub = self.create_publisher(                                                                                                                            
+            String,                                                                                                                                                              
+            '/scene_graph',                                                                                                                                                      
+            10                                                                                                                                                                   
+        )     
+
+        # Configure and Initialize VLM Client
         self.use_nebius = False
         self.use_groq = True
 
@@ -81,7 +104,7 @@ class MultiTopicListener(Node):
             'top_p': 0.9,
         }
 
-    def synchronized_callback(self, image_msg, entity_msg, human_msg):
+    def synchronized_callback(self, image_msg, entity_msg, human_msg, skeleton_msg):
         self.counter_ += 1
         self.get_logger().info(f"Received synchronized Data. Counter: {self.counter_}")
 
@@ -116,7 +139,7 @@ class MultiTopicListener(Node):
                     # Convert the image bytes to a base64 string for Groq
                     image_base64 = base64.b64encode(image_bytes).decode('utf-8')
 
-                #self.get_logger().info(f"Resized image to {pixels_height} successfully ({pixels_width}x{pixels_height}). Scale factor: {scale_factor:.2f}")
+                self.get_logger().info(f"Image size: {pixels_width}x{pixels_height}")
 
                 # create a string representation of the entity information from entity_msg
                 entities_info = "List of entities detcted in this frame (make reference to these exact bounding boxes):\n"
@@ -125,16 +148,16 @@ class MultiTopicListener(Node):
                     entities_info += "No entities detected in this frame.\n"
                 else:
                     for entity in entity_msg.entity_array:
-                        #bbox = entity.bbox_xyxy
+                        bbox = entity.bbox_xyxy
 
-                        # Rescale bounding box coordinates according to the new image size.
-                        #x_min = int(bbox.xmin * scale_factor)
-                        #y_min = int(bbox.ymin * scale_factor)
-                        #x_max = int(bbox.xmax * scale_factor)
-                        #y_max = int(bbox.ymax * scale_factor)
+                        # Denormalize bboxes 
+                        x_min = int(bbox.xmin * pixels_width)
+                        y_min = int(bbox.ymin * pixels_height)
+                        x_max = int(bbox.xmax * pixels_width)
+                        y_max = int(bbox.ymax * pixels_height)
 
                         # Build phrase with id, label and bounding box.
-                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}\n"
+                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {bbox.xmin}, {bbox.ymin}, {bbox.xmax}, {bbox.ymax}\n"
                 
                 # create a string representation of the human bodies information from human_msg
                 human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
@@ -143,25 +166,45 @@ class MultiTopicListener(Node):
                     human_info += "No human bodies detected in this frame.\n"
                 else:
                     for human in human_msg.entity_array:
-                        #bbox = human.bbox_xyxy
+                        bbox = human.bbox_xyxy
 
-                        # Rescale bounding box coordinates according to the new image size.
-                        #x_min = int(bbox.xmin * scale_factor)
-                        #y_min = int(bbox.ymin * scale_factor)
-                        #x_max = int(bbox.xmax * scale_factor)
-                        #y_max = int(bbox.ymax * scale_factor)
+                        # Denormalize bboxes 
+                        x_min = int(bbox.xmin * pixels_width)
+                        y_min = int(bbox.ymin * pixels_height)
+                        x_max = int(bbox.xmax * pixels_width)
+                        y_max = int(bbox.ymax * pixels_height)
 
                         # Build phrase with id, label and bounding box.
-                        human_info += f"- ID: {human.track_id}, Label: {human.label}\n"
+                        human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {bbox.xmin}, {bbox.ymin}, {bbox.xmax}, {bbox.ymax}\n"
+
+                # create a string representation of the skeleton keypoints from skeleton_msg
+                skeleton_info = "Human body skeleton keypoints detected in this frame (normalized coordinates 0-1, confidence c):\n"
+
+                if not skeleton_msg.skeleton2d_array:
+                    skeleton_info += "No skeleton keypoints detected in this frame.\n"
+                else:
+                    for skeleton in skeleton_msg.skeleton2d_array:
+                        skeleton_info += f"\n  Skeleton ID: {skeleton.skeleton_id} (image: {skeleton.width}x{skeleton.height})\n"
+                        for kp in skeleton.skeleton:
+                            kp_name = KEYPOINT_NAMES.get(kp.type, f"UNKNOWN_{kp.type}")
+                            # Only include keypoints with non-zero confidence
+                            if kp.c > 0.0:
+                                skeleton_info += f"    - {kp_name}: x={kp.x:.3f}, y={kp.y:.3f}, confidence={kp.c:.2f}\n"
 
                 # 4. Prepare the Scene Graph prompt
-                task = "Construct a detailed Scene Graph from the image and skeleton data."
+                task = "Construct a detailed Scene Graph from the image, entity detections, and skeleton keypoint data."
                 bb_prompt = f"""
                 Task: {task}
                 Image Dimensions: {pixels_width} x {pixels_height}
 
-                Analyze the raw image using the provided contextual data (Entity Info: {entities_info}, Human Info: {human_info}). Your goal is to generate a comprehensive, physically-grounded Scene Graph. 
+                Start by analyzing the provided contextual data:
+                - Entity Info: {entities_info}
+                - Human Info: {human_info}
+                - Skeleton Keypoints: {skeleton_info}
 
+                Use the skeleton keypoints to infer precise human body poses and actions (e.g. if WRIST is near an object, the human might be reaching/holding it; if HIP/KNEE angles suggest sitting, mark state as sitting).
+                Use the raw image just as a reference for scene graph generation output.
+                Your goal is to generate a comprehensive, physically-grounded Scene Graph.
                 The output must serve as a deterministic spatial and semantic map for a downstream LLM decision-making agent designed for social robotics and human-robot interaction.
 
                 ------------------------------------------------------------------------
@@ -304,33 +347,13 @@ class MultiTopicListener(Node):
                 if not isinstance(response_data, dict):
                     raise ValueError(f"Expected dict JSON response, got {type(response_data)}")
 
-                # 7. Draw bounding boxes
-                # Map the VLM response format's "bounding_box" key to the "coordinates" key expected by _draw_bbs
-                #drawing_boxes = []
-                #for ent in response_data.get("entities", []):
-                #    if "bounding_box" in ent:
-                #        drawing_boxes.append({
-                #            "label": ent.get("label", ""),
-                #            "coordinates": ent["bounding_box"]
-                #        })
-                #    else:
-                #        drawing_boxes.append(ent)
-
-                #with Image.open(BytesIO(image_bytes)) as img:
-                #    annotated_img = self.vlm._draw_bbs(drawing_boxes, img, print=False)
-
-                # 8. Save the annotated image
-                #image_pool_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_Image_pool")
-                #os.makedirs(image_pool_dir, exist_ok=True)
-                #output_path = os.path.join(image_pool_dir, f"annotated_frame_{self.counter_}.jpg")
-                #annotated_img.save(output_path)
-
-                # 9. Save the Scene Graph JSON metadata
-                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_json")
-                os.makedirs(json_dir, exist_ok=True)
-                json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")
                 
-                metadata = {
+                # Save the Scene Graph JSON metadata                                                                                                                          
+                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_json")                                                                          
+                os.makedirs(json_dir, exist_ok=True)                                                                                                                             
+                json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")                                                                                          
+                                                                                                                                                                                    
+                metadata = {                                                                                                                                                     
                     "frame_id": self.counter_,
                     "timestamp_sec": image_msg.header.stamp.sec,
                     "timestamp_nanosec": image_msg.header.stamp.nanosec,
@@ -338,12 +361,22 @@ class MultiTopicListener(Node):
                     "height": pixels_height,
                     "scene_graph": response_data,
                 }
-                
+
                 with open(json_path, "w") as json_file:
                     json.dump(metadata, json_file, indent=4)
-                
+
                 self.get_logger().info(f"Saved Scene Graph to {json_path}")
                 self.vlm.log_metrics()
+
+                # =======================================================
+                # 10. Publish the Scene Graph to the LLM Decision Maker
+                # =======================================================
+                msg = String()
+                # Publish the full metadata dict (includes frame details) as a JSON string
+                msg.data = json.dumps(metadata) 
+
+                self.scene_graph_pub.publish(msg)
+                self.get_logger().info("Published Scene Graph JSON to '/scene_graph'")
 
             except Exception as e:
                 self.get_logger().error(f"Exception in VLM synchronized callback: {format_exc()}")

@@ -1,7 +1,7 @@
 {
     "frame_id": 4,
-    "timestamp_sec": 1779358824,
-    "timestamp_nanosec": 803708943,
+    "timestamp_sec": 1779358826,
+    "timestamp_nanosec": 807488548,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -9,66 +9,119 @@
             {
                 "id": 0,
                 "label": "person",
+                "type": "human",
                 "states": [
-                    "moving"
+                    "standing",
+                    "interacting"
                 ],
-                "action description": "cooking"
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        414,
+                        1920,
+                        1080
+                    ]
+                },
+                "action_description": "stirring the pot"
             },
             {
                 "id": 1,
-                "label": "stove",
+                "label": "vase",
+                "type": "object",
                 "states": [
-                    "hot",
-                    "static"
-                ]
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        1300,
+                        477,
+                        1740,
+                        603
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 2,
-                "label": "pan",
+                "label": "stove",
+                "type": "structural",
                 "states": [
-                    "full",
-                    "hot",
-                    "static"
-                ]
+                    "static",
+                    "on"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        340,
+                        690,
+                        830,
+                        830
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 3,
-                "label": "kitchen_counter",
+                "label": "pot",
+                "type": "object",
                 "states": [
-                    "clean",
-                    "static"
-                ]
+                    "hot",
+                    "filled"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        320,
+                        510,
+                        640,
+                        690
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 4,
-                "label": "bowl",
+                "label": "spatula",
+                "type": "object",
                 "states": [
-                    "full",
-                    "clean",
-                    "static"
-                ]
+                    "reachable",
+                    "held_by"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        500,
+                        400,
+                        600,
+                        500
+                    ]
+                },
+                "action_description": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "near",
-                "object_id": 1
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 3
+                "predicate": "holding",
+                "object_id": 4
             },
             {
                 "subject_id": 0,
-                "predicate": "holding",
+                "predicate": "interacting",
+                "object_id": 3
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
                 "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "near",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "inside",
+                "object_id": 3
             }
         ]
     }

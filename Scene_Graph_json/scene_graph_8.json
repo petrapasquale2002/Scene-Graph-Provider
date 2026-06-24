@@ -1,115 +1,160 @@
 {
     "frame_id": 8,
     "timestamp_sec": 1779358832,
-    "timestamp_nanosec": 400323925,
+    "timestamp_nanosec": 469319249,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "person",
+                "label": "stove",
+                "type": "structural",
                 "states": [
                     "static"
                 ],
-                "action description": "turning faucet handle"
+                "spatial_info": {
+                    "box_2d": [
+                        500,
+                        200,
+                        1500,
+                        900
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 1,
-                "label": "stove",
+                "label": "pot",
+                "type": "object",
                 "states": [
-                    "static",
-                    "cold"
-                ]
+                    "empty",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        500,
+                        550,
+                        700
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 2,
                 "label": "pot",
+                "type": "object",
                 "states": [
                     "empty",
-                    "clean",
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        550,
+                        500,
+                        750,
+                        700
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 3,
-                "label": "pot",
+                "label": "human",
+                "type": "human",
                 "states": [
-                    "empty",
-                    "clean",
-                    "static"
-                ]
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        800,
+                        50,
+                        1200,
+                        300
+                    ]
+                },
+                "action_description": "operating the faucet"
             },
             {
                 "id": 4,
-                "label": "spoon",
+                "label": "faucet",
+                "type": "object",
                 "states": [
+                    "turned_on",
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        300,
+                        100,
+                        600,
+                        200
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 5,
-                "label": "faucet",
+                "label": "spatula",
+                "type": "object",
                 "states": [
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        450,
+                        480,
+                        550
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 6,
-                "label": "counter",
-                "states": [
-                    "clean",
-                    "static"
-                ]
-            },
-            {
-                "id": 7,
-                "label": "vase",
+                "label": "stovetop",
+                "type": "structural",
                 "states": [
                     "static"
-                ]
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        400,
+                        700,
+                        1600,
+                        1000
+                    ]
+                },
+                "action_description": null
             }
         ],
         "relationships": [
             {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 6
+            },
+            {
                 "subject_id": 2,
                 "predicate": "on_top_of",
-                "object_id": 1
+                "object_id": 6
             },
             {
                 "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 1
+                "predicate": "near",
+                "object_id": 4
             },
             {
-                "subject_id": 4,
-                "predicate": "inside",
-                "object_id": 2
+                "subject_id": 3,
+                "predicate": "operating",
+                "object_id": 4
             },
             {
                 "subject_id": 5,
-                "predicate": "part_of",
-                "object_id": 6
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 5
-            },
-            {
-                "subject_id": 0,
-                "predicate": "holding",
-                "object_id": 5
-            },
-            {
-                "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 3
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_top_of",
-                "object_id": 6
+                "predicate": "inside",
+                "object_id": 1
             }
         ]
     }

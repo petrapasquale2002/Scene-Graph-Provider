@@ -1,86 +1,105 @@
 {
     "frame_id": 3,
-    "timestamp_sec": 1779358823,
-    "timestamp_nanosec": 199629973,
+    "timestamp_sec": 1779358826,
+    "timestamp_nanosec": 777094763,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "person",
+                "label": "stove",
+                "type": "structural",
                 "states": [
                     "static",
-                    "moving"
+                    "on"
                 ],
-                "action description": "standing"
+                "spatial_info": {
+                    "box_2d": [
+                        500,
+                        700,
+                        1000,
+                        900
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 1,
-                "label": "chair",
+                "label": "pot",
+                "type": "object",
                 "states": [
-                    "empty",
-                    "static",
-                    "clean"
-                ]
+                    "filled",
+                    "hot",
+                    "stable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        300,
+                        500,
+                        600,
+                        700
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 2,
-                "label": "chair",
+                "label": "spatula",
+                "type": "object",
                 "states": [
-                    "empty",
-                    "static",
-                    "clean"
-                ]
+                    "reachable",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        800,
+                        200,
+                        1200,
+                        400
+                    ]
+                },
+                "action_description": null
             },
             {
                 "id": 3,
-                "label": "kitchen_island",
+                "label": "human",
+                "type": "human",
                 "states": [
-                    "clean",
-                    "static"
-                ]
-            },
-            {
-                "id": 4,
-                "label": "dining_table",
-                "states": [
-                    "clean",
-                    "static",
-                    "empty"
-                ]
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        1000,
+                        50,
+                        1500,
+                        500
+                    ]
+                },
+                "action_description": "stirring the pot with a spatula"
             }
         ],
         "relationships": [
             {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 3
-            },
-            {
                 "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 4
+                "predicate": "on_top_of",
+                "object_id": 0
             },
             {
                 "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 4
-            },
-            {
-                "subject_id": 1,
-                "predicate": "near",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "near",
+                "predicate": "held_by",
                 "object_id": 3
             },
             {
                 "subject_id": 3,
                 "predicate": "near",
-                "object_id": 4
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "operating",
+                "object_id": 1
             }
         ]
     }

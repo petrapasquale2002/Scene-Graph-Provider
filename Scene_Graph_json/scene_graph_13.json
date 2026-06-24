@@ -1,0 +1,188 @@
+{
+    "frame_id": 13,
+    "timestamp_sec": 1779358777,
+    "timestamp_nanosec": 67075977,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "human",
+                "type": "human",
+                "states": [
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        1080,
+                        1920
+                    ]
+                },
+                "action_description": "grating cheese over pasta"
+            },
+            {
+                "id": 1,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "filled",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        220,
+                        630,
+                        740,
+                        870
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "pasta",
+                "type": "object",
+                "states": [
+                    "filled",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        220,
+                        630,
+                        740,
+                        870
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "cheese",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        430,
+                        0,
+                        570,
+                        240
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "grater",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        310,
+                        310,
+                        630,
+                        410
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "filled",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        100,
+                        380,
+                        620,
+                        630
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "food",
+                "type": "object",
+                "states": [
+                    "filled",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        100,
+                        380,
+                        620,
+                        630
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "fork",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "interacting",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "holding",
+                "object_id": 3
+            },
+            {
+                "subject_id": 0,
+                "predicate": "operating",
+                "object_id": 4
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 4
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 2,
+                "predicate": "inside",
+                "object_id": 1
+            },
+            {
+                "subject_id": 6,
+                "predicate": "inside",
+                "object_id": 5
+            }
+        ]
+    }
+}
