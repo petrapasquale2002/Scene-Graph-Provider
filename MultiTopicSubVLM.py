@@ -119,20 +119,6 @@ class MultiTopicListener(Node):
                 with Image.open(BytesIO(image_bytes)) as img:
                     img.load()
                     pixels_width, pixels_height = img.size
-                
-                #original size of the image
-                #orig_width, orig_height = pixels_width, pixels_height
-
-                # Reduce image size but maintain the aspect ratio, to reduce visual tokens sent
-                #scale_factor = 1.0
-                    
-                # Resize
-                #img_resized = img.resize((pixels_width, pixels_height), Image.Resampling.LANCZOS)
-                
-                # Save the resized image in bytes to be sent to the VLM
-                #buffer = BytesIO()
-                #img_resized.save(buffer, format="JPEG")
-                #image_bytes = buffer.getvalue()
 
                 # Convert it to base64 for groq
                 if self.use_groq:
@@ -211,7 +197,7 @@ class MultiTopicListener(Node):
                 ALLOWED STATES
                 ------------------------------------------------------------------------
                 [Object/Inanimate States]: open, closed, empty, full, dirty, clean, hot, cold, turned_on, turned_off, stable, unstable, broken
-                [Human/Agent States]: standing, sitting, walking, reaching, looking_at, interacting, neutral, gesturing
+                [Human/Agent States]: standing, sitting, walking, reaching, looking_at, interacting, neutral, gesturing (use skeleton info to state the posture and confirm with compressed image as a reference)
                 [Shared States]: reachable, occluded, held_by, static, moving, unknown
 
                 ------------------------------------------------------------------------

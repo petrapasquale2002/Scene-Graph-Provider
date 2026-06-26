@@ -1,43 +1,42 @@
 {
-    "frame_id": 12,
+    "frame_id": 21,
     "timestamp_sec": 1779358834,
-    "timestamp_nanosec": 771238923,
+    "timestamp_nanosec": 666248327,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "kitchen_counter",
-                "type": "structural",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "clean",
-                    "static"
+                    "standing",
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        150,
-                        200,
-                        700,
-                        900
+                        346,
+                        768,
+                        585,
+                        972
                     ]
                 },
-                "action_description": null
+                "action_description": "standing and gesturing near the kitchen island"
             },
             {
                 "id": 1,
-                "label": "dining_table",
+                "label": "kitchen_island",
                 "type": "structural",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        750,
-                        500,
-                        1200,
-                        900
+                        342,
+                        455,
+                        768,
+                        827
                     ]
                 },
                 "action_description": null
@@ -47,15 +46,14 @@
                 "label": "chair",
                 "type": "object",
                 "states": [
-                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
                         750,
-                        600,
-                        900,
-                        800
+                        520,
+                        902,
+                        863
                     ]
                 },
                 "action_description": null
@@ -65,51 +63,31 @@
                 "label": "chair",
                 "type": "object",
                 "states": [
-                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        850,
-                        600,
-                        1000,
-                        800
+                        898,
+                        518,
+                        999,
+                        855
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "human",
-                "type": "human",
-                "states": [
-                    "standing",
-                    "gesturing"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        350,
-                        150,
-                        550,
-                        900
-                    ]
-                },
-                "action_description": "gesturing towards the kitchen counter"
-            },
-            {
-                "id": 5,
                 "label": "bottle",
                 "type": "object",
                 "states": [
-                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        800,
-                        400,
-                        850,
-                        600
+                        822,
+                        466,
+                        838,
+                        534
                     ]
                 },
                 "action_description": null
@@ -117,29 +95,34 @@
         ],
         "relationships": [
             {
-                "subject_id": 4,
+                "subject_id": 0,
                 "predicate": "near",
-                "object_id": 0
+                "object_id": 1
             },
             {
-                "subject_id": 4,
-                "predicate": "gesturing_at",
-                "object_id": 0
+                "subject_id": 0,
+                "predicate": "gesturing",
+                "object_id": 1
             },
             {
                 "subject_id": 2,
                 "predicate": "next_to",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "near",
                 "object_id": 1
             },
             {
                 "subject_id": 3,
-                "predicate": "next_to",
+                "predicate": "near",
                 "object_id": 1
             },
             {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 0
+                "subject_id": 4,
+                "predicate": "on_the_right_of",
+                "object_id": 1
             }
         ]
     }

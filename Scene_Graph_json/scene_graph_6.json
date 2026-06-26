@@ -1,125 +1,149 @@
 {
     "frame_id": 6,
-    "timestamp_sec": 1779358832,
-    "timestamp_nanosec": 633333771,
+    "timestamp_sec": 1779358822,
+    "timestamp_nanosec": 431834638,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "stove",
+                "label": "kitchen_counter",
                 "type": "structural",
                 "states": [
+                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        500,
-                        700,
-                        1500,
-                        900
+                        200,
+                        350,
+                        800,
+                        600
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "pot1",
-                "type": "object",
+                "label": "kitchen_cabinets",
+                "type": "structural",
                 "states": [
-                    "empty",
+                    "closed",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        300,
-                        500,
-                        500,
-                        700
+                        100,
+                        100,
+                        900,
+                        300
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "pot2",
-                "type": "object",
+                "label": "dining_table",
+                "type": "structural",
                 "states": [
-                    "empty",
+                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        550,
+                        700,
                         500,
-                        750,
-                        700
+                        1200,
+                        800
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "faucet",
+                "label": "chair",
                 "type": "object",
                 "states": [
-                    "turned_on",
+                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        350,
-                        100,
+                        750,
                         600,
-                        300
+                        900,
+                        850
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "stable",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        850,
+                        600,
+                        1000,
+                        850
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
                 "label": "human",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        800,
-                        50,
-                        1200,
-                        300
+                        350,
+                        150,
+                        600,
+                        900
                     ]
                 },
-                "action_description": "filling pot2 with water"
+                "action_description": "gesturing with hands"
             }
         ],
         "relationships": [
             {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 4,
+                "subject_id": 5,
                 "predicate": "near",
                 "object_id": 0
             },
             {
+                "subject_id": 5,
+                "predicate": "in_front_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_the_right_of",
+                "object_id": 2
+            },
+            {
                 "subject_id": 4,
-                "predicate": "holding",
+                "predicate": "on_the_left_of",
                 "object_id": 2
             },
             {
                 "subject_id": 3,
-                "predicate": "above",
+                "predicate": "part_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "part_of",
                 "object_id": 2
             }
         ]

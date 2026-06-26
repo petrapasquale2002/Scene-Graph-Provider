@@ -1,7 +1,7 @@
 {
     "frame_id": 1,
-    "timestamp_sec": 1779358822,
-    "timestamp_nanosec": 235723696,
+    "timestamp_sec": 1779358809,
+    "timestamp_nanosec": 14538906,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,27 +16,27 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        453,
-                        792,
-                        554,
-                        964
+                        369,
+                        738,
+                        585,
+                        1080
                     ]
                 },
-                "action_description": "gesturing with hands"
+                "action_description": "gesturing while standing"
             },
             {
                 "id": 1,
-                "label": "chair",
-                "type": "object",
+                "label": "kitchen_island",
+                "type": "structural",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        747,
-                        595,
-                        882,
-                        870
+                        338,
+                        361,
+                        766,
+                        1080
                     ]
                 },
                 "action_description": null
@@ -50,10 +50,45 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        882,
-                        592,
-                        999,
-                        791
+                        748,
+                        627,
+                        894,
+                        923
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        893,
+                        624,
+                        1000,
+                        918
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "full",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        834,
+                        554,
+                        886,
+                        587
                     ]
                 },
                 "action_description": null
@@ -67,13 +102,18 @@
             },
             {
                 "subject_id": 0,
-                "predicate": "near",
-                "object_id": 2
+                "predicate": "gesturing_towards",
+                "object_id": 4
             },
             {
-                "subject_id": 1,
+                "subject_id": 2,
                 "predicate": "next_to",
-                "object_id": 2
+                "object_id": 3
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 1
             }
         ]
     }

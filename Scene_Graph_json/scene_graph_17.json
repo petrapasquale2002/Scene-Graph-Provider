@@ -1,7 +1,7 @@
 {
-    "frame_id": 5,
-    "timestamp_sec": 1779358822,
-    "timestamp_nanosec": 235723696,
+    "frame_id": 17,
+    "timestamp_sec": 1779358834,
+    "timestamp_nanosec": 666248327,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,9 +16,9 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        369,
-                        792,
-                        554,
+                        360,
+                        820,
+                        540,
                         1080
                     ]
                 },
@@ -33,9 +33,9 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        747,
-                        595,
-                        882,
+                        750,
+                        560,
+                        900,
                         870
                     ]
                 },
@@ -50,44 +50,27 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        882,
-                        593,
-                        999,
-                        792
+                        870,
+                        560,
+                        1,
+                        870
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "kitchen_island",
-                "type": "structural",
+                "label": "bottle",
+                "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        384,
-                        278,
-                        748,
-                        675
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "dining_table",
-                "type": "structural",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        738,
-                        526,
-                        999,
-                        631
+                        810,
+                        370,
+                        900,
+                        530
                     ]
                 },
                 "action_description": null
@@ -97,32 +80,22 @@
             {
                 "subject_id": 0,
                 "predicate": "near",
-                "object_id": 3
+                "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "near",
+                "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "near",
                 "object_id": 3
             },
             {
                 "subject_id": 1,
                 "predicate": "next_to",
                 "object_id": 2
-            },
-            {
-                "subject_id": 1,
-                "predicate": "near",
-                "object_id": 4
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_the_right_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 2,
-                "predicate": "near",
-                "object_id": 4
             }
         ]
     }

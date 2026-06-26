@@ -1,7 +1,7 @@
 {
     "frame_id": 15,
-    "timestamp_sec": 1779358789,
-    "timestamp_nanosec": 507110035,
+    "timestamp_sec": 1779358834,
+    "timestamp_nanosec": 666248327,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -12,32 +12,31 @@
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        518,
-                        246,
-                        934,
-                        972
+                        346,
+                        768,
+                        585,
+                        1080
                     ]
                 },
                 "action_description": "standing and gesturing"
             },
             {
                 "id": 1,
-                "label": "couch",
-                "type": "structural",
+                "label": "chair",
+                "type": "object",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        546,
-                        751,
-                        999,
-                        999
+                        750,
+                        520,
+                        902,
+                        862
                     ]
                 },
                 "action_description": null
@@ -47,50 +46,31 @@
                 "label": "chair",
                 "type": "object",
                 "states": [
-                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        716,
-                        592,
-                        837,
-                        848
+                        899,
+                        518,
+                        999,
+                        855
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "chair",
+                "label": "bottle",
                 "type": "object",
                 "states": [
-                    "stable",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
+                        823,
+                        466,
                         838,
-                        588,
-                        947,
-                        781
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "clock",
-                "type": "object",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        935,
-                        260,
-                        963,
-                        329
+                        534
                     ]
                 },
                 "action_description": null
@@ -104,23 +84,13 @@
             },
             {
                 "subject_id": 0,
-                "predicate": "facing",
-                "object_id": 2
-            },
-            {
-                "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 3
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_the_right_of",
+                "predicate": "near",
                 "object_id": 2
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
-                "object_id": 4
+                "predicate": "gesturing",
+                "object_id": 3
             }
         ]
     }

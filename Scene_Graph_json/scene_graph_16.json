@@ -1,7 +1,7 @@
 {
     "frame_id": 16,
-    "timestamp_sec": 1779358793,
-    "timestamp_nanosec": 170413920,
+    "timestamp_sec": 1779358835,
+    "timestamp_nanosec": 564536839,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,13 +16,13 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        251,
-                        481,
-                        933,
-                        586
+                        186,
+                        428,
+                        1080,
+                        959
                     ]
                 },
-                "action_description": "gesturing while standing"
+                "action_description": "standing and gesturing"
             },
             {
                 "id": 1,
@@ -33,10 +33,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        717,
-                        585,
-                        840,
-                        850
+                        562,
+                        748,
+                        860,
+                        185
                     ]
                 },
                 "action_description": null
@@ -50,27 +50,27 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        840,
-                        582,
-                        955,
-                        845
+                        685,
+                        556,
+                        854,
+                        629
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "clock",
+                "label": "bottle",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        937,
-                        250,
-                        965,
-                        321
+                        441,
+                        405,
+                        459,
+                        466
                     ]
                 },
                 "action_description": null
@@ -88,19 +88,9 @@
                 "object_id": 2
             },
             {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_the_left_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_the_right_of",
-                "object_id": 0
+                "subject_id": 0,
+                "predicate": "gesturing_towards",
+                "object_id": 1
             }
         ]
     }

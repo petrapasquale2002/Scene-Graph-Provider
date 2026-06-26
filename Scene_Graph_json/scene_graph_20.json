@@ -1,7 +1,7 @@
 {
-    "frame_id": 12,
+    "frame_id": 20,
     "timestamp_sec": 1779358834,
-    "timestamp_nanosec": 771238923,
+    "timestamp_nanosec": 666248327,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,7 +16,7 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        150,
+                        100,
                         200,
                         700,
                         900
@@ -34,7 +34,7 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        750,
+                        800,
                         500,
                         1200,
                         900
@@ -70,9 +70,9 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        850,
+                        900,
                         600,
-                        1000,
+                        1100,
                         800
                     ]
                 },
@@ -80,7 +80,26 @@
             },
             {
                 "id": 4,
-                "label": "human",
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "clean",
+                    "full",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        400,
+                        350,
+                        500,
+                        450
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
@@ -89,40 +108,22 @@
                 "spatial_info": {
                     "box_2d": [
                         350,
-                        150,
+                        100,
                         550,
                         900
                     ]
                 },
-                "action_description": "gesturing towards the kitchen counter"
-            },
-            {
-                "id": 5,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "stable",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        800,
-                        400,
-                        850,
-                        600
-                    ]
-                },
-                "action_description": null
+                "action_description": "standing and gesturing near the kitchen counter"
             }
         ],
         "relationships": [
             {
-                "subject_id": 4,
+                "subject_id": 5,
                 "predicate": "near",
                 "object_id": 0
             },
             {
-                "subject_id": 4,
+                "subject_id": 5,
                 "predicate": "gesturing_at",
                 "object_id": 0
             },
@@ -137,7 +138,7 @@
                 "object_id": 1
             },
             {
-                "subject_id": 5,
+                "subject_id": 4,
                 "predicate": "on_top_of",
                 "object_id": 0
             }
