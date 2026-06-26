@@ -3,38 +3,34 @@ from typing import List, Dict, Union, Optional, Any
 from abc import ABC, abstractmethod
 
 import pandas as pd
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore[reportMissingImports]
 
 # Import provider SDKs
 try:
-    from groq import Groq
+    from groq import Groq  # type: ignore[reportMissingImports]
 except ImportError:
     Groq = None
 
 try:
-    from openai import OpenAI
+    from openai import OpenAI  # type: ignore[reportMissingImports]
 except ImportError:
     OpenAI = None
 
 try:
-    from anthropic import Anthropic
+    from anthropic import Anthropic  # type: ignore[reportMissingImports]
 except ImportError:
     Anthropic = None
 
 try:
     from google import genai
-    from google.genai import types
+    from google.genai import types  # type: ignore[reportMissingImports]
 except ImportError:
     genai = None
 
-vlm_node_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-nebius_env = os.path.join(vlm_node_dir, "NebiusAPI.env")
-groq_env = os.path.join(vlm_node_dir, "GroqAPI.env")
-
-if os.path.exists(nebius_env):
-    load_dotenv(dotenv_path=nebius_env, override=True)
-if os.path.exists(groq_env):
-    load_dotenv(dotenv_path=groq_env, override=True)
+# Load API keys from project-specific env files (search from this file's location upward)
+_pkg_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(dotenv_path=os.path.join(_pkg_root, "GroqAPI.env"), override=False)
+load_dotenv(dotenv_path=os.path.join(_pkg_root, "NebiusAPI.env"), override=False)
 
 class ModelRegistry:
     """
@@ -44,23 +40,22 @@ class ModelRegistry:
     
     # Groq Models
     GROQ_MODELS = {
-        "llama3.1-8b": "llama-3.1-8b-instant",
-        "llama3.3-70b": "llama-3.3-70b-versatile",
-        "llama4-maverick-17b": "meta-llama/llama-4-maverick-17b-128e-instruct",
-        "moonshotai-kimik2-32b": "moonshotai/kimi-k2-instruct-0905",
-        "qwen3-32b": "qwen/qwen3-32b",
         "openai-oss-20b": "openai/gpt-oss-20b",
         "openai-oss-120b": "openai/gpt-oss-120b",
+        "qwen3-32b": "qwen/qwen3-32b",
         # vision enabled models
-        "llama4-scout-17b": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "qwen3.6-27b": "qwen/qwen3.6-27b",
     }
 
     # Nebius Models
     NEBIUS_MODELS = {
+        'google-gemma-27b': 'google/gemma-3-27b-it',
         'nvidia-nemotron-30b': "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
         'nvidia-nemotron-120b': "nvidia/nemotron-3-super-120b-a12b",
+        'nvidia-cosmos3-33b': "nvidia/Cosmos3-Super-Reasoner",
         'kimi-k2.6': "moonshotai/Kimi-K2.6",
         'qwen3-embedding-8b': 'Qwen/Qwen3-Embedding-8B',
+        # vision enabled models
         'qwen3-2.5-70b': 'Qwen/Qwen2.5-VL-72B-Instruct',
     }
 

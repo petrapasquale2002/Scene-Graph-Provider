@@ -18,6 +18,13 @@ from hri_msgs.msg import EntityArray, Skeleton2DArray
 
 from src.vlm_client import VLMClient
 
+from dotenv import load_dotenv
+
+load_dotenv(
+    dotenv_path=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "GroqAPI.env"),
+    override=True
+)
+
 # Mapping from Skeleton2D keypoint index to human-readable name (OpenPose COCO convention)
 KEYPOINT_NAMES = {
     0: "NOSE", 1: "NECK",
@@ -90,7 +97,7 @@ class MultiTopicListener(Node):
 
     def test_groq_vlm(self):
         return {
-            "model_name": "groq/llama4-scout-17b",
+            "model_name": "groq/qwen3.6-27b",
             'temperature': 0.7,
             'max_tokens': 2048,
             'top_p': 0.9
@@ -190,7 +197,7 @@ class MultiTopicListener(Node):
 
                 Use the skeleton keypoints to infer precise human body poses and actions (e.g. if WRIST is near an object, the human might be reaching/holding it; if HIP/KNEE angles suggest sitting, mark state as sitting).
                 Use the raw image just as a reference for scene graph generation output.
-                Your goal is to generate a comprehensive, physically-grounded Scene Graph.
+                Your goal is to generate a comprehensive, physically-grounded Scene Graph AS THE JSON STRUCTURE ASKS YOU TO (YOU FIND IT BELOW).
                 The output must serve as a deterministic spatial and semantic map for a downstream LLM decision-making agent designed for social robotics and human-robot interaction.
 
                 ------------------------------------------------------------------------
@@ -314,28 +321,34 @@ class MultiTopicListener(Node):
                     response = self.vlm(
                         text_prompt=bb_prompt,
                         image=image_bytes,
-                        force_json_response=True
+                        force_json=True
                     )
                 elif self.use_groq:
                     response = self.vlm(
                         text_prompt=bb_prompt,
                         image=image_base64,
-                        force_json_response=True
+                        force_json=True
                     )
 
                 self.get_logger().info("VLM Scene Graph response received.")
                 print("VLM Scene Graph:\n", response)
 
-                # 6. Parse response
+                # 6. Parse response — extract JSON robustly even if the model
+                #    wraps it in markdown fences or adds surrounding text.
                 if response is None:
                     raise ValueError("VLM returned None response")
-                response_data = json.loads(response) if isinstance(response, str) else response
+                if isinstance(response, str):
+                    clean_response = self.vlm._extract_json(response)
+                    self.get_logger().info(f"Extracted JSON (first 120 chars): {clean_response[:120]}")
+                    response_data = json.loads(clean_response)
+                else:
+                    response_data = response
                 if not isinstance(response_data, dict):
                     raise ValueError(f"Expected dict JSON response, got {type(response_data)}")
 
                 
                 # Save the Scene Graph JSON metadata                                                                                                                          
-                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Scene_Graph_json")                                                                          
+                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "JSON_FOLDER")                                                                          
                 os.makedirs(json_dir, exist_ok=True)                                                                                                                             
                 json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")                                                                                          
                                                                                                                                                                                     
