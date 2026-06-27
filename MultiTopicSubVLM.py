@@ -10,6 +10,8 @@ from io import BytesIO
 from traceback import format_exc
 from PIL import Image
 import base64
+from typing import List, Optional
+from pydantic import BaseModel
 
 from std_msgs.msg import String
 
@@ -35,6 +37,141 @@ KEYPOINT_NAMES = {
     14: "LEFT_EYE", 15: "RIGHT_EYE",
     16: "LEFT_EAR", 17: "RIGHT_EAR",
 }
+
+# ---------------------------------------------------------------------------
+# Tool definition for Groq function/tool calling.
+#
+# Strategy: instead of asking the model to output JSON in the message content,
+# we define a "tool" whose parameters ARE the scene graph schema. Setting
+# tool_choice to force this specific function means the model MUST populate
+# the arguments with valid JSON — completely bypassing <think> blocks,
+# markdown fences, and unsupported response_format modes.
+#
+# The Pydantic classes below are kept for reference/validation; the actual
+# enforcement happens via SCENE_GRAPH_TOOL passed to the Groq API.
+# ---------------------------------------------------------------------------
+
+class SpatialInfo(BaseModel):
+    box_2d: List[int]               # [ymin, xmin, ymax, xmax] absolute pixels
+
+class EntityNode(BaseModel):
+    id: int
+    label: str
+    type: str                       # "object" | "human" | "structural"
+    states: List[str]
+    spatial_info: SpatialInfo
+    action_description: Optional[str]
+
+class Relationship(BaseModel):
+    subject_id: int
+    predicate: str
+    object_id: int
+
+class SceneGraphSchema(BaseModel):
+    entities: List[EntityNode]
+    relationships: List[Relationship]
+
+# Groq tool definition — JSON Schema format understood by the chat/completions API.
+# Kept deliberately flat: Groq tool calling does not support JSON Schema union types
+# (e.g. ["string","null"]), array size constraints (minItems/maxItems), or nested
+# $ref. All constraints are expressed in field descriptions instead.
+SCENE_GRAPH_TOOL = [
+    {
+        "type": "function",
+        "function": {
+            "name": "create_scene_graph",
+            "description": (
+                "Record the complete scene graph extracted from the camera frame and "
+                "sensor data. Call this tool exactly once with ALL detected entities "
+                "and ALL spatial relationships."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "entities": {
+                        "type": "array",
+                        "description": "All entities detected in the scene.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Tracker track_id. For untracked structural elements use IDs >= 1000."
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "Snake_case name of the entity, e.g. coffee_mug, kitchen_counter."
+                                },
+                                "entity_type": {
+                                    "type": "string",
+                                    "description": "Category: 'object' for movable items, 'human' for people, 'structural' for fixed env elements."
+                                },
+                                "states": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                    "description": (
+                                        "One or more applicable states. Valid values: "
+                                        "open, closed, empty, full, dirty, clean, hot, cold, "
+                                        "turned_on, turned_off, stable, unstable, broken, "
+                                        "standing, sitting, walking, reaching, looking_at, "
+                                        "interacting, neutral, gesturing, reachable, occluded, "
+                                        "held_by, static, moving, unknown."
+                                    )
+                                },
+                                "box_2d": {
+                                    "type": "array",
+                                    "items": {"type": "integer"},
+                                    "description": "Bounding box as [ymin, xmin, ymax, xmax] in absolute pixel integers."
+                                },
+                                "action_description": {
+                                    "type": "string",
+                                    "description": "For humans: short verb phrase (<=8 words) describing the current action. For objects/structural: use empty string or 'none'."
+                                }
+                            },
+                            "required": ["id", "label", "entity_type", "states", "box_2d", "action_description"]
+                        }
+                    },
+                    "relationships": {
+                        "type": "array",
+                        "description": "All spatial and semantic relationships between entities.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "subject_id": {
+                                    "type": "integer",
+                                    "description": "Entity id of the subject."
+                                },
+                                "predicate": {
+                                    "type": "string",
+                                    "description": (
+                                        "Relationship type. Valid values: "
+                                        "on_top_of, inside, part_of, touching, not_touching, "
+                                        "embedded_in, next_to, near, above, below, in_front_of, "
+                                        "behind, on_the_left_of, on_the_right_of, facing, "
+                                        "occluding, holding, held_by, pointed_by, looking_at, "
+                                        "operating, interacting."
+                                    )
+                                },
+                                "object_id": {
+                                    "type": "integer",
+                                    "description": "Entity id of the object."
+                                }
+                            },
+                            "required": ["subject_id", "predicate", "object_id"]
+                        }
+                    }
+                },
+                "required": ["entities", "relationships"]
+            }
+        }
+    }
+]
+
+
+# Force the model to always call this specific tool (no free-form text output).
+SCENE_GRAPH_TOOL_CHOICE = {"type": "function", "function": {"name": "create_scene_graph"}}
+
+# ---------------------------------------------------------------------------
 
 class MultiTopicListener(Node):
     # This listener subscribes to the compressed image, entity detection, human detection,
@@ -98,17 +235,17 @@ class MultiTopicListener(Node):
     def test_groq_vlm(self):
         return {
             "model_name": "groq/qwen3.6-27b",
-            'temperature': 0.7,
-            'max_tokens': 2048,
-            'top_p': 0.9
+            'temperature': 0.0,
+            'max_tokens': 1500,
+            'top_p': 1.0
         }
 
     def test_nebius_vlm(self):
         return {
             "model_name": "nebius/qwen3-2.5-70b",
-            'temperature': 0.7,
-            'max_tokens': 2048,
-            'top_p': 0.9,
+            'temperature': 0.0,
+            'max_tokens': 1500,
+            'top_p': 1.0,
         }
 
     def synchronized_callback(self, image_msg, entity_msg, human_msg, skeleton_msg):
@@ -149,8 +286,8 @@ class MultiTopicListener(Node):
                         x_max = int(bbox.xmax * pixels_width)
                         y_max = int(bbox.ymax * pixels_height)
 
-                        # Build phrase with id, label and bounding box.
-                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {bbox.xmin}, {bbox.ymin}, {bbox.xmax}, {bbox.ymax}\n"
+                        # Build phrase with id, label and bounding box (absolute pixel coords).
+                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
                 
                 # create a string representation of the human bodies information from human_msg
                 human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
@@ -167,8 +304,8 @@ class MultiTopicListener(Node):
                         x_max = int(bbox.xmax * pixels_width)
                         y_max = int(bbox.ymax * pixels_height)
 
-                        # Build phrase with id, label and bounding box.
-                        human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {bbox.xmin}, {bbox.ymin}, {bbox.xmax}, {bbox.ymax}\n"
+                        # Build phrase with id, label and bounding box (absolute pixel coords).
+                        human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
 
                 # create a string representation of the skeleton keypoints from skeleton_msg
                 skeleton_info = "Human body skeleton keypoints detected in this frame (normalized coordinates 0-1, confidence c):\n"
@@ -184,157 +321,99 @@ class MultiTopicListener(Node):
                             if kp.c > 0.0:
                                 skeleton_info += f"    - {kp_name}: x={kp.x:.3f}, y={kp.y:.3f}, confidence={kp.c:.2f}\n"
 
-                # 4. Prepare the Scene Graph prompt
-                task = "Construct a detailed Scene Graph from the image, entity detections, and skeleton keypoint data."
-                bb_prompt = f"""
-                Task: {task}
-                Image Dimensions: {pixels_width} x {pixels_height}
+                # ----------------------------------------------------------------
+                # 4. Build the Scene Graph prompt for Qwen3.6-27b  (tool-calling mode)
+                # ----------------------------------------------------------------
+                # With tool calling active the schema is already encoded in the tool
+                # definition, so the prompt no longer needs to repeat it. Instead:
+                #   a) system_prompt — short role + visual-reasoning mandate
+                #   b) user prompt   — sensor data dump + explicit fusion guidance
+                #                      (how to combine image evidence with tracker data)
+                # The model populates the tool arguments; any CoT stays in content
+                # and is automatically ignored by _call_groq.
+                # ----------------------------------------------------------------
 
-                Start by analyzing the provided contextual data:
-                - Entity Info: {entities_info}
-                - Human Info: {human_info}
-                - Skeleton Keypoints: {skeleton_info}
+                system_msg = (
+                    "You are a visual perception module on a mobile robot. "
+                    "You receive a camera frame together with structured sensor data "
+                    "(bounding boxes from an object tracker and skeleton keypoints "
+                    "from a pose estimator). "
+                    "Your job is to analyse the image carefully and call the "
+                    "create_scene_graph tool with a complete, accurate scene graph. "
+                    "Prioritise what you can directly see in the image; use the sensor "
+                    "data to confirm entity identities, precise locations, and human pose."
+                )
 
-                Use the skeleton keypoints to infer precise human body poses and actions (e.g. if WRIST is near an object, the human might be reaching/holding it; if HIP/KNEE angles suggest sitting, mark state as sitting).
-                Use the raw image just as a reference for scene graph generation output.
-                Your goal is to generate a comprehensive, physically-grounded Scene Graph AS THE JSON STRUCTURE ASKS YOU TO (YOU FIND IT BELOW).
-                The output must serve as a deterministic spatial and semantic map for a downstream LLM decision-making agent designed for social robotics and human-robot interaction.
+                bb_prompt = f"""\
+                Analyse the camera frame and the sensor data below, then call `create_scene_graph`.
 
-                ------------------------------------------------------------------------
-                ALLOWED STATES
-                ------------------------------------------------------------------------
-                [Object/Inanimate States]: open, closed, empty, full, dirty, clean, hot, cold, turned_on, turned_off, stable, unstable, broken
-                [Human/Agent States]: standing, sitting, walking, reaching, looking_at, interacting, neutral, gesturing (use skeleton info to state the posture and confirm with compressed image as a reference)
-                [Shared States]: reachable, occluded, held_by, static, moving, unknown
+                --- SENSOR DATA (IMAGE: {pixels_width}x{pixels_height} px) ---
+                {entities_info}
+                {human_info}
+                {skeleton_info}
+                --------------------------------------------------------------
 
-                ------------------------------------------------------------------------
-                ALLOWED RELATIONSHIPS (Strictly Directed: Subject -> Predicate -> Object)
-                ------------------------------------------------------------------------
-                [Topological / Contact]: on_top_of, inside, part_of, touching, not_touching, embedded_in
-                [Relative Spatial / Proximity]: next_to, near, above, below, in_front_of, behind, on_the_left_of, on_the_right_of, facing, occluding
-                [Agent / Interaction]: holding, held_by, pointed_by, looking_at, operating
+                GUIDELINES FOR FILLING THE TOOL ARGUMENTS:
 
-                ========================================================================
-                LAYOUT CONFIGURATION Context: DOMESTIC LIVING SPACE (Living Room & Dining Area)
-                ========================================================================
-                Description:
-                A cozy domestic environment designed for daily living and social interaction. It features a dining table used for meals, a comfortable sofa for reading and relaxing, and everyday household items scattered around, including dishes, utensils, food, and books. A human user is present, interacting naturally with the environment and the objects.
+                Entities
+                • Include every entity reported by the tracker. Also add background structural
+                    elements clearly visible in the image (walls, tables, counters, doors, etc.)
+                    even if not tracked — assign them a new sequential ID starting at 1000.
+                • Refine the tracker label using what you see (e.g. "object" → "coffee_mug").
+                • box_2d order: [ymin, xmin, ymax, xmax] in absolute pixel integers.
+                    Convert the tracker bbox from (xmin, ymin, xmax, ymax) to this order.
+                • states: pick the most accurate descriptors from the tool schema enum.
+                    Infer object states from visual appearance (open/closed, dirty/clean, etc.).
+                • action_description: for humans only — describe the ongoing action in ≤8 words
+                    (e.g. "picking up a mug from the table"). Use null for objects/structural.
 
-                Typical Entities & Scene Commonsense:
-                - dining_table (type: structural, states: clean, static)
-                - sofa (type: structural, states: clean, static)
-                - plate (type: object, states: clean, empty, reachable, static | relationship: on_top_of -> dining_table)
-                - fork (type: object, states: clean, reachable, static | relationship: next_to -> plate)
-                - apple (type: object, states: clean, reachable, static | relationship: inside -> plate)
-                - book (type: object, states: closed, static, reachable | relationship: on_top_of -> sofa)
-                - human_user (type: human, states: sitting, interacting | relationship: near -> dining_table)
+                Skeleton → Pose inference
+                • Nose above hips → standing. Hips and knees at similar height → sitting.
+                • Wrist(s) raised above shoulder → reaching / gesturing.
+                • Wrist near another entity bbox → interacting / holding.
+                • Low confidence keypoints (<0.3) should be ignored.
 
-                Example Scene Graph JSON:
-                {{
-                "entities": [
-                    {{
-                    "id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [200, 100, 500, 600]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [150, 600, 400, 900]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [210, 250, 260, 350]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [215, 360, 225, 420]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [220, 280, 250, 320]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 5, "label": "book", "type": "object", "states": ["closed", "static", "reachable"], 
-                    "spatial_info": {{"box_2d": [180, 650, 220, 720]}}, 
-                    "action_description": null
-                    }},
-                    {{
-                    "id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"], 
-                    "spatial_info": {{"box_2d": [100, 150, 450, 300]}}, 
-                    "action_description": "sitting at the table and reaching for the apple"
-                    }}
-                ],
-                "relationships": [
-                    {{"subject_id": 2, "predicate": "on_top_of", "object_id": 0}},
-                    {{"subject_id": 3, "predicate": "on_top_of", "object_id": 0}},
-                    {{"subject_id": 3, "predicate": "next_to", "object_id": 2}},
-                    {{"subject_id": 4, "predicate": "inside", "object_id": 2}},
-                    {{"subject_id": 5, "predicate": "on_top_of", "object_id": 1}},
-                    {{"subject_id": 6, "predicate": "near", "object_id": 0}},
-                    {{"subject_id": 6, "predicate": "looking_at", "object_id": 4}}
-                ]
-                }}
+                Relationships
+                • Model every meaningful spatial pair (human–object, object–surface, etc.).
+                • Use bbox overlap/containment and visual depth cues to choose the predicate.
+                • Human attention direction (nose/neck vector) can give a 'looking_at' edge.
+                • Prefer specific predicates (on_top_of, holding) over generic ones (near).
 
-                ------------------------------------------------------------------------
-                INSTRUCTIONS
-                ------------------------------------------------------------------------
-                1. Entity Identification: Detect all key entities (everyday objects, household architectural elements, humans, specific body parts if heavily interacting).
-                2. Physical Commonsense & Grounding: Ground your reasoning in physical reality. Furniture sits on the floor; food goes on plates or tables; humans sit on chairs/sofas or stand on the floor. Do not hallucinate floating or physically impossible states.
-                3. State Assignment: Apply states based on the entity type (Inanimate vs Human vs Shared). Pay special attention to human social cues (gesturing, interacting, looking_at).
-                4. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
-                5. JSON Formatting: Output MUST be a single, valid JSON object. Do not include any markdown block formatting (like ```json), explanations, or trailing text.
-
-                ------------------------------------------------------------------------
-                OUTPUT JSON FORMAT
-                ------------------------------------------------------------------------
-                {{
-                "entities": [
-                    {{
-                    "id": <int: unique ID starting from 0>,
-                    "label": "<string: entity_name>",
-                    "type": "<string: 'object' | 'human' | 'structural'>",
-                    "states": [<string: chosen from allowed states>],
-                    "spatial_info": {{
-                        "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>]
-                    }},
-                    "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork'), otherwise null>"
-                    }}
-                ],
-                "relationships": [
-                    {{
-                    "subject_id": <int: ID of the subject entity>,
-                    "predicate": "<string: predicate from allowed relationships>",
-                    "object_id": <int: ID of the object entity>
-                    }}
-                ]
-                }}
-                """
+                Call create_scene_graph now with the complete graph for this frame."""
 
                 self.get_logger().info("Sending scene graph request to VLM...")
-                
-                # 5. Call the VLM client for Qwen
+
+                # 5. Call the VLM — pass system_prompt + assistant_prefix for Groq,
+                #    forced_json_schema for maximum schema conformance,
+                #    or extra_body for Nebius thinking control.
                 if self.use_nebius:
                     response = self.vlm(
                         text_prompt=bb_prompt,
                         image=image_bytes,
-                        force_json=True
+                        force_json=True,
+                        system_prompt=system_msg,
+                        extra_body={"enable_thinking": False}
                     )
                 elif self.use_groq:
                     response = self.vlm(
                         text_prompt=bb_prompt,
                         image=image_base64,
-                        force_json=True
+                        system_prompt=system_msg,
+                        # qwen3.6-27b on Groq: tool calling not supported with image input,
+                        # json_schema response_format also not supported.
+                        # Strategy: assistant_prefix forces the reply to open with '{'
+                        # so the model cannot prepend free text or <think> blocks.
+                        # Any residual <think> blocks are stripped by _strip_think_blocks()
+                        # inside vlm_client before _extract_json is called.
+                        assistant_prefix="{",
                     )
+
 
                 self.get_logger().info("VLM Scene Graph response received.")
                 print("VLM Scene Graph:\n", response)
 
-                # 6. Parse response — extract JSON robustly even if the model
-                #    wraps it in markdown fences or adds surrounding text.
+                # 6. Parse response — tool calling returns the function arguments
+                #    directly as a JSON string; _extract_json handles any edge cases.
                 if response is None:
                     raise ValueError("VLM returned None response")
                 if isinstance(response, str):
@@ -345,6 +424,23 @@ class MultiTopicListener(Node):
                     response_data = response
                 if not isinstance(response_data, dict):
                     raise ValueError(f"Expected dict JSON response, got {type(response_data)}")
+
+                # 7. Normalise tool output → pipeline schema.
+                #    The simplified tool schema uses flat fields (box_2d at entity top-level,
+                #    entity_type instead of type) to avoid Groq JSON Schema limitations.
+                #    Convert back to the nested format expected by the rest of the pipeline.
+                for entity in response_data.get("entities", []):
+                    # box_2d: flat → nested in spatial_info
+                    if "box_2d" in entity and "spatial_info" not in entity:
+                        entity["spatial_info"] = {"box_2d": entity.pop("box_2d")}
+                    # entity_type → type
+                    if "entity_type" in entity and "type" not in entity:
+                        entity["type"] = entity.pop("entity_type")
+                    # action_description: "none"/""  → None
+                    ad = entity.get("action_description", "")
+                    if ad in ("", "none", "None", "null", "N/A"):
+                        entity["action_description"] = None
+
 
                 
                 # Save the Scene Graph JSON metadata                                                                                                                          

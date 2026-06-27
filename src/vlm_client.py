@@ -67,7 +67,20 @@ class VLMClient(BaseFoundationClient):
         }
 
     @staticmethod
+    def _strip_think_blocks(text: str) -> str:
+        """
+        Remove <think>...</think> chain-of-thought blocks emitted by Qwen3
+        models before JSON extraction. Handles multiline and nested-looking tags.
+        """
+        if not text:
+            return text
+        # Remove <think> ... </think> blocks (non-greedy to handle multiple blocks)
+        cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+        return cleaned.strip()
+
+    @staticmethod
     def _extract_json(raw: str) -> str:
+
         """
         Robustly extract a JSON object or array from a raw model response.
 
@@ -143,40 +156,68 @@ class VLMClient(BaseFoundationClient):
         max_tokens = kwargs.get("max_tokens", self.max_tokens)
         top_p = kwargs.get("top_p", self.top_p)
 
-        base64_image = self._encode_image(image)
+        # Optional system message and assistant prefix for JSON forcing
+        system_prompt = kwargs.get("system_prompt", None)
+        assistant_prefix = kwargs.get("assistant_prefix", None)
+        extra_body = kwargs.get("extra_body", None)
 
-        if isinstance(image, str) and image.startswith("http"):
-            image_content = {
-                "type": "image_url",
-                "image_url": {
-                    "url": image
+        # Tool calling kwargs (takes priority over json_schema response_format)
+        tools = kwargs.get("tools", None)
+        tool_choice = kwargs.get("tool_choice", None)
+
+        if image is not None:
+            # Build multipart content list with text + image
+            if isinstance(image, str) and image.startswith("http"):
+                image_content = {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": image
+                    }
                 }
-            }
+            else:
+                # base64_image covers local files, bytes, PIL images, and raw base64 strings
+                base64_image = self._encode_image(image)
+                image_content = {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{base64_image}"
+                    }
+                }
+            message_content = [
+                {"type": "text", "text": text_prompt},
+                image_content,
+            ]
         else:
-            # base64_image covers local files, bytes, PIL images, and raw base64 strings
-            image_content = {
-                "type": "image_url",
-                "image_url": {
-                    "url": f"data:image/jpeg;base64,{base64_image}"
-                }
-            }
+            # Groq requires content to be a plain string when there is no image
+            message_content = text_prompt
+
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": message_content})
+        # Assistant prefix forcing: the model will continue from this token
+        # (Groq supports prefill via an assistant message without a trailing newline)
+        # NOTE: do NOT use assistant_prefix together with tools — they are mutually exclusive.
+        if assistant_prefix and not tools:
+            messages.append({"role": "assistant", "content": assistant_prefix})
 
         params = {
             "model": self.model_name,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": text_prompt},
-                        image_content,
-                    ]
-                }
-            ],
+            "messages": messages,
             "max_completion_tokens": max_tokens,
             "temperature": temperature,
             "top_p": top_p,
         }
-        if force_json and forced_json_schema is not None:
+
+        if tools:
+            # Tool calling path — takes priority over all response_format strategies.
+            # Forcing tool_choice = {"type": "function", "function": {"name": "..."}}
+            # makes the model ALWAYS call the tool, returning structured JSON as
+            # tool call arguments rather than free-form content.
+            params["tools"] = tools
+            if tool_choice is not None:
+                params["tool_choice"] = tool_choice
+        elif force_json and forced_json_schema is not None:
             params["response_format"] = {
                 "type": "json_schema",
                 "json_schema": {
@@ -184,13 +225,32 @@ class VLMClient(BaseFoundationClient):
                     "schema": forced_json_schema.model_json_schema()
                 }
             }
-        # Note: Groq VLMs (e.g. qwen 3.6) don't support response_format json_object.
-        # JSON output is enforced via the prompt instead.
+        # Note: Groq VLMs (e.g. qwen3.6-27b) don't support response_format json_object
+        # or json_schema. JSON output is enforced via tools or prompt + assistant prefix.
+        if extra_body is not None:
+            params["extra_body"] = extra_body
 
         response = self.client.chat.completions.create(**params)
         if hasattr(response, 'usage'):
             self._update_metrics(response.usage.prompt_tokens, response.usage.completion_tokens)
-        return response.choices[0].message.content
+
+        message = response.choices[0].message
+
+        # If the model made a tool call, return the function arguments directly as JSON string.
+        # This is the most reliable structured output path — the arguments field is always
+        # valid JSON regardless of any <think> blocks or markdown in the content field.
+        if tools and message.tool_calls:
+            return message.tool_calls[0].function.arguments
+
+        raw = message.content
+        # Strip Qwen3 <think>...</think> CoT blocks before returning
+        if raw is not None:
+            raw = VLMClient._strip_think_blocks(raw)
+        # If we used an assistant prefix, prepend it back so _extract_json works correctly
+        if assistant_prefix and raw is not None and not raw.startswith(assistant_prefix):
+            raw = assistant_prefix + raw
+        return raw
+
 
     def _call_openai(self, text_prompt: Optional[str], image: Union[str, bytes, Image.Image, None], force_json: bool = False, **kwargs) -> str:
         temperature = kwargs.get("temperature", self.temperature)
