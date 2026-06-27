@@ -18,6 +18,7 @@ from hri_msgs.msg import EntityArray, Skeleton2DArray
 
 from src.vlm_client import VLMClient
 
+
 # Mapping from Skeleton2D keypoint index to human-readable name (OpenPose COCO convention)
 KEYPOINT_NAMES = {
     0: "NOSE", 1: "NECK",
