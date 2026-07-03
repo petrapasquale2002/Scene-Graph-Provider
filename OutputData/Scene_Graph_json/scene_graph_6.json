@@ -1,97 +1,43 @@
 {
     "frame_id": 6,
-    "timestamp_sec": 1779358834,
-    "timestamp_nanosec": 169268723,
+    "timestamp_sec": 1779358801,
+    "timestamp_nanosec": 68266647,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
-                "id": 0,
+                "id": 1315,
                 "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        99,
-                        1147,
-                        401,
-                        1919
+                        210,
+                        597,
+                        1073,
+                        982
                     ]
                 },
-                "action_description": "reaching towards the faucet to turn on the water"
+                "action_description": "standing in front of the kitchen island and gesturing with hands"
             },
             {
-                "id": 1,
-                "label": "spoon",
+                "id": 1316,
+                "label": "chair",
                 "type": "object",
                 "states": [
                     "static",
-                    "reachable"
+                    "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        399,
-                        1456,
-                        470,
-                        1502
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "spoon",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        395,
-                        1500,
-                        468,
-                        1543
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "spoon",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        497,
-                        738,
-                        583,
-                        888
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "vase",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        501,
-                        1619,
-                        644,
-                        1715
+                        729,
+                        1535,
+                        1077,
+                        1887
                     ]
                 },
                 "action_description": null
@@ -99,54 +45,14 @@
         ],
         "relationships": [
             {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 1
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 2
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 3
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 4
-            },
-            {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 3,
+                "subject_id": 1315,
                 "predicate": "on_the_left_of",
-                "object_id": 1
+                "object_id": 1316
             },
             {
-                "subject_id": 3,
-                "predicate": "on_the_left_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 4,
+                "subject_id": 1316,
                 "predicate": "on_the_right_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_the_right_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_the_right_of",
-                "object_id": 3
+                "object_id": 1315
             }
         ]
     }

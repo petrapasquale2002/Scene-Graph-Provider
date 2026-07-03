@@ -1,13 +1,13 @@
 {
-    "frame_id": 3,
-    "timestamp_sec": 1779358795,
-    "timestamp_nanosec": 503782113,
+    "frame_id": 12,
+    "timestamp_sec": 1779358824,
+    "timestamp_nanosec": 575860353,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
-                "id": 1307,
+                "id": 1360,
                 "label": "person",
                 "type": "human",
                 "states": [
@@ -16,45 +16,45 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        226,
-                        803,
-                        1077,
-                        1112
+                        266,
+                        723,
+                        1032,
+                        1035
                     ]
                 },
                 "action_description": "standing in the kitchen area and gesturing with both hands"
             },
             {
-                "id": 1309,
+                "id": 1361,
                 "label": "chair",
-                "type": "structural",
+                "type": "object",
                 "states": [
                     "static",
                     "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        648,
-                        1455,
-                        968,
-                        1740
+                        644,
+                        1445,
+                        944,
+                        1703
                     ]
                 },
                 "action_description": null
             },
             {
-                "id": 1310,
+                "id": 1362,
                 "label": "chair",
-                "type": "structural",
+                "type": "object",
                 "states": [
                     "static",
                     "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        646,
-                        1725,
-                        962,
+                        640,
+                        1710,
+                        857,
                         1920
                     ]
                 },
@@ -63,19 +63,19 @@
         ],
         "relationships": [
             {
-                "subject_id": 1307,
+                "subject_id": 1360,
                 "predicate": "on_the_left_of",
-                "object_id": 1309
+                "object_id": 1361
             },
             {
-                "subject_id": 1307,
+                "subject_id": 1360,
                 "predicate": "on_the_left_of",
-                "object_id": 1310
+                "object_id": 1362
             },
             {
-                "subject_id": 1309,
+                "subject_id": 1361,
                 "predicate": "next_to",
-                "object_id": 1310
+                "object_id": 1362
             }
         ]
     }

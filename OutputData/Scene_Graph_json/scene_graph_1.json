@@ -1,62 +1,78 @@
 {
     "frame_id": 1,
-    "timestamp_sec": 1779358826,
-    "timestamp_nanosec": 368807255,
+    "timestamp_sec": 1779358792,
+    "timestamp_nanosec": 964791878,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
-                "id": 1360,
+                "id": 0,
                 "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        18,
-                        797,
-                        1073,
-                        1329
+                        272,
+                        923,
+                        1008,
+                        1126
                     ]
                 },
-                "action_description": "standing at the counter and pouring liquid from a bottle into a pot"
+                "action_description": "standing near the kitchen island"
             },
             {
-                "id": 1364,
-                "label": "bowl",
+                "id": 1,
+                "label": "chair",
                 "type": "object",
                 "states": [
-                    "full",
-                    "static",
-                    "reachable"
+                    "empty",
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        679,
-                        580,
-                        760,
-                        730
+                        631,
+                        1377,
+                        918,
+                        1613
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "bottle",
+                "label": "chair",
                 "type": "object",
                 "states": [
-                    "held_by",
-                    "moving"
+                    "empty",
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        398,
-                        735,
-                        460,
-                        858
+                        629,
+                        1613,
+                        912,
+                        1834
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "clock",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        270,
+                        1800,
+                        347,
+                        1853
                     ]
                 },
                 "action_description": null
@@ -64,24 +80,24 @@
         ],
         "relationships": [
             {
-                "subject_id": 1360,
-                "predicate": "holding",
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
                 "object_id": 2
             },
             {
-                "subject_id": 2,
-                "predicate": "held_by",
-                "object_id": 1360
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 2
             },
             {
-                "subject_id": 1360,
-                "predicate": "near",
-                "object_id": 1364
-            },
-            {
-                "subject_id": 1364,
-                "predicate": "on_the_left_of",
-                "object_id": 1360
+                "subject_id": 3,
+                "predicate": "above",
+                "object_id": 2
             }
         ]
     }

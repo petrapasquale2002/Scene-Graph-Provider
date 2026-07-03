@@ -1,43 +1,78 @@
 {
     "frame_id": 2,
-    "timestamp_sec": 1779358826,
-    "timestamp_nanosec": 600906438,
+    "timestamp_sec": 1779358793,
+    "timestamp_nanosec": 202693509,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
-                "id": 0,
+                "id": 1307,
                 "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        21,
-                        795,
-                        1073,
-                        1333
+                        250,
+                        903,
+                        1012,
+                        1159
                     ]
                 },
-                "action_description": "standing at the counter and preparing food"
+                "action_description": "standing and gesturing with hands"
             },
             {
-                "id": 1,
-                "label": "vase",
+                "id": 1309,
+                "label": "chair",
                 "type": "object",
                 "states": [
                     "static",
-                    "clean"
+                    "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        516,
-                        1309,
-                        651,
-                        1426
+                        631,
+                        1377,
+                        918,
+                        1629
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1308,
+                "label": "clock",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        264,
+                        1809,
+                        342,
+                        1866
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1310,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        627,
+                        1633,
+                        914,
+                        1849
                     ]
                 },
                 "action_description": null
@@ -45,14 +80,24 @@
         ],
         "relationships": [
             {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 1
+                "subject_id": 1307,
+                "predicate": "on_the_left_of",
+                "object_id": 1309
             },
             {
-                "subject_id": 0,
+                "subject_id": 1307,
                 "predicate": "on_the_left_of",
-                "object_id": 1
+                "object_id": 1310
+            },
+            {
+                "subject_id": 1309,
+                "predicate": "next_to",
+                "object_id": 1310
+            },
+            {
+                "subject_id": 1308,
+                "predicate": "above",
+                "object_id": 1310
             }
         ]
     }

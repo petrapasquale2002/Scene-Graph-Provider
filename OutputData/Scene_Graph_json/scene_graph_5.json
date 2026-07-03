@@ -1,79 +1,43 @@
 {
     "frame_id": 5,
-    "timestamp_sec": 1779358832,
-    "timestamp_nanosec": 633333771,
+    "timestamp_sec": 1779358801,
+    "timestamp_nanosec": 104644933,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
-                "id": 0,
+                "id": 1315,
                 "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        90,
-                        1190,
-                        390,
-                        1919
+                        210,
+                        600,
+                        1075,
+                        984
                     ]
                 },
-                "action_description": "reaching to operate a faucet"
+                "action_description": "standing in the kitchen and gesturing with both hands"
             },
             {
-                "id": 1,
-                "label": "spoon",
+                "id": 1316,
+                "label": "chair",
                 "type": "object",
                 "states": [
                     "static",
-                    "reachable"
+                    "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        395,
-                        1560,
-                        471,
-                        1605
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "spoon",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        400,
-                        1514,
-                        472,
-                        1570
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "spoon",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        500,
-                        802,
-                        589,
-                        956
+                        727,
+                        1532,
+                        1077,
+                        1882
                     ]
                 },
                 "action_description": null
@@ -81,34 +45,14 @@
         ],
         "relationships": [
             {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 1
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 2
-            },
-            {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 3
-            },
-            {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 2,
+                "subject_id": 1315,
                 "predicate": "on_the_left_of",
-                "object_id": 1
+                "object_id": 1316
             },
             {
-                "subject_id": 3,
-                "predicate": "on_the_left_of",
-                "object_id": 2
+                "subject_id": 1316,
+                "predicate": "on_the_right_of",
+                "object_id": 1315
             }
         ]
     }

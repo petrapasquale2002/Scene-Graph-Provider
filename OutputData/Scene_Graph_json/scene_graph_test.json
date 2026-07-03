@@ -1,0 +1,28 @@
+{
+    "frame_id": 1,
+    "timestamp_sec": 1783069002,
+    "timestamp_nanosec": 811180268,
+    "width": 640,
+    "height": 480,
+    "scene_graph": {
+        "entities": [
+            {"id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"], "spatial_info": {"box_2d": [200, 100, 500, 600]}, "action_description": null},
+            {"id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"], "spatial_info": {"box_2d": [150, 600, 400, 900]}, "action_description": null},
+            {"id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable"], "spatial_info": {"box_2d": [210, 250, 260, 350]}, "action_description": null},
+            {"id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable"], "spatial_info": {"box_2d": [215, 360, 225, 420]}, "action_description": null},
+            {"id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable"], "spatial_info": {"box_2d": [220, 280, 250, 320]}, "action_description": null},
+            {"id": 5, "label": "book", "type": "object", "states": ["closed", "static"], "spatial_info": {"box_2d": [180, 650, 220, 720]}, "action_description": null},
+            {"id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"], "spatial_info": {"box_2d": [100, 150, 450, 300]}, "action_description": "sitting at the table and reaching for the apple"}
+        ],
+        "relationships": [
+            {"subject_id": 2, "predicate": "on_top_of", "object_id": 0},
+            {"subject_id": 3, "predicate": "on_top_of", "object_id": 0},
+            {"subject_id": 3, "predicate": "next_to", "object_id": 2},
+            {"subject_id": 4, "predicate": "inside", "object_id": 2},
+            {"subject_id": 5, "predicate": "on_top_of", "object_id": 1},
+            {"subject_id": 6, "predicate": "near", "object_id": 0},
+            {"subject_id": 6, "predicate": "looking_at", "object_id": 4},
+            {"subject_id": 6, "predicate": "holding", "object_id": 3}
+        ]
+    }
+}

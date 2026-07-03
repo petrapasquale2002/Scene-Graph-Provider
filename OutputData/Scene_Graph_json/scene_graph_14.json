@@ -1,0 +1,82 @@
+{
+    "frame_id": 14,
+    "timestamp_sec": 1779358832,
+    "timestamp_nanosec": 400323925,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        90,
+                        1194,
+                        391,
+                        1919
+                    ]
+                },
+                "action_description": "operating a faucet to fill a pot with water"
+            },
+            {
+                "id": 1,
+                "label": "spoon",
+                "type": "object",
+                "states": [
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        395,
+                        1567,
+                        472,
+                        1612
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "vase",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        506,
+                        1689,
+                        650,
+                        1790
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
+                "object_id": 2
+            }
+        ]
+    }
+}

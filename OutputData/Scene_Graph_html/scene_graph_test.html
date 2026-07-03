@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scene Graph — Frame #1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <style>
+    :root {
+      --bg:        #0f0f1a;
+      --surface:   #1a1a2e;
+      --surface2:  #22223a;
+      --accent:    #00c9b1;
+      --text:      #e0e0f0;
+      --subtext:   #8888aa;
+      --border:    #2e2e4e;
+      --radius:    12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+            min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Header ─────────────────────────────────────────── */
+    header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    header .icon { font-size: 28px; }
+    header h1   { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+    header .meta { margin-left: auto; font-size: 13px; color: var(--subtext); text-align: right; line-height: 1.6; }
+
+    /* ── Main layout ─────────────────────────────────────── */
+    .layout { display: flex; flex: 1; gap: 0; overflow: hidden; height: calc(100vh - 130px); }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .sidebar {
+      width: 260px; min-width: 220px; max-width: 300px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-title { padding: 16px 18px 8px; font-size: 11px; font-weight: 600;
+                       text-transform: uppercase; letter-spacing: 1px; color: var(--subtext); }
+    .entity-list { flex: 1; overflow-y: auto; padding: 6px 10px 12px; }
+    .entity-list::-webkit-scrollbar { width: 4px; }
+    .entity-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .entity-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; border-radius: 8px; margin-bottom: 4px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .entity-item:hover { background: var(--surface2); }
+    .entity-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .entity-name { font-size: 13px; font-weight: 500; flex: 1; }
+    .entity-type { font-size: 10px; color: var(--subtext); font-weight: 400; }
+
+    /* ── Graph area ──────────────────────────────────────── */
+    .graph-wrapper {
+      flex: 1; position: relative; overflow: hidden;
+      background: radial-gradient(ellipse at center, #1c1c32 0%, #0f0f1a 80%);
+    }
+    #graph { width: 100%; height: 100%; }
+
+    /* ── Legend ──────────────────────────────────────────── */
+    .legend {
+      position: absolute; bottom: 18px; right: 18px;
+      background: rgba(26,26,46,0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 12px;
+    }
+    .legend-section { margin-bottom: 10px; }
+    .legend-section:last-child { margin-bottom: 0; }
+    .legend-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+                              color: var(--subtext); margin-bottom: 6px; font-weight: 600; }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+                   margin-right: 5px; vertical-align: middle; }
+    .edge-dot  { display: inline-block; width: 24px; height: 3px; border-radius: 2px;
+                  margin-right: 5px; vertical-align: middle; }
+    .legend-label { margin-right: 14px; color: var(--text); }
+
+    /* ── Tooltip card ────────────────────────────────────── */
+    .vis-tooltip {
+      background: var(--surface2) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text) !important;
+      border-radius: 8px !important;
+      font-family: 'Inter', sans-serif !important;
+      font-size: 12px !important;
+      padding: 10px 14px !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+    }
+
+    /* ── Controls ────────────────────────────────────────── */
+    .controls {
+      position: absolute; top: 14px; right: 14px;
+      display: flex; gap: 8px;
+    }
+    .btn {
+      background: rgba(26,26,46,0.88);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 10px 28px;
+      font-size: 12px; color: var(--subtext);
+      display: flex; align-items: center; gap: 24px;
+    }
+    footer .badge {
+      background: var(--surface2); border: 1px solid var(--border);
+      padding: 3px 10px; border-radius: 20px; font-size: 11px;
+    }
+    footer .badge b { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="icon">🤖</span>
+  <h1>Scene Graph Viewer</h1>
+  <div class="meta">
+    <div><b style="color:var(--accent)">scene_graph_test.json</b></div>
+    <div>Timestamp: 1783069002.811 s</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar entità -->
+  <div class="sidebar">
+    <div class="sidebar-title">Entities (7)</div>
+    <div class="entity-list" id="entityList">
+      <div class="entity-item" onclick="focusNode(0)">
+        <span class="entity-dot" style="background:#00c9b1"></span>
+        <span class="entity-name">dining_table</span>
+        <span class="entity-type">structural</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(1)">
+        <span class="entity-dot" style="background:#00c9b1"></span>
+        <span class="entity-name">sofa</span>
+        <span class="entity-type">structural</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(2)">
+        <span class="entity-dot" style="background:#f39c12"></span>
+        <span class="entity-name">plate</span>
+        <span class="entity-type">object</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(3)">
+        <span class="entity-dot" style="background:#f39c12"></span>
+        <span class="entity-name">fork</span>
+        <span class="entity-type">object</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(4)">
+        <span class="entity-dot" style="background:#f39c12"></span>
+        <span class="entity-name">apple</span>
+        <span class="entity-type">object</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(5)">
+        <span class="entity-dot" style="background:#f39c12"></span>
+        <span class="entity-name">book</span>
+        <span class="entity-type">object</span>
+      </div>
+      <div class="entity-item" onclick="focusNode(6)">
+        <span class="entity-dot" style="background:#9b59b6"></span>
+        <span class="entity-name">human_user</span>
+        <span class="entity-type">human</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grafo -->
+  <div class="graph-wrapper">
+    <div id="graph"></div>
+
+    <div class="controls">
+      <button class="btn" onclick="network.fit()">⊡ Fit</button>
+      <button class="btn" onclick="network.setOptions({physics:{enabled:true}});setTimeout(()=>network.setOptions({physics:{enabled:false}}),2000)">⟳ Relayout</button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-section">
+        <div class="legend-section-title">Node type</div>
+        <span class="legend-dot" style="background:#00c9b1"></span><span class="legend-label">structural</span><span class="legend-dot" style="background:#9b59b6"></span><span class="legend-label">human</span><span class="legend-dot" style="background:#f39c12"></span><span class="legend-label">object</span>
+      </div>
+      <div class="legend-section">
+        <div class="legend-section-title">Relationship</div>
+        <span class="edge-dot" style="background:#e74c3c"></span><span class="legend-label">contact</span><span class="edge-dot" style="background:#3498db"></span><span class="legend-label">spatial</span><span class="edge-dot" style="background:#2ecc71"></span><span class="legend-label">interaction</span><span class="edge-dot" style="background:#95a5a6"></span><span class="legend-label">other</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>🖼 Frame <b style="color:var(--accent)">#1</b></span>
+  <span class="badge">Resolution: <b>640×480</b></span>
+  <span class="badge">Entities: <b>7</b></span>
+  <span class="badge">Relationships: <b>8</b></span>
+</footer>
+
+<script>
+const nodes = new vis.DataSet([{"id": 0, "label": "dining_table", "title": "<b>dining_table</b><br>Type: structural<br>States: clean, static<br>BBox: [200, 100, 500, 600]<br>", "color": {"background": "#00c9b1", "border": "#00857a", "highlight": {"background": "#00c9b1", "border": "#ffffff"}, "hover": {"background": "#00c9b1", "border": "#ffffff"}}, "font": {"color": "#ffffff", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 1, "label": "sofa", "title": "<b>sofa</b><br>Type: structural<br>States: clean, static<br>BBox: [150, 600, 400, 900]<br>", "color": {"background": "#00c9b1", "border": "#00857a", "highlight": {"background": "#00c9b1", "border": "#ffffff"}, "hover": {"background": "#00c9b1", "border": "#ffffff"}}, "font": {"color": "#ffffff", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 2, "label": "plate", "title": "<b>plate</b><br>Type: object<br>States: clean, empty, reachable<br>BBox: [210, 250, 260, 350]<br>", "color": {"background": "#f39c12", "border": "#b7770d", "highlight": {"background": "#f39c12", "border": "#ffffff"}, "hover": {"background": "#f39c12", "border": "#ffffff"}}, "font": {"color": "#1a1a2e", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 3, "label": "fork", "title": "<b>fork</b><br>Type: object<br>States: clean, reachable<br>BBox: [215, 360, 225, 420]<br>", "color": {"background": "#f39c12", "border": "#b7770d", "highlight": {"background": "#f39c12", "border": "#ffffff"}, "hover": {"background": "#f39c12", "border": "#ffffff"}}, "font": {"color": "#1a1a2e", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 4, "label": "apple", "title": "<b>apple</b><br>Type: object<br>States: clean, reachable<br>BBox: [220, 280, 250, 320]<br>", "color": {"background": "#f39c12", "border": "#b7770d", "highlight": {"background": "#f39c12", "border": "#ffffff"}, "hover": {"background": "#f39c12", "border": "#ffffff"}}, "font": {"color": "#1a1a2e", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 5, "label": "book", "title": "<b>book</b><br>Type: object<br>States: closed, static<br>BBox: [180, 650, 220, 720]<br>", "color": {"background": "#f39c12", "border": "#b7770d", "highlight": {"background": "#f39c12", "border": "#ffffff"}, "hover": {"background": "#f39c12", "border": "#ffffff"}}, "font": {"color": "#1a1a2e", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}, {"id": 6, "label": "human_user", "title": "<b>human_user</b><br>Type: human<br>States: sitting, interacting<br>BBox: [100, 150, 450, 300]<br>Action: sitting at the table and reaching for the apple", "color": {"background": "#9b59b6", "border": "#6c3483", "highlight": {"background": "#9b59b6", "border": "#ffffff"}, "hover": {"background": "#9b59b6", "border": "#ffffff"}}, "font": {"color": "#ffffff", "size": 14, "face": "Inter, sans-serif"}, "shape": "ellipse", "size": 28, "borderWidth": 2}]);
+const edges = new vis.DataSet([{"from": 2, "to": 0, "label": "on_top_of", "color": {"color": "#e74c3c", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#e74c3c", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 3, "to": 0, "label": "on_top_of", "color": {"color": "#e74c3c", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#e74c3c", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 3, "to": 2, "label": "next_to", "color": {"color": "#3498db", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#3498db", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 4, "to": 2, "label": "inside", "color": {"color": "#e74c3c", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#e74c3c", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 5, "to": 1, "label": "on_top_of", "color": {"color": "#e74c3c", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#e74c3c", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 6, "to": 0, "label": "near", "color": {"color": "#3498db", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#3498db", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 6, "to": 4, "label": "looking_at", "color": {"color": "#2ecc71", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#2ecc71", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}, {"from": 6, "to": 3, "label": "holding", "color": {"color": "#2ecc71", "highlight": "#ffffff", "hover": "#ffffff"}, "font": {"color": "#2ecc71", "size": 11, "face": "Inter, sans-serif", "strokeWidth": 2, "strokeColor": "#1a1a2e"}, "arrows": {"to": {"enabled": true, "scaleFactor": 0.8}}, "width": 1.5, "smooth": {"type": "curvedCW", "roundness": 0.2}}]);
+
+const options = {
+  interaction: {
+    hover: true,
+    tooltipDelay: 150,
+    navigationButtons: false,
+    keyboard: true,
+    zoomView: true,
+  },
+  physics: {
+    enabled: true,
+    solver: "forceAtlas2Based",
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.01,
+      springLength: 140,
+      springConstant: 0.08,
+    },
+    stabilization: { iterations: 200, updateInterval: 25 },
+  },
+  nodes: {
+    borderWidth: 2,
+    shadow: { enabled: true, color: "rgba(0,0,0,0.5)", size: 10, x: 3, y: 3 },
+  },
+  edges: {
+    shadow: { enabled: false },
+    selectionWidth: 3,
+  },
+};
+
+const container = document.getElementById("graph");
+const network = new vis.Network(container, { nodes, edges }, options);
+
+network.on("stabilized", () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function focusNode(id) {
+  network.focus(id, { scale: 1.4, animation: { duration: 500, easingFunction: "easeInOutQuad" } });
+  network.selectNodes([id]);
+}
+</script>
+</body>
+</html>

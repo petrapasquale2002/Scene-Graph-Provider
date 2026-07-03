@@ -1,7 +1,7 @@
 {
-    "frame_id": 7,
-    "timestamp_sec": 1779358809,
-    "timestamp_nanosec": 14538906,
+    "frame_id": 15,
+    "timestamp_sec": 1779358832,
+    "timestamp_nanosec": 633333771,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -12,68 +12,68 @@
                 "type": "human",
                 "states": [
                     "standing",
-                    "gesturing"
+                    "interacting"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        255,
-                        771,
-                        1077,
-                        1124
+                        90,
+                        1190,
+                        390,
+                        1919
                     ]
                 },
-                "action_description": "standing in the kitchen area and gesturing with hands"
+                "action_description": "reaching to operate a faucet"
             },
             {
                 "id": 1,
-                "label": "chair",
-                "type": "structural",
+                "label": "spoon",
+                "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        677,
-                        1438,
-                        997,
-                        1717
+                        395,
+                        1560,
+                        471,
+                        1605
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "chair",
-                "type": "structural",
+                "label": "spoon",
+                "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        674,
-                        1715,
-                        992,
-                        1920
+                        400,
+                        1514,
+                        472,
+                        1570
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "bowl",
+                "label": "spoon",
                 "type": "object",
                 "states": [
                     "static",
-                    "clean"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        598,
-                        1603,
-                        633,
-                        1702
+                        500,
+                        802,
+                        589,
+                        956
                     ]
                 },
                 "action_description": null
@@ -82,13 +82,18 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "near",
                 "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "near",
                 "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "near",
+                "object_id": 3
             },
             {
                 "subject_id": 1,
@@ -96,13 +101,13 @@
                 "object_id": 2
             },
             {
-                "subject_id": 3,
-                "predicate": "on_top_of",
+                "subject_id": 2,
+                "predicate": "on_the_left_of",
                 "object_id": 1
             },
             {
                 "subject_id": 3,
-                "predicate": "on_top_of",
+                "predicate": "on_the_left_of",
                 "object_id": 2
             }
         ]

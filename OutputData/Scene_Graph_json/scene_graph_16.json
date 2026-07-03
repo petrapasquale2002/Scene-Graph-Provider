@@ -1,7 +1,7 @@
 {
-    "frame_id": 7,
-    "timestamp_sec": 1779358809,
-    "timestamp_nanosec": 14538906,
+    "frame_id": 16,
+    "timestamp_sec": 1779358834,
+    "timestamp_nanosec": 405236550,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,10 +16,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        255,
-                        771,
-                        1077,
-                        1124
+                        150,
+                        742,
+                        1060,
+                        1097
                     ]
                 },
                 "action_description": "standing in the kitchen area and gesturing with hands"
@@ -34,10 +34,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        677,
-                        1438,
-                        997,
-                        1717
+                        605,
+                        1444,
+                        934,
+                        1742
                     ]
                 },
                 "action_description": null
@@ -52,28 +52,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        674,
-                        1715,
-                        992,
+                        600,
+                        1725,
+                        925,
                         1920
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "bowl",
-                "type": "object",
-                "states": [
-                    "static",
-                    "clean"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        598,
-                        1603,
-                        633,
-                        1702
                     ]
                 },
                 "action_description": null
@@ -82,27 +64,17 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "on_the_left_of",
                 "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "on_the_left_of",
                 "object_id": 2
             },
             {
                 "subject_id": 1,
                 "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
                 "object_id": 2
             }
         ]

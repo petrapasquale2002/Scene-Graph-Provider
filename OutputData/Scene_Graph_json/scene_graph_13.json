@@ -1,0 +1,110 @@
+{
+    "frame_id": 13,
+    "timestamp_sec": 1779358829,
+    "timestamp_nanosec": 472327808,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1372,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "reaching",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        325,
+                        0,
+                        727,
+                        771
+                    ]
+                },
+                "action_description": "reaching for and pulling open a kitchen drawer"
+            },
+            {
+                "id": 1373,
+                "label": "kitchen_cabinet",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        1080,
+                        1920
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1374,
+                "label": "drawer",
+                "type": "object",
+                "states": [
+                    "open",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        380,
+                        620,
+                        580
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1375,
+                "label": "drawer_handle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "held_by"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        300,
+                        600,
+                        450
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1374,
+                "predicate": "part_of",
+                "object_id": 1373
+            },
+            {
+                "subject_id": 1375,
+                "predicate": "part_of",
+                "object_id": 1374
+            },
+            {
+                "subject_id": 1372,
+                "predicate": "holding",
+                "object_id": 1375
+            },
+            {
+                "subject_id": 1372,
+                "predicate": "operating",
+                "object_id": 1374
+            },
+            {
+                "subject_id": 1372,
+                "predicate": "in_front_of",
+                "object_id": 1373
+            }
+        ]
+    }
+}
