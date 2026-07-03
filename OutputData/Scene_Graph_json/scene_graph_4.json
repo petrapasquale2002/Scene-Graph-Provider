@@ -1,7 +1,7 @@
 {
-    "frame_id": 15,
-    "timestamp_sec": 1779358834,
-    "timestamp_nanosec": 666248327,
+    "frame_id": 4,
+    "timestamp_sec": 1779358832,
+    "timestamp_nanosec": 400323925,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -12,65 +12,50 @@
                 "type": "human",
                 "states": [
                     "standing",
-                    "gesturing"
+                    "interacting"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        346,
-                        768,
-                        585,
-                        1080
+                        90,
+                        1194,
+                        391,
+                        1919
                     ]
                 },
-                "action_description": "standing and gesturing"
+                "action_description": "operating a faucet to fill a pot with water"
             },
             {
                 "id": 1,
-                "label": "chair",
+                "label": "spoon",
                 "type": "object",
                 "states": [
-                    "static"
+                    "static",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        750,
-                        520,
-                        902,
-                        862
+                        395,
+                        1567,
+                        472,
+                        1612
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "chair",
+                "label": "vase",
                 "type": "object",
                 "states": [
-                    "static"
+                    "static",
+                    "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        899,
-                        518,
-                        999,
-                        855
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        823,
-                        466,
-                        838,
-                        534
+                        506,
+                        1689,
+                        650,
+                        1790
                     ]
                 },
                 "action_description": null
@@ -88,9 +73,9 @@
                 "object_id": 2
             },
             {
-                "subject_id": 0,
-                "predicate": "gesturing",
-                "object_id": 3
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
+                "object_id": 2
             }
         ]
     }

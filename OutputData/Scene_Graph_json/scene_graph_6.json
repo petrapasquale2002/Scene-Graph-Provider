@@ -1,7 +1,7 @@
 {
-    "frame_id": 13,
-    "timestamp_sec": 1779358832,
-    "timestamp_nanosec": 400323925,
+    "frame_id": 6,
+    "timestamp_sec": 1779358834,
+    "timestamp_nanosec": 169268723,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -16,99 +16,82 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        792,
-                        0,
-                        1080,
-                        243
+                        99,
+                        1147,
+                        401,
+                        1919
                     ]
                 },
-                "action_description": "operating the faucet"
+                "action_description": "reaching towards the faucet to turn on the water"
             },
             {
                 "id": 1,
-                "label": "faucet",
+                "label": "spoon",
                 "type": "object",
                 "states": [
-                    "turned_on",
-                    "static"
+                    "static",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        317,
-                        84,
-                        585,
-                        146
+                        399,
+                        1456,
+                        470,
+                        1502
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "pot",
+                "label": "spoon",
                 "type": "object",
                 "states": [
-                    "empty",
-                    "static"
+                    "static",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        243,
-                        443,
-                        512,
-                        671
+                        395,
+                        1500,
+                        468,
+                        1543
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "spatula",
+                "label": "spoon",
                 "type": "object",
                 "states": [
                     "static",
-                    "held_by"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        null,
-                        null,
-                        null,
-                        null
+                        497,
+                        738,
+                        583,
+                        888
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "stove",
-                "type": "structural",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        192,
-                        553,
-                        1705,
-                        901
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 5,
-                "label": "pot",
+                "label": "vase",
                 "type": "object",
                 "states": [
-                    "empty",
-                    "static"
+                    "static",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        543,
-                        443,
-                        777,
-                        671
+                        501,
+                        1619,
+                        644,
+                        1715
                     ]
                 },
                 "action_description": null
@@ -117,7 +100,7 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "operating",
+                "predicate": "near",
                 "object_id": 1
             },
             {
@@ -128,22 +111,42 @@
             {
                 "subject_id": 0,
                 "predicate": "near",
-                "object_id": 5
+                "object_id": 3
             },
             {
-                "subject_id": 2,
-                "predicate": "on_top_of",
+                "subject_id": 0,
+                "predicate": "near",
                 "object_id": 4
             },
             {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 4
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 2
             },
             {
                 "subject_id": 3,
-                "predicate": "held_by",
-                "object_id": 0
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_the_left_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_the_right_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_the_right_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_the_right_of",
+                "object_id": 3
             }
         ]
     }

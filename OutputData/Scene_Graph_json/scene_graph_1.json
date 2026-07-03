@@ -1,0 +1,88 @@
+{
+    "frame_id": 1,
+    "timestamp_sec": 1779358826,
+    "timestamp_nanosec": 368807255,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1360,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        18,
+                        797,
+                        1073,
+                        1329
+                    ]
+                },
+                "action_description": "standing at the counter and pouring liquid from a bottle into a pot"
+            },
+            {
+                "id": 1364,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "full",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        679,
+                        580,
+                        760,
+                        730
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "held_by",
+                    "moving"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        398,
+                        735,
+                        460,
+                        858
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1360,
+                "predicate": "holding",
+                "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "held_by",
+                "object_id": 1360
+            },
+            {
+                "subject_id": 1360,
+                "predicate": "near",
+                "object_id": 1364
+            },
+            {
+                "subject_id": 1364,
+                "predicate": "on_the_left_of",
+                "object_id": 1360
+            }
+        ]
+    }
+}

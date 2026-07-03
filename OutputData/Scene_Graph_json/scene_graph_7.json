@@ -1,0 +1,157 @@
+{
+    "frame_id": 7,
+    "timestamp_sec": 1779358829,
+    "timestamp_nanosec": 537658289,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "gesturing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        3,
+                        590,
+                        697,
+                        875
+                    ]
+                },
+                "action_description": "pointing at the oven"
+            },
+            {
+                "id": 1,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "interacting"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        915,
+                        583,
+                        1184,
+                        744
+                    ]
+                },
+                "action_description": "interacting with the oven"
+            },
+            {
+                "id": 2,
+                "label": "oven",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        390,
+                        160,
+                        620,
+                        540
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        240,
+                        100,
+                        390,
+                        540
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        620,
+                        100,
+                        950,
+                        540
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "countertop",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        240,
+                        0,
+                        950,
+                        160
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "pointed_by",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "operating",
+                "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 3,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 5,
+                "predicate": "above",
+                "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            }
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "frame_id": 3,
+    "timestamp_sec": 1779358830,
+    "timestamp_nanosec": 598890581,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "neutral"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        542,
+                        4,
+                        923,
+                        787
+                    ]
+                },
+                "action_description": "standing in the background"
+            }
+        ],
+        "relationships": []
+    }
+}

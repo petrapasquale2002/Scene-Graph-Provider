@@ -80,29 +80,61 @@ class VLMClient(BaseFoundationClient):
 
     @staticmethod
     def _extract_json(raw: str) -> str:
-
         """
         Robustly extract a JSON object or array from a raw model response.
-
-        Tries three strategies in order:
-          1. Direct parse — the response is already valid JSON.
-          2. Strip markdown fences (```json ... ```) then parse.
-          3. Regex scan — find the first '{...}' or '[...]' block and parse it.
-
-        Returns the first valid JSON string found, or raises ValueError if none found.
+        Strips <think>...</think> blocks first, then uses character-by-character
+        brace/bracket matching to locate the correct JSON segment, and falls back
+        to regex scanning or direct parsing.
         """
         if not raw or not raw.strip():
             raise ValueError("Empty response from model")
 
-        # Strategy 1: direct parse
+        # Strip think blocks first
+        cleaned_raw = VLMClient._strip_think_blocks(raw)
+
+        # Strategy 1: Character-by-character brace matching (most robust for text + JSON)
+        # Search for any opening brace '{' or bracket '['
+        for start_idx in range(len(cleaned_raw)):
+            char = cleaned_raw[start_idx]
+            if char in ('{', '['):
+                start_char = char
+                end_char = '}' if start_char == '{' else ']'
+                depth = 0
+                in_string = False
+                escape = False
+                for idx in range(start_idx, len(cleaned_raw)):
+                    c = cleaned_raw[idx]
+                    if escape:
+                        escape = False
+                        continue
+                    if c == '\\':
+                        escape = True
+                        continue
+                    if c == '"':
+                        in_string = not in_string
+                        continue
+                    if not in_string:
+                        if c == start_char:
+                            depth += 1
+                        elif c == end_char:
+                            depth -= 1
+                            if depth == 0:
+                                candidate = cleaned_raw[start_idx:idx+1]
+                                try:
+                                    json.loads(candidate)
+                                    return candidate
+                                except json.JSONDecodeError:
+                                    break
+
+        # Strategy 2: Direct parse
         try:
-            json.loads(raw)
-            return raw
+            json.loads(cleaned_raw)
+            return cleaned_raw
         except json.JSONDecodeError:
             pass
 
-        # Strategy 2: strip markdown code fences
-        stripped = re.sub(r'^```(?:json)?\s*', '', raw.strip(), flags=re.IGNORECASE)
+        # Strategy 3: Strip markdown code fences
+        stripped = re.sub(r'^```(?:json)?\s*', '', cleaned_raw.strip(), flags=re.IGNORECASE)
         stripped = re.sub(r'```\s*$', '', stripped.strip())
         try:
             json.loads(stripped)
@@ -110,9 +142,9 @@ class VLMClient(BaseFoundationClient):
         except json.JSONDecodeError:
             pass
 
-        # Strategy 3: find the first JSON object or array block
+        # Strategy 4: Regex scan (find the first '{...}' or '[...]' block)
         for pattern in (r'(\{.*\})', r'(\[.*\])'):
-            match = re.search(pattern, raw, flags=re.DOTALL)
+            match = re.search(pattern, cleaned_raw, flags=re.DOTALL)
             if match:
                 candidate = match.group(1)
                 try:
@@ -161,6 +193,11 @@ class VLMClient(BaseFoundationClient):
         assistant_prefix = kwargs.get("assistant_prefix", None)
         extra_body = kwargs.get("extra_body", None)
 
+        # Qwen3 reasoning control: "none" disables thinking tokens for clean structured output.
+        # "hidden" keeps reasoning internal but returns only the final answer.
+        # Omit entirely to use the model default.
+        reasoning_effort = kwargs.get("reasoning_effort", None)
+
         # Tool calling kwargs (takes priority over json_schema response_format)
         tools = kwargs.get("tools", None)
         tool_choice = kwargs.get("tool_choice", None)
@@ -208,6 +245,10 @@ class VLMClient(BaseFoundationClient):
             "temperature": temperature,
             "top_p": top_p,
         }
+
+        # Pass reasoning_effort if explicitly set (e.g. "none" to fully disable Qwen3 thinking)
+        if reasoning_effort is not None:
+            params["reasoning_effort"] = reasoning_effort
 
         if tools:
             # Tool calling path — takes priority over all response_format strategies.
