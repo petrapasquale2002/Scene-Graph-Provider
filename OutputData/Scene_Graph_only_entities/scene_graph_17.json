@@ -1,0 +1,77 @@
+{
+    "frame_id": 17,
+    "timestamp_sec": 1783000101,
+    "timestamp_nanosec": 848477455,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        603,
+                        312,
+                        952
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        473,
+                        506,
+                        720,
+                        833
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        524,
+                        361,
+                        542,
+                        448
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 1
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 1
+            }
+        ]
+    }
+}

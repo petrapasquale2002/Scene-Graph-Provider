@@ -223,13 +223,13 @@ fireCrawlKey.env
 lib/
 lib64/
 bin/
-Outputs_VLM/
+OutputData/Outputs_VLM/
 Body_image_pool/
 Body_Image_pool/
-Body_json_outputs/
+OutputData/Body_json_outputs/
 Entity_image_pool/
 Entity_Image_pool/
-Entity_json_outputs/
+OutputData/Entity_json_outputs/
 Raw_image_json/
 Raw_Image_json/
 Raw_image_pool/
@@ -238,4 +238,6 @@ BodySubVLM.py
 EntitySubVLM.py
 MinimalSub_entityDetected.py
 RawImageVLM.py
+OutputData/Scene_Graph_Image_pool/
+OutputData/Scene_Graph_json/
 

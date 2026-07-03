@@ -21,7 +21,7 @@ from pathlib import Path
 
 DEFAULT_JSON_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "OutputData", "Scene_Graph_json"
+    "OutputData", "Scene_Graph_only_entities"
 )
 
 # ─────────────────────────────────────────────────────────────────────────────

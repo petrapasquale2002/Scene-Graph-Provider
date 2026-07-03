@@ -1,0 +1,105 @@
+{
+    "frame_id": 8,
+    "timestamp_sec": 1783000155,
+    "timestamp_nanosec": 447714889,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 4109,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        198,
+                        547,
+                        473,
+                        911
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4113,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        551,
+                        499,
+                        718,
+                        753
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4110,
+                "label": "cup",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        602,
+                        431,
+                        672,
+                        518
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4112,
+                "label": "dining table",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        261,
+                        425,
+                        718,
+                        802
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 4110,
+                "predicate": "on_top_of",
+                "object_id": 4112
+            },
+            {
+                "subject_id": 4109,
+                "predicate": "next_to",
+                "object_id": 4112
+            },
+            {
+                "subject_id": 4113,
+                "predicate": "next_to",
+                "object_id": 4112
+            },
+            {
+                "subject_id": 4109,
+                "predicate": "on_the_left_of",
+                "object_id": 4113
+            }
+        ]
+    }
+}

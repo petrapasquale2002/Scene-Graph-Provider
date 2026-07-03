@@ -1,0 +1,283 @@
+{
+    "frame_id": 4,
+    "timestamp_sec": 1783000140,
+    "timestamp_nanosec": 847079379,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "microwave",
+                "type": "object",
+                "states": [
+                    "turned_on",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        416,
+                        0,
+                        587,
+                        230
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "closed",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        230,
+                        416
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "closed",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        587,
+                        0,
+                        720,
+                        230
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "countertop",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        230,
+                        0,
+                        416,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "dishwasher",
+                "type": "object",
+                "states": [
+                    "closed",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        416,
+                        230,
+                        587,
+                        490
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "water_dispenser",
+                "type": "object",
+                "states": [
+                    "turned_on",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        230,
+                        230,
+                        416,
+                        350
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "sink",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        416,
+                        490,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "dish_rack",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        230,
+                        350,
+                        416,
+                        490
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 8,
+                "label": "wall",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        230,
+                        416,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 9,
+                "label": "floor",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        587,
+                        0,
+                        720,
+                        960
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 0,
+                "predicate": "below",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 1,
+                "predicate": "above",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "above",
+                "object_id": 3
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 4
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 6
+            },
+            {
+                "subject_id": 4,
+                "predicate": "below",
+                "object_id": 3
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 9
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_the_right_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_the_right_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 7,
+                "predicate": "next_to",
+                "object_id": 6
+            },
+            {
+                "subject_id": 8,
+                "predicate": "behind",
+                "object_id": 3
+            },
+            {
+                "subject_id": 9,
+                "predicate": "below",
+                "object_id": 4
+            }
+        ]
+    }
+}

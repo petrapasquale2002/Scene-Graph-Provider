@@ -1,0 +1,267 @@
+{
+    "frame_id": 14,
+    "timestamp_sec": 1783000094,
+    "timestamp_nanosec": 244686958,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "countertop",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        250,
+                        960,
+                        350
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "cabinets",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "closed"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        350,
+                        960,
+                        750
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "wall",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        960,
+                        250
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "floor",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        750,
+                        960,
+                        960
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3781,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        320,
+                        409,
+                        361,
+                        477
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "kettle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        250,
+                        50,
+                        350,
+                        150
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "mug",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        300,
+                        350,
+                        340,
+                        400
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "cardboard_box",
+                "type": "object",
+                "states": [
+                    "static",
+                    "closed"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        450,
+                        200,
+                        550,
+                        300
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "green_box",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        600,
+                        200,
+                        650,
+                        300
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 8,
+                "label": "plates",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        250,
+                        300,
+                        300,
+                        350
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "behind",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3781,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 8,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3781,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 3781,
+                "predicate": "next_to",
+                "object_id": 6
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_the_left_of",
+                "object_id": 3781
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_the_right_of",
+                "object_id": 3781
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_the_left_of",
+                "object_id": 3781
+            },
+            {
+                "subject_id": 8,
+                "predicate": "on_the_left_of",
+                "object_id": 3781
+            }
+        ]
+    }
+}

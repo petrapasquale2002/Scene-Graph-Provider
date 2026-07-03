@@ -1,0 +1,87 @@
+{
+    "frame_id": 10,
+    "timestamp_sec": 1783000160,
+    "timestamp_nanosec": 444845042,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        429,
+                        0,
+                        858,
+                        330
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        414,
+                        573,
+                        803,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "dining table",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        373,
+                        185,
+                        798,
+                        695
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 2,
+                "predicate": "between",
+                "object_id": 0
+            }
+        ]
+    }
+}

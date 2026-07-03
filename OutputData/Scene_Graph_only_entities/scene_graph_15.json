@@ -1,0 +1,116 @@
+{
+    "frame_id": 15,
+    "timestamp_sec": 1783000097,
+    "timestamp_nanosec": 948963144,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "cup",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        459,
+                        458,
+                        535,
+                        532
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        0,
+                        376,
+                        36
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        483,
+                        563,
+                        561,
+                        670
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "oven",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "turned_off"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        604,
+                        299,
+                        951,
+                        506
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_the_right_of",
+                "object_id": 0
+            }
+        ]
+    }
+}

@@ -80,20 +80,20 @@ class MultiTopicListener(Node):
             EntityArray,
             "/entities/detected"
         )
-        self.human_sub = Subscriber(
-            self,
-            EntityArray,
-            "/humans/detected"
-        )
+        # self.human_sub = Subscriber(
+        #     self,
+        #     EntityArray,
+        #     "/humans/detected"
+        # )
    
 
         self.sync = ApproximateTimeSynchronizer(
-            [self.image_sub, self.entity_sub, self.human_sub],
+            [self.image_sub, self.entity_sub],# self.human_sub],
             queue_size=10,
             slop=0.5
         )
         self.sync.registerCallback(self.synchronized_callback)
-        self.get_logger().info("Subscribed and synchronized image, entity, and human topics.")
+        self.get_logger().info("Subscribed and synchronized image and entities.")
 
         # Create a publisher to send the Scene Graph to the LLM Decision Maker                                                                                                   
         self.scene_graph_pub = self.create_publisher(                                                                                                                            
@@ -117,7 +117,7 @@ class MultiTopicListener(Node):
             'reasoning_effort': 'none',  # Disabilita il thinking mode di Qwen3 per avere output diretto
         }
 
-    def synchronized_callback(self, image_msg, entity_msg, human_msg):
+    def synchronized_callback(self, image_msg, entity_msg):#, human_msg):
         self.counter_ += 1
         self.get_logger().info(f"Received synchronized Data. Counter: {self.counter_}")
 
@@ -156,23 +156,23 @@ class MultiTopicListener(Node):
                         # Build phrase with id, label and bounding box (absolute pixel coords).
                         entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
                 
-                # create a string representation of the human bodies information from human_msg
-                human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
+                # # create a string representation of the human bodies information from human_msg
+                # human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
 
-                if not human_msg.entity_array:
-                    human_info += "No human bodies detected in this frame.\n"
-                else:
-                    for human in human_msg.entity_array:
-                        bbox = human.bbox_xyxy
+                # if not human_msg.entity_array:
+                #     human_info += "No human bodies detected in this frame.\n"
+                # else:
+                #     for human in human_msg.entity_array:
+                #         bbox = human.bbox_xyxy
 
-                        # Denormalize bboxes 
-                        x_min = int(bbox.xmin * pixels_width)
-                        y_min = int(bbox.ymin * pixels_height)
-                        x_max = int(bbox.xmax * pixels_width)
-                        y_max = int(bbox.ymax * pixels_height)
+                #         # Denormalize bboxes 
+                #         x_min = int(bbox.xmin * pixels_width)
+                #         y_min = int(bbox.ymin * pixels_height)
+                #         x_max = int(bbox.xmax * pixels_width)
+                #         y_max = int(bbox.ymax * pixels_height)
 
-                        # Build phrase with id, label and bounding box (absolute pixel coords).
-                        human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
+                #         # Build phrase with id, label and bounding box (absolute pixel coords).
+                #         human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
 
                 # ----------------------------------------------------------------
                 # 4. Build the Scene Graph prompt for Qwen3.6-27b 
@@ -195,7 +195,7 @@ class MultiTopicListener(Node):
 
                 --- SENSOR DATA (IMAGE: {pixels_width}x{pixels_height} px) ---
                 {entities_info}
-                {human_info}
+                (MISSING HUMAN INFO BUT IGNORE FOR NOW)
                 --------------------------------------------------------------
 
                 Use the raw image just as a reference for scene graph generation output.
@@ -363,7 +363,7 @@ class MultiTopicListener(Node):
 
                 
                 # Save the Scene Graph JSON metadata                                                                                                                          
-                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "OutputData/Scene_Graph_json")                                                                          
+                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "OutputData/Scene_Graph_only_entities")                                                                          
                 os.makedirs(json_dir, exist_ok=True)                                                                                                                             
                 json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")                                                                                          
                                                                                                                                                                                     

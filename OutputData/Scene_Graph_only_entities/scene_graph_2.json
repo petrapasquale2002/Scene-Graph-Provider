@@ -1,0 +1,61 @@
+{
+    "frame_id": 2,
+    "timestamp_sec": 1783000138,
+    "timestamp_nanosec": 47729881,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "refrigerator",
+                "type": "structural",
+                "states": [
+                    "closed",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        180,
+                        60,
+                        947,
+                        434
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "microwave",
+                "type": "object",
+                "states": [
+                    "closed",
+                    "static",
+                    "turned_off"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        427,
+                        486,
+                        600,
+                        720
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1,
+                "predicate": "on_the_right_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            }
+        ]
+    }
+}

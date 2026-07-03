@@ -1,0 +1,82 @@
+{
+    "frame_id": 16,
+    "timestamp_sec": 1783000100,
+    "timestamp_nanosec": 47731846,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 3794,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "empty",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        480,
+                        535,
+                        743,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3790,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "empty",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        540,
+                        166,
+                        910,
+                        445
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3793,
+                "label": "dining table",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        420,
+                        235,
+                        806,
+                        708
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 3790,
+                "predicate": "next_to",
+                "object_id": 3793
+            },
+            {
+                "subject_id": 3794,
+                "predicate": "next_to",
+                "object_id": 3793
+            },
+            {
+                "subject_id": 3790,
+                "predicate": "on_the_left_of",
+                "object_id": 3794
+            }
+        ]
+    }
+}

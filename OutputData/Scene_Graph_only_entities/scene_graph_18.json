@@ -1,0 +1,59 @@
+{
+    "frame_id": 18,
+    "timestamp_sec": 1783000103,
+    "timestamp_nanosec": 247174972,
+    "width": 720,
+    "height": 960,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        455,
+                        451,
+                        720,
+                        810
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        498,
+                        249,
+                        925
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "on_the_right_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
+                "object_id": 0
+            }
+        ]
+    }
+}
