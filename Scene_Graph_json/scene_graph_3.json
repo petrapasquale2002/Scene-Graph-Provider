@@ -1,18 +1,18 @@
 {
     "frame_id": 3,
     "timestamp_sec": 1779358809,
-    "timestamp_nanosec": 137188313,
+    "timestamp_nanosec": 167902109,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "kitchen_island",
+                "label": "kitchen_counter",
                 "type": "structural",
                 "states": [
-                    "static",
-                    "clean"
+                    "clean",
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
@@ -27,28 +27,63 @@
             {
                 "id": 1,
                 "label": "dining_table",
-                "type": "object",
+                "type": "structural",
                 "states": [
-                    "static",
-                    "clean"
+                    "clean",
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
                         700,
                         500,
                         1200,
-                        800
+                        900
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "closed",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        100,
+                        100,
+                        300,
+                        500
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "human",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "gesturing"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        250,
+                        550,
+                        900
+                    ]
+                },
+                "action_description": "gesturing while standing"
+            },
+            {
+                "id": 4,
                 "label": "chair",
                 "type": "object",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
@@ -61,89 +96,41 @@
                 "action_description": null
             },
             {
-                "id": 3,
-                "label": "chair",
-                "type": "object",
-                "states": [
-                    "static",
-                    "clean"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        900,
-                        600,
-                        1100,
-                        900
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
+                "id": 5,
                 "label": "bowl",
                 "type": "object",
                 "states": [
-                    "static",
-                    "clean",
-                    "empty"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        820,
+                        850,
                         450,
-                        880,
-                        520
+                        950,
+                        550
                     ]
                 },
                 "action_description": null
-            },
-            {
-                "id": 5,
-                "label": "human",
-                "type": "human",
-                "states": [
-                    "standing",
-                    "gesturing"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        350,
-                        100,
-                        600,
-                        950
-                    ]
-                },
-                "action_description": "gesturing while standing"
             }
         ],
         "relationships": [
             {
-                "subject_id": 5,
+                "subject_id": 3,
                 "predicate": "near",
                 "object_id": 0
             },
             {
-                "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": null
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": null
-            },
-            {
-                "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 1
-            },
-            {
                 "subject_id": 3,
-                "predicate": "next_to",
+                "predicate": "facing",
                 "object_id": 1
             },
             {
                 "subject_id": 4,
+                "predicate": "next_to",
+                "object_id": 1
+            },
+            {
+                "subject_id": 5,
                 "predicate": "on_top_of",
                 "object_id": 1
             }

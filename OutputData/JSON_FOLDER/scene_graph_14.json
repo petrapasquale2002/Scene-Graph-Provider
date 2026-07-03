@@ -1,0 +1,48 @@
+{
+    "frame_id": 14,
+    "timestamp_sec": 1779358829,
+    "timestamp_nanosec": 705420462,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1372,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "static",
+                    "neutral"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        5373923792
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1374,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "static",
+                    "neutral"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        5539537241186
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1372,
+                "predicate": "near",
+                "object_id": 1374
+            }
+        ]
+    }
+}

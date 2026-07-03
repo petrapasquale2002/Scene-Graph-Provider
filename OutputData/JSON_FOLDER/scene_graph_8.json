@@ -1,0 +1,85 @@
+{
+    "frame_id": 8,
+    "timestamp_sec": 1779358810,
+    "timestamp_nanosec": 374836407,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1325,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        28078010751086
+                    ]
+                },
+                "action_description": "standing"
+            },
+            {
+                "id": 1327,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        67014239731679
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1328,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        66616809661906
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1329,
+                "label": "clock",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        28318503611905
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1325,
+                "predicate": "on_the_left_of",
+                "object_id": 1327
+            },
+            {
+                "subject_id": 1325,
+                "predicate": "on_the_left_of",
+                "object_id": 1328
+            },
+            {
+                "subject_id": 1325,
+                "predicate": "on_the_left_of",
+                "object_id": 1329
+            }
+        ]
+    }
+}

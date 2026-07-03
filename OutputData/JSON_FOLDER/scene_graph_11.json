@@ -1,0 +1,46 @@
+{
+    "frame_id": 11,
+    "timestamp_sec": 1779358828,
+    "timestamp_nanosec": 832891889,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        3251659809
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "neutral"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        3251659809
+                    ]
+                },
+                "action_description": "interacting with object ID 0"
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1,
+                "predicate": "interacting",
+                "object_id": 0
+            }
+        ]
+    }
+}

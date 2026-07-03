@@ -1,0 +1,66 @@
+{
+    "frame_id": 9,
+    "timestamp_sec": 1779358822,
+    "timestamp_nanosec": 235723696,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 0,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        25479910421065
+                    ]
+                },
+                "action_description": "standing"
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        64214359401694
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        64016948551919
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 2
+            }
+        ]
+    }
+}

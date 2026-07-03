@@ -1,0 +1,45 @@
+{
+    "frame_id": 6,
+    "timestamp_sec": 1779358801,
+    "timestamp_nanosec": 104644933,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1315,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        2106001075984
+                    ]
+                },
+                "action_description": "standing"
+            },
+            {
+                "id": 1000,
+                "label": "floor",
+                "type": "structural",
+                "states": [],
+                "spatial_info": {
+                    "box_2d": [
+                        1000010801920
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1315,
+                "predicate": "on_top_of",
+                "object_id": 1000
+            }
+        ]
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "frame_id": 10,
+    "timestamp_sec": 1779358825,
+    "timestamp_nanosec": 367829436,
+    "width": 1920,
+    "height": 1080,
+    "scene_graph": {
+        "entities": [
+            {
+                "id": 1360,
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        2171210751348
+                    ]
+                },
+                "action_description": "standing near the bowl"
+            },
+            {
+                "id": 1364,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        679581760728
+                    ]
+                },
+                "action_description": null
+            }
+        ],
+        "relationships": [
+            {
+                "subject_id": 1360,
+                "predicate": "near",
+                "object_id": 1364
+            }
+        ]
+    }
+}

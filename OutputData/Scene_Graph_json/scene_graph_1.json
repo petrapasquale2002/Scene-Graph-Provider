@@ -1,96 +1,94 @@
 {
     "frame_id": 1,
-    "timestamp_sec": 1779358771,
-    "timestamp_nanosec": 869808407,
+    "timestamp_sec": 1779358809,
+    "timestamp_nanosec": 14538906,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "human",
+                "label": "person",
                 "type": "human",
                 "states": [
                     "standing",
-                    "interacting"
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        513,
-                        990
+                        369,
+                        738,
+                        585,
+                        1080
                     ]
                 },
-                "action_description": "stirring the pot"
+                "action_description": "gesturing while standing"
             },
             {
                 "id": 1,
-                "label": "pot",
-                "type": "object",
+                "label": "kitchen_island",
+                "type": "structural",
                 "states": [
-                    "open",
-                    "filled",
-                    "hot"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        247,
-                        93,
-                        718,
-                        677
+                        338,
+                        361,
+                        766,
+                        1080
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "spatula",
+                "label": "chair",
                 "type": "object",
                 "states": [
-                    "used"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        0,
-                        0
+                        748,
+                        627,
+                        894,
+                        923
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "stove",
-                "type": "structural",
+                "label": "chair",
+                "type": "object",
                 "states": [
-                    "on"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        0,
-                        0
+                        893,
+                        624,
+                        1000,
+                        918
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "knife_block",
+                "label": "bowl",
                 "type": "object",
                 "states": [
-                    "closed",
+                    "full",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        0,
-                        0
+                        834,
+                        554,
+                        886,
+                        587
                     ]
                 },
                 "action_description": null
@@ -99,23 +97,23 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "holding",
-                "object_id": 2
-            },
-            {
-                "subject_id": 0,
-                "predicate": "interacting",
+                "predicate": "near",
                 "object_id": 1
             },
             {
-                "subject_id": 1,
-                "predicate": "on_top_of",
+                "subject_id": 0,
+                "predicate": "gesturing_towards",
+                "object_id": 4
+            },
+            {
+                "subject_id": 2,
+                "predicate": "next_to",
                 "object_id": 3
             },
             {
-                "subject_id": 1,
-                "predicate": "near",
-                "object_id": 4
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 1
             }
         ]
     }
