@@ -232,12 +232,3 @@ Entity_Image_pool/
 OutputData/Entity_json_outputs/
 Raw_image_json/
 Raw_Image_json/
-Raw_image_pool/
-Raw_Image_pool/
-BodySubVLM.py
-EntitySubVLM.py
-MinimalSub_entityDetected.py
-RawImageVLM.py
-OutputData/Scene_Graph_Image_pool/
-OutputData/Scene_Graph_json/
-
