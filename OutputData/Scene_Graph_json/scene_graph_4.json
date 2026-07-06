@@ -1,43 +1,114 @@
 {
     "frame_id": 4,
-    "timestamp_sec": 1779358801,
-    "timestamp_nanosec": 4088311,
-    "width": 1920,
-    "height": 1080,
+    "timestamp_sec": 1783341368,
+    "timestamp_nanosec": 385508545,
+    "width": 1280,
+    "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "person",
-                "type": "human",
-                "states": [
-                    "standing",
-                    "gesturing"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        209,
-                        599,
-                        1075,
-                        999
-                    ]
-                },
-                "action_description": "standing and gesturing with hands"
-            },
-            {
-                "id": 1,
-                "label": "chair",
+                "label": "shelf",
                 "type": "structural",
                 "states": [
                     "static",
-                    "empty"
+                    "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        727,
-                        1531,
-                        1077,
-                        1882
+                        0,
+                        0,
+                        720,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "empty",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        267,
+                        460,
+                        359,
+                        623
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "pot",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        267,
+                        623,
+                        359,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "plate",
+                "type": "object",
+                "states": [
+                    "static",
+                    "dirty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        360,
+                        460,
+                        450,
+                        550
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "debris",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        480,
+                        430,
+                        520
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        100,
+                        100,
+                        300,
+                        400
                     ]
                 },
                 "action_description": null
@@ -45,14 +116,39 @@
         ],
         "relationships": [
             {
-                "subject_id": 0,
-                "predicate": "on_the_left_of",
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "inside",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "above",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "next_to",
                 "object_id": 1
             },
             {
-                "subject_id": 0,
-                "predicate": "near",
-                "object_id": 1
+                "subject_id": 5,
+                "predicate": "behind",
+                "object_id": 0
             }
         ]
     }

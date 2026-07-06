@@ -1,43 +1,114 @@
 {
     "frame_id": 6,
-    "timestamp_sec": 1779358801,
-    "timestamp_nanosec": 68266647,
-    "width": 1920,
-    "height": 1080,
+    "timestamp_sec": 1783341368,
+    "timestamp_nanosec": 719308105,
+    "width": 1280,
+    "height": 720,
     "scene_graph": {
         "entities": [
             {
-                "id": 1315,
-                "label": "person",
-                "type": "human",
+                "id": 0,
+                "label": "shelf",
+                "type": "structural",
                 "states": [
-                    "standing",
-                    "gesturing"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        210,
-                        597,
-                        1073,
-                        982
+                        0,
+                        0,
+                        720,
+                        720
                     ]
                 },
-                "action_description": "standing in front of the kitchen island and gesturing with hands"
+                "action_description": null
             },
             {
-                "id": 1316,
-                "label": "chair",
+                "id": 1,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "empty",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        314,
+                        502,
+                        412,
+                        660
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "pot",
                 "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        729,
-                        1535,
-                        1077,
-                        1887
+                        314,
+                        660,
+                        412,
+                        720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "plate",
+                "type": "object",
+                "states": [
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        412,
+                        502,
+                        510,
+                        660
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        314,
+                        314
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "water_bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        660,
+                        100,
+                        720
                     ]
                 },
                 "action_description": null
@@ -45,14 +116,39 @@
         ],
         "relationships": [
             {
-                "subject_id": 1315,
-                "predicate": "on_the_left_of",
-                "object_id": 1316
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 0
             },
             {
-                "subject_id": 1316,
-                "predicate": "on_the_right_of",
-                "object_id": 1315
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 3,
+                "predicate": "below",
+                "object_id": 1
+            },
+            {
+                "subject_id": 4,
+                "predicate": "behind",
+                "object_id": 0
             }
         ]
     }

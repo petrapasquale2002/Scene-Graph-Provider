@@ -21,7 +21,7 @@ from pathlib import Path
 
 DEFAULT_JSON_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "OutputData", "Scene_Graph_only_entities"
+    "OutputData", "Scene_Graph_json"
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -306,6 +306,21 @@ const EDGE_COLOR = {
   pointed_by:"#2ecc71", looking_at:"#2ecc71", operating:"#2ecc71",
 };
 
+// Pose labels produced by the VLM for human entities
+const HUMAN_POSES = new Set([
+  "standing", "sitting", "walking",
+  "pointing", "raising_right_hand", "raising_left_hand", "waving"
+]);
+const POSE_EMOJI = {
+  standing:           "🧍",
+  sitting:            "🪑",
+  walking:            "🚶",
+  pointing:           "👉",
+  raising_right_hand: "🙋",
+  raising_left_hand:  "🙋",
+  waving:             "👋",
+};
+
 // ── vis.js setup ──────────────────────────────────────────────────────────
 const nodesDS = new vis.DataSet([]);
 const edgesDS = new vis.DataSet([]);
@@ -346,24 +361,49 @@ function relayout() {
 function buildVisNodes(entities) {
   return entities.map(e => {
     const s = NODE_STYLE[e.type] || NODE_STYLE._default;
-    const states = (e.states || []).join(", ");
-    const box = (e.spatial_info?.box_2d || []).join(", ");
+    const allStates = e.states || [];
+    const box    = (e.spatial_info?.box_2d || []).join(", ");
     const action = e.action_description || "";
-    const tooltip =
+
+    // ── Human nodes: split pose vs activity states ──────────────────────
+    let nodeLabel = e.label;
+    let tooltip =
       `<b>${e.label}</b><br>` +
       `Type: ${e.type}<br>` +
-      `States: ${states || "—"}<br>` +
+      `States: ${allStates.join(", ") || "—"}<br>` +
       `BBox: [${box || "—"}]` +
       (action ? `<br>Action: ${action}` : "");
+
+    if (e.type === "human") {
+      const poses      = allStates.filter(st => HUMAN_POSES.has(st));
+      const activities = allStates.filter(st => !HUMAN_POSES.has(st));
+      const poseStr    = poses.map(p => (POSE_EMOJI[p] || "🧍") + " " + p).join(" · ");
+
+      // Node label: name on first line, pose on second line
+      nodeLabel = poseStr ? `${e.label}\n${poseStr}` : e.label;
+
+      // Richer tooltip for humans
+      tooltip =
+        `<b>${e.label}</b><br>` +
+        `Type: human<br>` +
+        (poses.length      ? `<b>Pose:</b> ${poses.join(", ")}<br>`       : "") +
+        (activities.length ? `<b>Activity:</b> ${activities.join(", ")}<br>` : "") +
+        `BBox: [${box || "—"}]` +
+        (action ? `<br><i>${action}</i>` : "");
+    }
+
     return {
       id: e.id,
-      label: e.label,
+      label: nodeLabel,
       title: tooltip,
       color: { background: s.bg, border: s.border,
                highlight: { background: s.bg, border: "#ffffff" },
                hover:      { background: s.bg, border: "#ffffff" } },
-      font:  { color: s.font, size: 14, face: "Inter, sans-serif" },
-      shape: "ellipse", size: 28, borderWidth: 2,
+      font:  { color: s.font, size: 14, face: "Inter, sans-serif",
+               multi: "html" },
+      shape: e.type === "human" ? "ellipse" : "ellipse",
+      size:  e.type === "human" ? 34 : 28,
+      borderWidth: e.type === "human" ? 3 : 2,
     };
   });
 }
@@ -442,10 +482,21 @@ function updateGraph(data) {
   const el = document.getElementById("entityList");
   el.innerHTML = entities.map(e => {
     const s = NODE_STYLE[e.type] || NODE_STYLE._default;
+    // For humans: extract pose states and show as a chip
+    const poses = e.type === "human"
+      ? (e.states || []).filter(st => HUMAN_POSES.has(st))
+      : [];
+    const poseChip = poses.length
+      ? `<span style="font-size:10px;background:rgba(155,89,182,0.25);
+           border:1px solid #9b59b6;border-radius:10px;padding:1px 6px;
+           color:#d7bde2;margin-left:4px;white-space:nowrap">
+           ${poses.map(p => (POSE_EMOJI[p]||"🧍")+" "+p).join(" · ")}</span>`
+      : "";
     return `<div class="entity-item" onclick="focusNode(${e.id})">
       <span class="entity-dot" style="background:${s.bg}"></span>
       <span class="entity-name">${e.label}</span>
       <span class="entity-type">${e.type}</span>
+      ${poseChip}
     </div>`;
   }).join("");
 

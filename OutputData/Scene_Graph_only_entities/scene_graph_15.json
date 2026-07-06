@@ -1,51 +1,71 @@
 {
     "frame_id": 15,
-    "timestamp_sec": 1783000097,
-    "timestamp_nanosec": 948963144,
+    "timestamp_sec": 1783000139,
+    "timestamp_nanosec": 147781552,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "cup",
-                "type": "object",
+                "label": "refrigerator",
+                "type": "structural",
                 "states": [
+                    "closed",
                     "static",
-                    "clean",
-                    "empty"
+                    "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        459,
-                        458,
-                        535,
-                        532
+                        170,
+                        0,
+                        921,
+                        257
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "bowl",
+                "label": "microwave",
                 "type": "object",
                 "states": [
+                    "turned_on",
                     "static",
                     "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        350,
-                        0,
-                        376,
-                        36
+                        399,
+                        272,
+                        548,
+                        532
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "bowl",
+                "label": "cabinet",
+                "type": "structural",
+                "states": [
+                    "closed",
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        620,
+                        960
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "water_dispenser",
                 "type": "object",
                 "states": [
                     "static",
@@ -53,28 +73,29 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        483,
-                        563,
-                        561,
-                        670
+                        340,
+                        620,
+                        520,
+                        760
                     ]
                 },
                 "action_description": null
             },
             {
-                "id": 3,
-                "label": "oven",
+                "id": 4,
+                "label": "dishwasher",
                 "type": "structural",
                 "states": [
+                    "closed",
                     "static",
-                    "turned_off"
+                    "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        604,
-                        299,
-                        951,
-                        506
+                        520,
+                        620,
+                        760,
+                        960
                     ]
                 },
                 "action_description": null
@@ -83,18 +104,23 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 3
+                "predicate": "on_the_left_of",
+                "object_id": 1
             },
             {
                 "subject_id": 1,
-                "predicate": "on_top_of",
+                "predicate": "inside",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
                 "object_id": 3
             },
             {
-                "subject_id": 2,
+                "subject_id": 3,
                 "predicate": "on_top_of",
-                "object_id": 3
+                "object_id": 4
             },
             {
                 "subject_id": 0,
@@ -102,14 +128,9 @@
                 "object_id": 2
             },
             {
-                "subject_id": 1,
-                "predicate": "on_the_left_of",
-                "object_id": 0
-            },
-            {
                 "subject_id": 2,
-                "predicate": "on_the_right_of",
-                "object_id": 0
+                "predicate": "next_to",
+                "object_id": 4
             }
         ]
     }

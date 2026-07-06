@@ -1,25 +1,27 @@
 {
-    "frame_id": 18,
-    "timestamp_sec": 1783000146,
-    "timestamp_nanosec": 144597457,
-    "width": 720,
-    "height": 960,
+    "frame_id": 19,
+    "timestamp_sec": 1783341355,
+    "timestamp_nanosec": 150627441,
+    "width": 1280,
+    "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "microwave",
+                "label": "bowl",
                 "type": "object",
                 "states": [
+                    "empty",
+                    "clean",
                     "static",
-                    "turned_off"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
+                        377,
                         382,
-                        46,
-                        492,
-                        232
+                        582,
+                        643
                     ]
                 },
                 "action_description": null
@@ -29,15 +31,17 @@
                 "label": "bowl",
                 "type": "object",
                 "states": [
+                    "empty",
+                    "clean",
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        328,
-                        502,
-                        350,
-                        551
+                        288,
+                        570,
+                        439,
+                        770
                     ]
                 },
                 "action_description": null
@@ -52,10 +56,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        300,
                         0,
-                        500,
-                        960
+                        0,
+                        720,
+                        1280
                     ]
                 },
                 "action_description": null
@@ -73,9 +77,19 @@
                 "object_id": 2
             },
             {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
                 "subject_id": 1,
                 "predicate": "on_the_right_of",
                 "object_id": 0
+            },
+            {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 1
             }
         ]
     }

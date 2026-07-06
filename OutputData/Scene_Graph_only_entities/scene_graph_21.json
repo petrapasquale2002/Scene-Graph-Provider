@@ -1,25 +1,26 @@
 {
-    "frame_id": 18,
-    "timestamp_sec": 1783000146,
-    "timestamp_nanosec": 144597457,
+    "frame_id": 21,
+    "timestamp_sec": 1783000152,
+    "timestamp_nanosec": 648555119,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "microwave",
+                "label": "cup",
                 "type": "object",
                 "states": [
                     "static",
-                    "turned_off"
+                    "clean",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        382,
-                        46,
-                        492,
-                        232
+                        431,
+                        387,
+                        487,
+                        450
                     ]
                 },
                 "action_description": null
@@ -30,14 +31,15 @@
                 "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "clean",
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        328,
-                        502,
-                        350,
-                        551
+                        438,
+                        480,
+                        492,
+                        561
                     ]
                 },
                 "action_description": null
@@ -52,9 +54,9 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        300,
+                        350,
                         0,
-                        500,
+                        550,
                         960
                     ]
                 },
@@ -71,6 +73,11 @@
                 "subject_id": 1,
                 "predicate": "on_top_of",
                 "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
             },
             {
                 "subject_id": 1,

@@ -1,61 +1,79 @@
 {
     "frame_id": 17,
-    "timestamp_sec": 1783000101,
-    "timestamp_nanosec": 848477455,
+    "timestamp_sec": 1783000143,
+    "timestamp_nanosec": 847802611,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "chair",
-                "type": "structural",
+                "label": "microwave",
+                "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "turned_off"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        603,
-                        312,
-                        952
+                        391,
+                        425,
+                        468,
+                        569
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "chair",
-                "type": "structural",
+                "label": "bowl",
+                "type": "object",
                 "states": [
                     "static",
                     "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        473,
-                        506,
-                        720,
-                        833
+                        345,
+                        301,
+                        371,
+                        355
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "bottle",
+                "label": "oven",
                 "type": "object",
                 "states": [
                     "static",
-                    "reachable"
+                    "turned_off"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        524,
-                        361,
-                        542,
-                        448
+                        363,
+                        283,
+                        495,
+                        419
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "sink",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        502,
+                        0,
+                        569,
+                        182
                     ]
                 },
                 "action_description": null
@@ -64,13 +82,23 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "next_to",
-                "object_id": 1
+                "predicate": "on_the_right_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 2
             },
             {
                 "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 1
+                "predicate": "on_the_right_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 2
             }
         ]
     }

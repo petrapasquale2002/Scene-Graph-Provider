@@ -1,68 +1,14 @@
 {
     "frame_id": 8,
-    "timestamp_sec": 1783000155,
-    "timestamp_nanosec": 447714889,
+    "timestamp_sec": 1783000120,
+    "timestamp_nanosec": 246753381,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
-                "id": 4109,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        198,
-                        547,
-                        473,
-                        911
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4113,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        551,
-                        499,
-                        718,
-                        753
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4110,
-                "label": "cup",
-                "type": "object",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        602,
-                        431,
-                        672,
-                        518
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4112,
-                "label": "dining table",
+                "id": 0,
+                "label": "table",
                 "type": "structural",
                 "states": [
                     "static",
@@ -70,10 +16,208 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        261,
-                        425,
-                        718,
-                        802
+                        0,
+                        250,
+                        650,
+                        960
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "chair",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        369,
+                        413,
+                        859,
+                        718
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "closed"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        266,
+                        214,
+                        346,
+                        240
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "closed"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        281,
+                        256,
+                        350,
+                        277
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "closed"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        238,
+                        262,
+                        339,
+                        307
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "cereal_box",
+                "type": "object",
+                "states": [
+                    "static",
+                    "open"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        241,
+                        350,
+                        322,
+                        455
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "cereal_box",
+                "type": "object",
+                "states": [
+                    "static",
+                    "open"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        248,
+                        290,
+                        321,
+                        310
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "cereal_box",
+                "type": "object",
+                "states": [
+                    "static",
+                    "open"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        210,
+                        297,
+                        318,
+                        343
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 8,
+                "label": "basket",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        241,
+                        200,
+                        322,
+                        350
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 9,
+                "label": "mug",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        266,
+                        150,
+                        346,
+                        200
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 10,
+                "label": "whiteboard",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        250,
+                        960
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 11,
+                "label": "floor",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        650,
+                        0,
+                        960,
+                        960
                     ]
                 },
                 "action_description": null
@@ -81,24 +225,94 @@
         ],
         "relationships": [
             {
-                "subject_id": 4110,
+                "subject_id": 1,
+                "predicate": "next_to",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
                 "predicate": "on_top_of",
-                "object_id": 4112
+                "object_id": 0
             },
             {
-                "subject_id": 4109,
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 8,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 9,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 11
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 11
+            },
+            {
+                "subject_id": 10,
+                "predicate": "behind",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
                 "predicate": "next_to",
-                "object_id": 4112
+                "object_id": 3
             },
             {
-                "subject_id": 4113,
+                "subject_id": 3,
                 "predicate": "next_to",
-                "object_id": 4112
+                "object_id": 4
             },
             {
-                "subject_id": 4109,
-                "predicate": "on_the_left_of",
-                "object_id": 4113
+                "subject_id": 5,
+                "predicate": "next_to",
+                "object_id": 6
+            },
+            {
+                "subject_id": 6,
+                "predicate": "next_to",
+                "object_id": 7
+            },
+            {
+                "subject_id": 8,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 9,
+                "predicate": "next_to",
+                "object_id": 2
             }
         ]
     }

@@ -1,61 +1,61 @@
 {
     "frame_id": 12,
-    "timestamp_sec": 1779358824,
-    "timestamp_nanosec": 575860353,
-    "width": 1920,
-    "height": 1080,
+    "timestamp_sec": 1783341333,
+    "timestamp_nanosec": 427592041,
+    "width": 1280,
+    "height": 720,
     "scene_graph": {
         "entities": [
             {
-                "id": 1360,
-                "label": "person",
-                "type": "human",
-                "states": [
-                    "standing",
-                    "gesturing"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        266,
-                        723,
-                        1032,
-                        1035
-                    ]
-                },
-                "action_description": "standing in the kitchen area and gesturing with both hands"
-            },
-            {
-                "id": 1361,
-                "label": "chair",
+                "id": 0,
+                "label": "bowl",
                 "type": "object",
                 "states": [
+                    "empty",
                     "static",
-                    "empty"
+                    "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        644,
-                        1445,
-                        944,
-                        1703
+                        251,
+                        439,
+                        431,
+                        690
                     ]
                 },
                 "action_description": null
             },
             {
-                "id": 1362,
+                "id": 1,
                 "label": "chair",
-                "type": "object",
+                "type": "structural",
                 "states": [
                     "static",
                     "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        640,
-                        1710,
-                        857,
-                        1920
+                        4,
+                        250,
+                        227,
+                        504
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "shelf",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        720,
+                        1280
                     ]
                 },
                 "action_description": null
@@ -63,19 +63,19 @@
         ],
         "relationships": [
             {
-                "subject_id": 1360,
-                "predicate": "on_the_left_of",
-                "object_id": 1361
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 2
             },
             {
-                "subject_id": 1360,
-                "predicate": "on_the_left_of",
-                "object_id": 1362
+                "subject_id": 1,
+                "predicate": "behind",
+                "object_id": 2
             },
             {
-                "subject_id": 1361,
-                "predicate": "next_to",
-                "object_id": 1362
+                "subject_id": 0,
+                "predicate": "in_front_of",
+                "object_id": 1
             }
         ]
     }

@@ -3,6 +3,7 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
 from message_filters import Subscriber, ApproximateTimeSynchronizer
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 import os
 import sys
 import json
@@ -17,6 +18,13 @@ from std_msgs.msg import String
 
 # Import EntityArray for entity tracking
 from hri_msgs.msg import EntityArray
+
+# Import TIPS message types
+from eut_scene_msgs.msg import (
+    TipsObjectIdentityArray,
+    TipsEmbeddingArray,
+    TipsPatchMatchArray,
+)
 
 from src.vlm_client import VLMClient
 
@@ -62,45 +70,118 @@ class SceneGraphSchema(BaseModel):
 
 # ---------------------------------------------------------------------------
 
+# Maximum number of contour points to include in the prompt (to keep it concise)
+_MAX_CONTOUR_PTS = 12
+
+
+def _contour_to_pixel_pts(contour, img_w: int, img_h: int, max_pts: int = _MAX_CONTOUR_PTS) -> List[tuple]:
+    """
+    Convert a list of NormalizedPointOfInterest2D to absolute pixel (x, y) tuples.
+    Uniformly sub-samples to at most `max_pts` points so the prompt stays compact.
+    Returns an empty list when `contour` is empty.
+    """
+    if not contour:
+        return []
+    total = len(contour)
+    step = max(1, total // max_pts)
+    pts = []
+    for i in range(0, total, step):
+        p = contour[i]
+        pts.append((int(p.x * img_w), int(p.y * img_h)))
+        if len(pts) >= max_pts:
+            break
+    return pts
+
+
+def _bbox_xcywh_to_abs(xcenter: float, ycenter: float,
+                        width: float, height: float,
+                        img_w: int, img_h: int) -> tuple:
+    """
+    Convert normalised (xcenter, ycenter, width, height) -> absolute pixel
+    (xmin, ymin, xmax, ymax).
+    """
+    x_min = int((xcenter - width  / 2.0) * img_w)
+    y_min = int((ycenter - height / 2.0) * img_h)
+    x_max = int((xcenter + width  / 2.0) * img_w)
+    y_max = int((ycenter + height / 2.0) * img_h)
+    return x_min, y_min, x_max, y_max
+
+
 class MultiTopicListener(Node):
-    # This listener subscribes to the compressed image, entity detection, and human detection topics.
-    # It synchronizes them and sends merged data to the VLM to generate a detailed Scene Graph.
+    # This listener subscribes to the compressed image, entity detection, and
+    # TIPS perception topics.  It synchronizes them and sends merged data to
+    # the VLM to generate a detailed Scene Graph.
     def __init__(self):
         super().__init__("multi_listener")
         self.counter_ = 0
         self.Analyzing = False
 
+        # QoS profile that matches rosbag-recorded sensor topics (BEST_EFFORT).
+        # Without this, ROS2 logs "incompatible QoS / RELIABILITY" and drops all messages.
+        sensor_qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=10,
+            durability=DurabilityPolicy.VOLATILE,
+        )
+
         self.image_sub = Subscriber(
             self,
             CompressedImage,
-            "/camera/image_raw/compressed"
+            "/camera/image_raw/compressed",
+            qos_profile=sensor_qos,
         )
         self.entity_sub = Subscriber(
             self,
             EntityArray,
-            "/entities/detected"
+            "/entities/detected",
+            qos_profile=sensor_qos,
         )
-        # self.human_sub = Subscriber(
-        #     self,
-        #     EntityArray,
-        #     "/humans/detected"
-        # )
-   
+
+        # -- TIPS subscribers ------------------------------------------------
+        self.tips_identities_sub = Subscriber(
+            self,
+            TipsObjectIdentityArray,
+            "/tips/object_identities",
+            qos_profile=sensor_qos,
+        )
+        self.tips_embeddings_sub = Subscriber(
+            self,
+            TipsEmbeddingArray,
+            "/tips/embeddings",
+            qos_profile=sensor_qos,
+        )
+        self.tips_patch_matches_sub = Subscriber(
+            self,
+            TipsPatchMatchArray,
+            "/tips/patch_matches",
+            qos_profile=sensor_qos,
+        )
+        # --------------------------------------------------------------------
 
         self.sync = ApproximateTimeSynchronizer(
-            [self.image_sub, self.entity_sub],# self.human_sub],
+            [
+                self.image_sub,
+                self.entity_sub,
+                self.tips_identities_sub,
+                self.tips_embeddings_sub,
+                self.tips_patch_matches_sub,
+            ],
             queue_size=10,
             slop=0.5
         )
         self.sync.registerCallback(self.synchronized_callback)
-        self.get_logger().info("Subscribed and synchronized image and entities.")
+        self.get_logger().info(
+            "Subscribed and synchronized: image, entities, "
+            "/tips/object_identities, /tips/embeddings, /tips/patch_matches."
+        )
 
-        # Create a publisher to send the Scene Graph to the LLM Decision Maker                                                                                                   
-        self.scene_graph_pub = self.create_publisher(                                                                                                                            
-            String,                                                                                                                                                              
-            '/scene_graph',                                                                                                                                                      
-            10                                                                                                                                                                   
-        )     
+        # Create a publisher to send the Scene Graph to the LLM Decision Maker
+        self.scene_graph_pub = self.create_publisher(
+            String,
+            '/scene_graph',
+            10
+        )
 
         # Configure and Initialize VLM Client
         self.model_parameters = self.test_groq_vlm()
@@ -112,12 +193,127 @@ class MultiTopicListener(Node):
         return {
             "model_name": "groq/qwen3.6-27b",
             'temperature': 0.0,
-            'max_tokens': 4096,  # Increased from 1500 to 4096 to prevent truncation
+            'max_tokens': 4096,
             'top_p': 1.0,
-            'reasoning_effort': 'none',  # Disabilita il thinking mode di Qwen3 per avere output diretto
+            'reasoning_effort': 'none',
         }
 
-    def synchronized_callback(self, image_msg, entity_msg):#, human_msg):
+    # ------------------------------------------------------------------
+    # Helper: build the {tips ...} string section from the three arrays
+    # ------------------------------------------------------------------
+    def _build_tips_info(
+        self,
+        tips_identities_msg: TipsObjectIdentityArray,
+        tips_embeddings_msg: TipsEmbeddingArray,
+        tips_patch_matches_msg: TipsPatchMatchArray,
+        img_w: int,
+        img_h: int,
+    ) -> str:
+        """
+        Build a compact human-readable summary of the TIPS perception data
+        to be injected as a {tips ...} block inside the VLM prompt.
+
+        All bounding boxes (normalised xcenter/ycenter/width/height) are
+        converted to absolute pixel (xmin, ymin, xmax, ymax) coordinates.
+        When a segmentation contour is available it is sub-sampled and
+        reported as a list of (x,y) pixel points for richer spatial grounding.
+        """
+        lines: List[str] = ["{tips"]
+
+        # -- 1. Object Identities --------------------------------------------
+        lines.append("  [object_identities]  # stable physical-object re-ID")
+        if not tips_identities_msg.identities:
+            lines.append("    (none)")
+        else:
+            for ident in tips_identities_msg.identities:
+                x_min, y_min, x_max, y_max = _bbox_xcywh_to_abs(
+                    ident.bbox_xcenter, ident.bbox_ycenter,
+                    ident.bbox_width,   ident.bbox_height,
+                    img_w, img_h,
+                )
+                entry = (
+                    f"    - track_id={ident.entity.track_id}"
+                    f"  object_id={ident.object_id!r}"
+                    f"  category={ident.category!r}"
+                    f"  confirmed={ident.is_confirmed}"
+                    f"  new={ident.is_new_identity}"
+                    f"  confidence={ident.assignment_confidence:.3f}"
+                    f"  bbox_px=[{x_min},{y_min},{x_max},{y_max}]"
+                )
+                # Contour (segmentation mask boundary)
+                contour_pts = _contour_to_pixel_pts(
+                    ident.entity.contour, img_w, img_h
+                )
+                if contour_pts:
+                    entry += f"  contour_px={contour_pts}"
+                lines.append(entry)
+
+        # -- 2. Visual Embeddings summary ------------------------------------
+        lines.append("  [embeddings]  # TIPS visual embeddings (category + bbox)")
+        if not tips_embeddings_msg.embeddings:
+            lines.append("    (none)")
+        else:
+            for emb in tips_embeddings_msg.embeddings:
+                x_min, y_min, x_max, y_max = _bbox_xcywh_to_abs(
+                    emb.bbox_xcenter, emb.bbox_ycenter,
+                    emb.bbox_width,   emb.bbox_height,
+                    img_w, img_h,
+                )
+                entry = (
+                    f"    - track_id={emb.entity.track_id}"
+                    f"  category={emb.category!r}"
+                    f"  model={emb.tips_model!r}_{emb.variant!r}"
+                    f"  embedding_dim={emb.embedding_dim}"
+                    f"  bbox_px=[{x_min},{y_min},{x_max},{y_max}]"
+                )
+                # Contour (segmentation mask boundary)
+                contour_pts = _contour_to_pixel_pts(
+                    emb.entity.contour, img_w, img_h
+                )
+                if contour_pts:
+                    entry += f"  contour_px={contour_pts}"
+                lines.append(entry)
+
+        # -- 3. Patch Matches (text-query spatial grounding) -----------------
+        lines.append("  [patch_matches]  # best-matching ViT patch per text query")
+        if not tips_patch_matches_msg.matches:
+            lines.append("    (none)")
+        else:
+            for match in tips_patch_matches_msg.matches:
+                x_min, y_min, x_max, y_max = _bbox_xcywh_to_abs(
+                    match.bbox_xcenter, match.bbox_ycenter,
+                    match.bbox_width,   match.bbox_height,
+                    img_w, img_h,
+                )
+                entry = (
+                    f"    - track_id={match.entity.track_id}"
+                    f"  query={match.query!r}"
+                    f"  patch=({match.patch_row},{match.patch_col})"
+                    f"  cosine_sim={match.cosine_similarity:.3f}"
+                    f"  bbox_px=[{x_min},{y_min},{x_max},{y_max}]"
+                )
+                # Contour (segmentation mask boundary)
+                contour_pts = _contour_to_pixel_pts(
+                    match.entity.contour, img_w, img_h
+                )
+                if contour_pts:
+                    entry += f"  contour_px={contour_pts}"
+                lines.append(entry)
+
+        lines.append("}")
+        return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Synchronized callback
+    # ------------------------------------------------------------------
+    def synchronized_callback(
+        self,
+        image_msg,
+        entity_msg,
+        tips_identities_msg,
+        tips_embeddings_msg,
+        tips_patch_matches_msg,
+    ):
         self.counter_ += 1
         self.get_logger().info(f"Received synchronized Data. Counter: {self.counter_}")
 
@@ -138,8 +334,8 @@ class MultiTopicListener(Node):
 
                 self.get_logger().info(f"Image size: {pixels_width}x{pixels_height}")
 
-                # create a string representation of the entity information from entity_msg
-                entities_info = "List of entities detcted in this frame (make reference to these exact bounding boxes):\n"
+                # -- Entities (existing detector) ----------------------------
+                entities_info = "List of entities detected in this frame (make reference to these exact bounding boxes):\n"
 
                 if not entity_msg.entity_array:
                     entities_info += "No entities detected in this frame.\n"
@@ -147,7 +343,7 @@ class MultiTopicListener(Node):
                     for entity in entity_msg.entity_array:
                         bbox = entity.bbox_xyxy
 
-                        # Denormalize bboxes 
+                        # Denormalize bboxes
                         x_min = int(bbox.xmin * pixels_width)
                         y_min = int(bbox.ymin * pixels_height)
                         x_max = int(bbox.xmax * pixels_width)
@@ -155,35 +351,35 @@ class MultiTopicListener(Node):
 
                         # Build phrase with id, label and bounding box (absolute pixel coords).
                         entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
-                
-                # # create a string representation of the human bodies information from human_msg
-                # human_info = "List of human bodies detected in this frame (make reference to these exact bounding boxes):\n"
 
-                # if not human_msg.entity_array:
-                #     human_info += "No human bodies detected in this frame.\n"
-                # else:
-                #     for human in human_msg.entity_array:
-                #         bbox = human.bbox_xyxy
+                # -- TIPS perception data ------------------------------------
+                tips_info = self._build_tips_info(
+                    tips_identities_msg,
+                    tips_embeddings_msg,
+                    tips_patch_matches_msg,
+                    pixels_width,
+                    pixels_height,
+                )
 
-                #         # Denormalize bboxes 
-                #         x_min = int(bbox.xmin * pixels_width)
-                #         y_min = int(bbox.ymin * pixels_height)
-                #         x_max = int(bbox.xmax * pixels_width)
-                #         y_max = int(bbox.ymax * pixels_height)
-
-                #         # Build phrase with id, label and bounding box (absolute pixel coords).
-                #         human_info += f"- ID: {human.track_id}, Label: {human.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
+                self.get_logger().info(
+                    f"TIPS summary built: "
+                    f"{len(tips_identities_msg.identities)} identities, "
+                    f"{len(tips_embeddings_msg.embeddings)} embeddings, "
+                    f"{len(tips_patch_matches_msg.matches)} patch matches."
+                )
 
                 # ----------------------------------------------------------------
-                # 4. Build the Scene Graph prompt for Qwen3.6-27b 
+                # 4. Build the Scene Graph prompt for Qwen3.6-27b
                 # ----------------------------------------------------------------
-                # Povide the VLM a prompt that gives the json schema
-                # definition to follow strictly. 
+                # Provide the VLM a prompt that gives the json schema
+                # definition to follow strictly.
                 # ----------------------------------------------------------------
 
                 system_msg = (
                     "You are a visual perception module on a mobile robot. "
                     "You receive a camera frame together with structured sensor data "
+                    "including standard entity detections and rich TIPS perceptual data "
+                    "(stable object re-ID, visual embeddings, and text-query patch matches). "
                     "Your job is to analyse the image carefully and call the "
                     "create_scene_graph tool with a complete, accurate scene graph. "
                     "Prioritise what you get from the message data and confirm the relationships with the image; "
@@ -195,8 +391,21 @@ class MultiTopicListener(Node):
 
                 --- SENSOR DATA (IMAGE: {pixels_width}x{pixels_height} px) ---
                 {entities_info}
-                (MISSING HUMAN INFO BUT IGNORE FOR NOW)
                 --------------------------------------------------------------
+
+                --- TIPS PERCEPTUAL DATA ---
+                The TIPS block below comes from three complementary perception streams:
+                  * object_identities : stable cross-frame re-ID (object_id persists across tracking resets).
+                  * embeddings        : TIPS v2 ViT features — use category & bbox for grounding.
+                  * patch_matches     : each entry names the text query it matched best and the
+                                       cosine similarity score; use this to infer object semantics
+                                       and fine-grained spatial location.
+                  * contour_px        : when present, a sub-sampled polygon (absolute pixel coords)
+                                       of the segmentation mask; use it to refine the entity's
+                                       exact shape and spatial relationships with neighbouring objects.
+
+                {tips_info}
+                ------------------------------------------------------------
 
                 Use the raw image just as a reference for scene graph generation output.
                 Your goal is to generate a comprehensive, physically-grounded Scene Graph.
@@ -206,7 +415,8 @@ class MultiTopicListener(Node):
                 ALLOWED STATES
                 ------------------------------------------------------------------------
                 [Object/Inanimate States]: open, closed, empty, full, dirty, clean, hot, cold, turned_on, turned_off, stable, unstable, broken
-                [Human/Agent States]: standing, sitting, walking, reaching, looking_at, interacting, neutral, gesturing (use the image to state the posture and confirm the human's actions)
+                [Human Pose States — pick exactly one per human entity]: standing, sitting, walking, pointing, raising_right_hand, raising_left_hand, waving
+                [Human Activity States — optional, combine with pose]: reaching, looking_at, interacting, neutral, gesturing
                 [Shared States]: reachable, occluded, held_by, static, moving, unknown
 
                 ------------------------------------------------------------------------
@@ -235,38 +445,38 @@ class MultiTopicListener(Node):
                 {{
                 "entities": [
                     {{
-                    "id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [200, 100, 500, 600]}}, 
+                    "id": 0, "label": "dining_table", "type": "structural", "states": ["clean", "static"],
+                    "spatial_info": {{"box_2d": [200, 100, 500, 600]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"], 
-                    "spatial_info": {{"box_2d": [150, 600, 400, 900]}}, 
+                    "id": 1, "label": "sofa", "type": "structural", "states": ["clean", "static"],
+                    "spatial_info": {{"box_2d": [150, 600, 400, 900]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [210, 250, 260, 350]}}, 
+                    "id": 2, "label": "plate", "type": "object", "states": ["clean", "empty", "reachable", "static"],
+                    "spatial_info": {{"box_2d": [210, 250, 260, 350]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [215, 360, 225, 420]}}, 
+                    "id": 3, "label": "fork", "type": "object", "states": ["clean", "reachable", "static"],
+                    "spatial_info": {{"box_2d": [215, 360, 225, 420]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable", "static"], 
-                    "spatial_info": {{"box_2d": [220, 280, 250, 320]}}, 
+                    "id": 4, "label": "apple", "type": "object", "states": ["clean", "reachable", "static"],
+                    "spatial_info": {{"box_2d": [220, 280, 250, 320]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 5, "label": "book", "type": "object", "states": ["closed", "static", "reachable"], 
-                    "spatial_info": {{"box_2d": [180, 650, 220, 720]}}, 
+                    "id": 5, "label": "book", "type": "object", "states": ["closed", "static", "reachable"],
+                    "spatial_info": {{"box_2d": [180, 650, 220, 720]}},
                     "action_description": null
                     }},
                     {{
-                    "id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"], 
-                    "spatial_info": {{"box_2d": [100, 150, 450, 300]}}, 
+                    "id": 6, "label": "human_user", "type": "human", "states": ["sitting", "interacting"],
+                    "spatial_info": {{"box_2d": [100, 150, 450, 300]}},
                     "action_description": "sitting at the table and reaching for the apple"
                     }}
                 ],
@@ -286,10 +496,11 @@ class MultiTopicListener(Node):
                 ------------------------------------------------------------------------
                 1. Entity Identification: Detect all key entities (everyday objects, household architectural elements, humans, specific body parts if heavily interacting).
                 2. Physical Commonsense & Grounding: Ground your reasoning in physical reality. Furniture sits on the floor; food goes on plates or tables; humans sit on chairs/sofas or stand on the floor. Do not hallucinate floating or physically impossible states.
-                3. State Assignment: Apply states based on the entity type (Inanimate vs Human vs Shared). Pay special attention to human social cues (gesturing, interacting, looking_at).
+                3. Human Pose Classification: For every human entity you MUST assign exactly one pose from the Human Pose States list (standing, sitting, walking, pointing, raising_right_hand, raising_left_hand, waving). Use the bounding box from /humans/detected together with the image to determine the correct pose. You may additionally add one or more Human Activity States.
                 4. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
-                5. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
-                6. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
+                5. TIPS data usage: Cross-reference entity identities (object_id from object_identities) with the detector track_id to confirm persistent identities across frames. Use patch_match cosine scores and matched queries to refine semantic labels and states. Use contour_px (when present) to sharpen occlusion and proximity relationships between overlapping entities.
+                6. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
+                7. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
 
                 ------------------------------------------------------------------------
                 OUTPUT JSON FORMAT
@@ -316,8 +527,7 @@ class MultiTopicListener(Node):
                 ]
                 }}
                 """
-             
-            
+
                 response = self.vlm(
                     text_prompt=bb_prompt,
                     image=image_base64,
@@ -344,30 +554,29 @@ class MultiTopicListener(Node):
                 if not isinstance(response_data, dict):
                     raise ValueError(f"Expected dict JSON response, got {type(response_data)}")
 
-                # 7. Normalise tool output → pipeline schema.
+                # 7. Normalise tool output -> pipeline schema.
                 #    The simplified tool schema uses flat fields (box_2d at entity top-level,
                 #    entity_type instead of type) to avoid Groq JSON Schema limitations.
                 #    Convert back to the nested format expected by the rest of the pipeline.
                 for entity in response_data.get("entities", []):
-                    # box_2d: flat → nested in spatial_info
+                    # box_2d: flat -> nested in spatial_info
                     if "box_2d" in entity and "spatial_info" not in entity:
                         entity["spatial_info"] = {"box_2d": entity.pop("box_2d")}
-                    # entity_type → type
+                    # entity_type -> type
                     if "entity_type" in entity and "type" not in entity:
                         entity["type"] = entity.pop("entity_type")
-                    # action_description: "none"/""  → None
+                    # action_description: "none"/"" -> None
                     ad = entity.get("action_description", "")
                     if ad in ("", "none", "None", "null", "N/A"):
                         entity["action_description"] = None
 
 
-                
-                # Save the Scene Graph JSON metadata                                                                                                                          
-                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "OutputData/Scene_Graph_only_entities")                                                                          
-                os.makedirs(json_dir, exist_ok=True)                                                                                                                             
-                json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")                                                                                          
-                                                                                                                                                                                    
-                metadata = {                                                                                                                                                     
+                # Save the Scene Graph JSON metadata
+                json_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "OutputData/Scene_Graph_json")
+                os.makedirs(json_dir, exist_ok=True)
+                json_path = os.path.join(json_dir, f"scene_graph_{self.counter_}.json")
+
+                metadata = {
                     "frame_id": self.counter_,
                     "timestamp_sec": image_msg.header.stamp.sec,
                     "timestamp_nanosec": image_msg.header.stamp.nanosec,
@@ -387,7 +596,7 @@ class MultiTopicListener(Node):
                 # =======================================================
                 msg = String()
                 # Publish the full metadata dict (includes frame details) as a JSON string
-                msg.data = json.dumps(metadata) 
+                msg.data = json.dumps(metadata)
 
                 self.scene_graph_pub.publish(msg)
                 self.get_logger().info("Published Scene Graph JSON to '/scene_graph'")

@@ -1,45 +1,171 @@
 {
     "frame_id": 2,
-    "timestamp_sec": 1783000138,
-    "timestamp_nanosec": 47729881,
+    "timestamp_sec": 1783000102,
+    "timestamp_nanosec": 48309419,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "refrigerator",
-                "type": "structural",
+                "label": "chair",
+                "type": "object",
                 "states": [
-                    "closed",
+                    "empty",
                     "static",
-                    "clean"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        180,
-                        60,
-                        947,
-                        434
+                        612,
+                        0,
+                        952,
+                        309
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "microwave",
+                "label": "chair",
                 "type": "object",
                 "states": [
-                    "closed",
+                    "empty",
                     "static",
-                    "turned_off"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        427,
-                        486,
-                        600,
+                        528,
+                        481,
+                        851,
+                        718
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "table",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        350,
+                        110,
+                        750,
+                        850
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "paper_towel_roll",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        450,
+                        480,
+                        550,
+                        600
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "mug",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        420,
+                        580,
+                        480,
+                        620
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 5,
+                "label": "dish_rack",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        650,
+                        450,
                         720
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        550,
+                        420,
+                        600
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "brochure",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        480,
+                        300,
+                        550,
+                        450
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 8,
+                "label": "whiteboard",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        0,
+                        400,
+                        750
                     ]
                 },
                 "action_description": null
@@ -47,14 +173,69 @@
         ],
         "relationships": [
             {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
                 "subject_id": 1,
-                "predicate": "on_the_right_of",
-                "object_id": 0
+                "predicate": "next_to",
+                "object_id": 2
             },
             {
                 "subject_id": 0,
                 "predicate": "on_the_left_of",
                 "object_id": 1
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 6,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "in_front_of",
+                "object_id": 8
+            },
+            {
+                "subject_id": 4,
+                "predicate": "next_to",
+                "object_id": 3
+            },
+            {
+                "subject_id": 5,
+                "predicate": "next_to",
+                "object_id": 4
+            },
+            {
+                "subject_id": 6,
+                "predicate": "next_to",
+                "object_id": 5
+            },
+            {
+                "subject_id": 7,
+                "predicate": "next_to",
+                "object_id": 3
             }
         ]
     }

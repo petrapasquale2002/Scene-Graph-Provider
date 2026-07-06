@@ -1,61 +1,79 @@
 {
     "frame_id": 10,
-    "timestamp_sec": 1783000160,
-    "timestamp_nanosec": 444845042,
+    "timestamp_sec": 1783000125,
+    "timestamp_nanosec": 148127711,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "chair",
-                "type": "structural",
+                "label": "potted plant",
+                "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "stable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        429,
-                        0,
-                        858,
-                        330
+                        390,
+                        579,
+                        512,
+                        717
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "chair",
-                "type": "structural",
+                "label": "bowl",
+                "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "stable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        414,
-                        573,
-                        803,
-                        720
+                        494,
+                        657,
+                        525,
+                        708
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "dining table",
-                "type": "structural",
+                "label": "potted plant",
+                "type": "object",
                 "states": [
                     "static",
-                    "clean"
+                    "stable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        373,
-                        185,
-                        798,
-                        695
+                        563,
+                        582,
+                        642,
+                        702
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "plant stand",
+                "type": "structural",
+                "states": [
+                    "static",
+                    "stable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        380,
+                        550,
+                        750,
+                        950
                     ]
                 },
                 "action_description": null
@@ -64,23 +82,33 @@
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "next_to",
-                "object_id": 2
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 3
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 3
             },
             {
                 "subject_id": 1,
                 "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 0,
-                "predicate": "on_the_left_of",
-                "object_id": 1
+                "object_id": 0
             },
             {
                 "subject_id": 2,
-                "predicate": "between",
+                "predicate": "below",
                 "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "below",
+                "object_id": 1
             }
         ]
     }

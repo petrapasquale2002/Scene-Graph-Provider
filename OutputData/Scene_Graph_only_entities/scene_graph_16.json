@@ -1,61 +1,43 @@
 {
     "frame_id": 16,
-    "timestamp_sec": 1783000100,
-    "timestamp_nanosec": 47731846,
+    "timestamp_sec": 1783000142,
+    "timestamp_nanosec": 346927502,
     "width": 720,
     "height": 960,
     "scene_graph": {
         "entities": [
             {
-                "id": 3794,
-                "label": "chair",
-                "type": "structural",
+                "id": 0,
+                "label": "microwave",
+                "type": "object",
                 "states": [
-                    "empty",
-                    "static"
+                    "static",
+                    "turned_off"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        480,
-                        535,
-                        743,
+                        380,
+                        615,
+                        448,
                         720
                     ]
                 },
                 "action_description": null
             },
             {
-                "id": 3790,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "empty",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        540,
-                        166,
-                        910,
-                        445
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3793,
-                "label": "dining table",
-                "type": "structural",
+                "id": 1,
+                "label": "bowl",
+                "type": "object",
                 "states": [
                     "static",
-                    "clean"
+                    "empty"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        420,
-                        235,
-                        806,
-                        708
+                        337,
+                        515,
+                        365,
+                        567
                     ]
                 },
                 "action_description": null
@@ -63,19 +45,14 @@
         ],
         "relationships": [
             {
-                "subject_id": 3790,
-                "predicate": "next_to",
-                "object_id": 3793
-            },
-            {
-                "subject_id": 3794,
-                "predicate": "next_to",
-                "object_id": 3793
-            },
-            {
-                "subject_id": 3790,
+                "subject_id": 1,
                 "predicate": "on_the_left_of",
-                "object_id": 3794
+                "object_id": 0
+            },
+            {
+                "subject_id": 1,
+                "predicate": "near",
+                "object_id": 0
             }
         ]
     }

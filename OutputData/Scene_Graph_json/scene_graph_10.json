@@ -1,61 +1,79 @@
 {
     "frame_id": 10,
-    "timestamp_sec": 1779358822,
-    "timestamp_nanosec": 235723696,
-    "width": 1920,
-    "height": 1080,
+    "timestamp_sec": 1783341329,
+    "timestamp_nanosec": 859251221,
+    "width": 1280,
+    "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "person",
-                "type": "human",
+                "label": "refrigerator",
+                "type": "structural",
                 "states": [
-                    "standing",
-                    "gesturing"
+                    "static",
+                    "closed"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        254,
-                        799,
-                        1042,
-                        1065
+                        1,
+                        27,
+                        720,
+                        1255
                     ]
                 },
-                "action_description": "standing in the kitchen area and gesturing with hands"
+                "action_description": null
             },
             {
                 "id": 1,
-                "label": "chair",
+                "label": "bottle",
                 "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        642,
-                        1435,
-                        940,
-                        1694
+                        270,
+                        799,
+                        518,
+                        909
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "chair",
+                "label": "bottle",
                 "type": "object",
                 "states": [
                     "static",
-                    "empty"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        640,
-                        1694,
-                        855,
-                        1919
+                        149,
+                        547,
+                        599,
+                        683
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "bottle",
+                "type": "object",
+                "states": [
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        251,
+                        487,
+                        518,
+                        565
                     ]
                 },
                 "action_description": null
@@ -63,19 +81,34 @@
         ],
         "relationships": [
             {
-                "subject_id": 0,
+                "subject_id": 1,
+                "predicate": "inside",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "inside",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "inside",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
                 "predicate": "on_the_left_of",
                 "object_id": 1
             },
             {
-                "subject_id": 0,
+                "subject_id": 3,
                 "predicate": "on_the_left_of",
                 "object_id": 2
             },
             {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
+                "subject_id": 3,
+                "predicate": "on_the_left_of",
+                "object_id": 1
             }
         ]
     }
