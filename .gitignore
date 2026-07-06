@@ -220,6 +220,7 @@ __marimo__/
 GroqAPI.env
 NebiusAPI.env
 fireCrawlKey.env
+FireCrawl.py
 lib/
 lib64/
 bin/
@@ -232,3 +233,4 @@ Entity_Image_pool/
 OutputData/Entity_json_outputs/
 Raw_image_json/
 Raw_Image_json/
+camera_publisher.py
