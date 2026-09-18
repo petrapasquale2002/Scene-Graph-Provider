@@ -92,18 +92,21 @@ class VLMClient(BaseFoundationClient):
         # Strip think blocks first
         cleaned_raw = VLMClient._strip_think_blocks(raw)
 
-        # Strategy 1: Character-by-character brace matching (most robust for text + JSON)
-        # Search for any opening brace '{' or bracket '['
-        for start_idx in range(len(cleaned_raw)):
-            char = cleaned_raw[start_idx]
-            if char in ('{', '['):
-                start_char = char
-                end_char = '}' if start_char == '{' else ']'
+        # Strategy 1: Character-by-character brace matching.
+        # Two passes: first look only for '{...}' objects (scene graph root),
+        # then fall back to '[...]' arrays only if no object was found.
+        # This prevents a bare bounding-box array like [407, 264, 696, 467]
+        # that appears earlier in the text from being mistaken for the result.
+        def _brace_extract(text: str, open_char: str) -> str | None:
+            close_char = '}' if open_char == '{' else ']'
+            for start_idx in range(len(text)):
+                if text[start_idx] != open_char:
+                    continue
                 depth = 0
                 in_string = False
                 escape = False
-                for idx in range(start_idx, len(cleaned_raw)):
-                    c = cleaned_raw[idx]
+                for idx in range(start_idx, len(text)):
+                    c = text[idx]
                     if escape:
                         escape = False
                         continue
@@ -114,17 +117,22 @@ class VLMClient(BaseFoundationClient):
                         in_string = not in_string
                         continue
                     if not in_string:
-                        if c == start_char:
+                        if c == open_char:
                             depth += 1
-                        elif c == end_char:
+                        elif c == close_char:
                             depth -= 1
                             if depth == 0:
-                                candidate = cleaned_raw[start_idx:idx+1]
+                                candidate = text[start_idx:idx + 1]
                                 try:
                                     json.loads(candidate)
                                     return candidate
                                 except json.JSONDecodeError:
                                     break
+            return None
+
+        result = _brace_extract(cleaned_raw, '{') or _brace_extract(cleaned_raw, '[')
+        if result is not None:
+            return result
 
         # Strategy 2: Direct parse
         try:

@@ -1,14 +1,53 @@
 {
     "frame_id": 9,
-    "timestamp_sec": 1783341327,
-    "timestamp_nanosec": 792102539,
+    "timestamp_sec": 1783341336,
+    "timestamp_nanosec": 297623535,
     "width": 1280,
     "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "sink",
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static",
+                    "stable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        362,
+                        437,
+                        557,
+                        679
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 1,
+                "label": "pot",
+                "type": "object",
+                "states": [
+                    "clean",
+                    "static",
+                    "stable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        180,
+                        650,
+                        380,
+                        880
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "shelf",
                 "type": "structural",
                 "states": [
                     "static",
@@ -16,64 +55,10 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        162,
-                        885,
-                        249,
-                        1266
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 1,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        582,
-                        108,
-                        711,
-                        580
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        535,
-                        979,
-                        608,
-                        1053
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static",
-                    "empty"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        187,
-                        689,
-                        243,
-                        1000
+                        200,
+                        0,
+                        720,
+                        1280
                     ]
                 },
                 "action_description": null
@@ -81,18 +66,23 @@
         ],
         "relationships": [
             {
+                "subject_id": 0,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
                 "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 0,
                 "predicate": "on_the_left_of",
-                "object_id": 0
+                "object_id": 1
             },
             {
-                "subject_id": 2,
+                "subject_id": 1,
                 "predicate": "on_the_right_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 3,
-                "predicate": "behind",
                 "object_id": 0
             }
         ]

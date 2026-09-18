@@ -1,24 +1,25 @@
 {
     "frame_id": 6,
-    "timestamp_sec": 1783341368,
-    "timestamp_nanosec": 719308105,
+    "timestamp_sec": 1783341325,
+    "timestamp_nanosec": 525153809,
     "width": 1280,
     "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "shelf",
+                "label": "dining_table",
                 "type": "structural",
                 "states": [
+                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        720,
-                        720
+                        35,
+                        217,
+                        1249,
+                        718
                     ]
                 },
                 "action_description": null
@@ -29,51 +30,56 @@
                 "type": "object",
                 "states": [
                     "empty",
+                    "clean",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        314,
-                        502,
-                        412,
-                        660
+                        861,
+                        409,
+                        1003,
+                        522
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "pot",
+                "label": "cup",
                 "type": "object",
                 "states": [
+                    "empty",
+                    "clean",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        314,
-                        660,
-                        412,
-                        720
+                        291,
+                        393,
+                        392,
+                        519
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "plate",
+                "label": "cup",
                 "type": "object",
                 "states": [
+                    "empty",
+                    "clean",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        412,
-                        502,
-                        510,
-                        660
+                        870,
+                        285,
+                        948,
+                        380
                     ]
                 },
                 "action_description": null
@@ -87,17 +93,56 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        314,
-                        314
+                        875,
+                        190,
+                        1203,
+                        412
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 5,
-                "label": "water_bottle",
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        435,
+                        403,
+                        577,
+                        519
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 6,
+                "label": "orange",
+                "type": "object",
+                "states": [
+                    "clean",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        650,
+                        245,
+                        709,
+                        306
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "keyboard",
                 "type": "object",
                 "states": [
                     "static",
@@ -105,10 +150,49 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        660,
-                        100,
-                        720
+                        87,
+                        211,
+                        495,
+                        325
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 8,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "empty",
+                    "clean",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        232,
+                        487,
+                        426,
+                        658
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 9,
+                "label": "orange",
+                "type": "object",
+                "states": [
+                    "clean",
+                    "static",
+                    "reachable"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        901,
+                        135,
+                        956,
+                        193
                     ]
                 },
                 "action_description": null
@@ -136,19 +220,64 @@
                 "object_id": 0
             },
             {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
+                "subject_id": 6,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 8,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 9,
+                "predicate": "on_top_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 4,
+                "predicate": "near",
+                "object_id": 0
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_the_left_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_the_left_of",
+                "object_id": 1
             },
             {
                 "subject_id": 3,
-                "predicate": "below",
+                "predicate": "on_the_right_of",
                 "object_id": 1
+            },
+            {
+                "subject_id": 6,
+                "predicate": "near",
+                "object_id": 9
+            },
+            {
+                "subject_id": 7,
+                "predicate": "on_the_left_of",
+                "object_id": 2
+            },
+            {
+                "subject_id": 8,
+                "predicate": "on_the_left_of",
+                "object_id": 2
             },
             {
                 "subject_id": 4,
                 "predicate": "behind",
-                "object_id": 0
+                "object_id": 1
             }
         ]
     }

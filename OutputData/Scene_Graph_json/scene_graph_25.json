@@ -1,86 +1,32 @@
 {
-    "frame_id": 19,
-    "timestamp_sec": 1783341329,
-    "timestamp_nanosec": 191855225,
+    "frame_id": 25,
+    "timestamp_sec": 1783341340,
+    "timestamp_nanosec": 2366943,
     "width": 1280,
     "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "shelving_unit",
-                "type": "structural",
+                "label": "keyboard",
+                "type": "object",
                 "states": [
                     "static",
                     "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        720,
-                        1280
+                        248,
+                        153,
+                        718,
+                        507
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "static",
-                    "full"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        2,
-                        489,
-                        373,
-                        632
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "static",
-                    "full"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        50,
-                        444,
-                        277,
-                        525
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "static",
-                    "full"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        99,
-                        730,
-                        330,
-                        840
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "blue_bowl",
+                "label": "cup",
                 "type": "object",
                 "states": [
                     "static",
@@ -89,17 +35,74 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        480,
-                        280,
-                        580,
-                        420
+                        154,
+                        624,
+                        288,
+                        724
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 2,
+                "label": "cup",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        486,
+                        754,
+                        659,
+                        911
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 3,
+                "label": "cup",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        0,
+                        836,
+                        58,
+                        940
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 4,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "empty",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        101,
+                        660,
+                        216,
+                        790
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 5,
-                "label": "metal_pot",
+                "label": "frying_pan",
                 "type": "object",
                 "states": [
                     "static",
@@ -107,35 +110,17 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        370,
-                        480,
-                        500,
-                        620
+                        100,
+                        650,
+                        300,
+                        880
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 6,
-                "label": "grey_container",
-                "type": "object",
-                "states": [
-                    "static",
-                    "closed"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        100,
-                        180,
-                        350,
-                        420
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 7,
-                "label": "white_basket",
+                "label": "mouse",
                 "type": "object",
                 "states": [
                     "static",
@@ -143,10 +128,28 @@
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        180,
-                        150,
-                        450,
-                        450
+                        460,
+                        380,
+                        540,
+                        520
+                    ]
+                },
+                "action_description": null
+            },
+            {
+                "id": 7,
+                "label": "green_object",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        80,
+                        350,
+                        120,
+                        400
                     ]
                 },
                 "action_description": null
@@ -154,69 +157,44 @@
         ],
         "relationships": [
             {
+                "subject_id": 6,
+                "predicate": "next_to",
+                "object_id": 0
+            },
+            {
                 "subject_id": 1,
-                "predicate": "on_top_of",
+                "predicate": "on_the_right_of",
                 "object_id": 0
             },
             {
                 "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 0
+                "predicate": "below",
+                "object_id": 1
             },
             {
                 "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 6,
-                "predicate": "inside",
-                "object_id": 7
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_the_left_of",
+                "predicate": "above",
                 "object_id": 1
             },
             {
                 "subject_id": 3,
+                "predicate": "above",
+                "object_id": 4
+            },
+            {
+                "subject_id": 5,
                 "predicate": "on_the_right_of",
                 "object_id": 1
             },
             {
-                "subject_id": 4,
-                "predicate": "below",
-                "object_id": 6
+                "subject_id": 7,
+                "predicate": "on_the_left_of",
+                "object_id": 1
             },
             {
-                "subject_id": 5,
-                "predicate": "below",
-                "object_id": 3
-            },
-            {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 2
-            },
-            {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 3
+                "subject_id": 2,
+                "predicate": "on_the_left_of",
+                "object_id": 5
             }
         ]
     }

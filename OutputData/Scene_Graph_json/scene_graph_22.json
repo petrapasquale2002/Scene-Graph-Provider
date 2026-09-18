@@ -1,246 +1,122 @@
 {
     "frame_id": 22,
-    "timestamp_sec": 1783341362,
-    "timestamp_nanosec": 817779785,
+    "timestamp_sec": 1783341338,
+    "timestamp_nanosec": 668574219,
     "width": 1280,
     "height": 720,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "table",
-                "type": "structural",
+                "label": "cup",
+                "type": "object",
                 "states": [
+                    "clean",
                     "static",
-                    "clean"
+                    "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        1280,
-                        720
+                        322,
+                        780,
+                        455,
+                        888
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 1,
-                "label": "cup",
+                "label": "keyboard",
                 "type": "object",
                 "states": [
-                    "empty",
+                    "clean",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        317,
-                        192,
-                        435,
-                        292
+                        341,
+                        167,
+                        712,
+                        661
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 2,
-                "label": "cup",
+                "label": "bowl",
                 "type": "object",
                 "states": [
+                    "clean",
                     "empty",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        290,
-                        557,
-                        393,
-                        634
+                        291,
+                        859,
+                        409,
+                        1003
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 3,
-                "label": "bowl",
-                "type": "object",
+                "label": "chair",
+                "type": "structural",
                 "states": [
-                    "empty",
-                    "static",
-                    "reachable"
+                    "clean",
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        451,
-                        227,
-                        590,
-                        397
+                        21,
+                        913,
+                        187,
+                        1280
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 4,
-                "label": "cup",
+                "label": "bowl",
                 "type": "object",
                 "states": [
+                    "clean",
                     "empty",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        352,
-                        1118,
-                        452,
-                        1215
+                        216,
+                        1138,
+                        304,
+                        1263
                     ]
                 },
                 "action_description": null
             },
             {
                 "id": 5,
-                "label": "orange",
+                "label": "cup",
                 "type": "object",
                 "states": [
+                    "clean",
                     "static",
                     "reachable"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        259,
-                        925,
-                        320,
-                        986
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 6,
-                "label": "keyboard",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        249,
-                        227,
-                        319,
-                        577
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 7,
-                "label": "bowl",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        339,
-                        656,
-                        432,
-                        779
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 8,
-                "label": "frying_pan",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        400,
-                        300,
-                        600,
-                        700
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 9,
-                "label": "orange",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        260,
-                        990,
-                        320,
-                        1050
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 10,
-                "label": "plate",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        250,
-                        900,
-                        350,
-                        1100
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 11,
-                "label": "utensils",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        250,
-                        750,
-                        350,
-                        850
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 12,
-                "label": "placemat",
-                "type": "object",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
+                        112,
+                        1020,
                         200,
-                        700,
-                        400,
-                        1150
+                        1113
                     ]
                 },
                 "action_description": null
@@ -248,104 +124,44 @@
         ],
         "relationships": [
             {
+                "subject_id": 0,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
                 "subject_id": 1,
-                "predicate": "on_top_of",
+                "predicate": "on_the_left_of",
                 "object_id": 0
             },
             {
                 "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 0
+                "predicate": "on_the_left_of",
+                "object_id": 4
             },
             {
                 "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 0
+                "predicate": "on_the_right_of",
+                "object_id": 2
             },
             {
                 "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 10
+                "predicate": "above",
+                "object_id": 4
             },
             {
-                "subject_id": 9,
-                "predicate": "on_top_of",
-                "object_id": 10
+                "subject_id": 3,
+                "predicate": "behind",
+                "object_id": 5
             },
             {
-                "subject_id": 6,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 8,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 10,
-                "predicate": "on_top_of",
-                "object_id": 12
-            },
-            {
-                "subject_id": 11,
-                "predicate": "on_top_of",
-                "object_id": 12
-            },
-            {
-                "subject_id": 12,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 1,
-                "predicate": "next_to",
-                "object_id": 6
-            },
-            {
-                "subject_id": 2,
-                "predicate": "next_to",
+                "subject_id": 0,
+                "predicate": "in_front_of",
                 "object_id": 3
             },
             {
-                "subject_id": 3,
-                "predicate": "next_to",
-                "object_id": 8
-            },
-            {
-                "subject_id": 8,
-                "predicate": "next_to",
-                "object_id": 7
-            },
-            {
-                "subject_id": 5,
-                "predicate": "next_to",
-                "object_id": 9
-            },
-            {
-                "subject_id": 11,
-                "predicate": "next_to",
-                "object_id": 10
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_the_right_of",
-                "object_id": 10
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_the_right_of",
-                "object_id": 8
+                "subject_id": 1,
+                "predicate": "in_front_of",
+                "object_id": 3
             }
         ]
     }

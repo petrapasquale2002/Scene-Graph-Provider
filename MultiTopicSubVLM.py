@@ -2,7 +2,9 @@ import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
-from message_filters import Subscriber, ApproximateTimeSynchronizer
+from collections import deque
+import threading
+import time
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 import os
 import sys
@@ -17,7 +19,7 @@ from pydantic import BaseModel
 from std_msgs.msg import String
 
 # Import EntityArray for entity tracking
-from hri_msgs.msg import EntityArray
+from hri_msgs.msg import EntityArray, PersonArray
 
 # Import TIPS message types
 from eut_scene_msgs.msg import (
@@ -35,18 +37,7 @@ load_dotenv(
     override=True
 )
 
-# ---------------------------------------------------------------------------
-# Tool definition for Groq function/tool calling.
-#
-# Strategy: instead of asking the model to output JSON in the message content,
-# we define a "tool" whose parameters ARE the scene graph schema. Setting
-# tool_choice to force this specific function means the model MUST populate
-# the arguments with valid JSON — completely bypassing <think> blocks,
-# markdown fences, and unsupported response_format modes.
-#
-# The Pydantic classes below are kept for reference/validation; the actual
-# enforcement happens via SCENE_GRAPH_TOOL passed to the Groq API.
-# ---------------------------------------------------------------------------
+# These are the attributes for each instance in JSOn schema
 
 class SpatialInfo(BaseModel):
     box_2d: List[int]               # [ymin, xmin, ymax, xmax] absolute pixels
@@ -109,8 +100,9 @@ def _bbox_xcywh_to_abs(xcenter: float, ycenter: float,
 
 class MultiTopicListener(Node):
     # This listener subscribes to the compressed image, entity detection, and
-    # TIPS perception topics.  It synchronizes them and sends merged data to
-    # the VLM to generate a detailed Scene Graph.
+    # TIPS perception topics.  Image compressed  is the trigger topic: its timestamp is the filter for
+    # data retrieval from caches, where every last topic message is stored, for synchronization.
+    # The datapack is then provided to theVLM to generate a detailed Scene Graph.
     def __init__(self):
         super().__init__("multi_listener")
         self.counter_ = 0
@@ -125,55 +117,68 @@ class MultiTopicListener(Node):
             durability=DurabilityPolicy.VOLATILE,
         )
 
-        self.image_sub = Subscriber(
-            self,
+        # -- Slop window (seconds) for timestamp matching --------------------
+        self._slop = 0.5
+        self._cache_lock = threading.Lock() # for message's persistance
+
+        # Caches for optional topics: deque of (timestamp_float, msg)
+        self._entity_cache               = deque(maxlen=10)
+        self._human_cache                = deque(maxlen=10)
+        self._human_detected_cache       = deque(maxlen=10) 
+        self._tips_identities_cache      = deque(maxlen=10)
+        self._tips_embeddings_cache      = deque(maxlen=10)
+        self._tips_patch_matches_cache   = deque(maxlen=10)
+
+        # -- Image: primary trigger (always published) -----------------------
+        self.create_subscription(
             CompressedImage,
             "/camera/image_raw/compressed",
-            qos_profile=sensor_qos,
-        )
-        self.entity_sub = Subscriber(
-            self,
-            EntityArray,
-            "/entities/detected",
+            self._on_image,
             qos_profile=sensor_qos,
         )
 
-        # -- TIPS subscribers ------------------------------------------------
-        self.tips_identities_sub = Subscriber(
-            self,
+        # -- Optional topics: fill caches ------------------------------------
+        self.create_subscription(
+            EntityArray,
+            "/entities/detected",
+            lambda msg: self._cache_push(self._entity_cache, msg),
+            qos_profile=sensor_qos,
+        )
+        self.create_subscription(
+            PersonArray,
+            "/humans/unified",
+            lambda msg: self._cache_push(self._human_cache, msg),
+            qos_profile=sensor_qos,
+        )
+        self.create_subscription(
+            EntityArray,
+            "/humans/detected",
+            lambda msg: self._cache_push(self._human_detected_cache, msg),
+            qos_profile=sensor_qos,
+        )
+        self.create_subscription(
             TipsObjectIdentityArray,
             "/tips/object_identities",
+            lambda msg: self._cache_push(self._tips_identities_cache, msg),
             qos_profile=sensor_qos,
         )
-        self.tips_embeddings_sub = Subscriber(
-            self,
+        self.create_subscription(
             TipsEmbeddingArray,
             "/tips/embeddings",
+            lambda msg: self._cache_push(self._tips_embeddings_cache, msg),
             qos_profile=sensor_qos,
         )
-        self.tips_patch_matches_sub = Subscriber(
-            self,
+        self.create_subscription(
             TipsPatchMatchArray,
             "/tips/patch_matches",
+            lambda msg: self._cache_push(self._tips_patch_matches_cache, msg),
             qos_profile=sensor_qos,
         )
         # --------------------------------------------------------------------
 
-        self.sync = ApproximateTimeSynchronizer(
-            [
-                self.image_sub,
-                self.entity_sub,
-                self.tips_identities_sub,
-                self.tips_embeddings_sub,
-                self.tips_patch_matches_sub,
-            ],
-            queue_size=10,
-            slop=0.5
-        )
-        self.sync.registerCallback(self.synchronized_callback)
         self.get_logger().info(
-            "Subscribed and synchronized: image, entities, "
-            "/tips/object_identities, /tips/embeddings, /tips/patch_matches."
+            "Subscribed: image (trigger) + optional caches for "
+            "entities, /humans/unified, /humans/detected, /tips/object_identities, /tips/embeddings, /tips/patch_matches."
         )
 
         # Create a publisher to send the Scene Graph to the LLM Decision Maker
@@ -201,7 +206,7 @@ class MultiTopicListener(Node):
     # ------------------------------------------------------------------
     # Helper: build the {tips ...} string section from the three arrays
     # ------------------------------------------------------------------
-    def _build_tips_info(
+    def _build_tips_info( # they are like dependences for the AI model
         self,
         tips_identities_msg: TipsObjectIdentityArray,
         tips_embeddings_msg: TipsEmbeddingArray,
@@ -304,12 +309,97 @@ class MultiTopicListener(Node):
         return "\n".join(lines)
 
     # ------------------------------------------------------------------
+    # Cache helpers
+    # ------------------------------------------------------------------
+
+    def _ts(self, msg) -> float:
+        """Return the header timestamp of a message as a float (seconds)."""
+        return msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+
+    def _cache_push(self, cache: deque, msg) -> None:
+        """
+        Push (reception_time, msg) into a thread-safe deque cache.
+        Uses time.monotonic() — the real wall-clock time at which the message
+        arrived at this node — instead of the message header timestamp.
+        This makes matching robust regardless of rosbag speed or VLM inference delay.
+        """
+        t_received = time.monotonic()
+        with self._cache_lock:
+            cache.append((t_received, msg))
+
+
+    def _closest(self, cache: deque, t_ref: float):
+        """
+        Return the message in *cache* whose timestamp is closest to *t_ref*
+        and within self._slop seconds.  Returns None if the cache is empty
+        or no entry falls within the slop window.
+        """
+        with self._cache_lock:
+            if not cache:
+                return None
+            best, best_dt = None, float("inf")
+            for t, msg in cache:
+                dt = abs(t - t_ref)
+                if dt <= self._slop and dt < best_dt:
+                    best, best_dt = msg, dt
+            if best is None:
+                # Log the closest miss to help tune slop
+                closest_dt = min(abs(t - t_ref) for t, _ in cache)
+                self.get_logger().debug(
+                    f"_closest miss for {type(cache[0][1]).__name__}: "
+                    f"best Δt={closest_dt:.3f}s exceeds slop={self._slop}s"
+                )
+            return best
+
+
+    def _on_image(self, image_msg) -> None:
+        """
+        Called on every incoming camera frame.
+        Looks up the best-matching message for each optional topic within the
+        slop window and forwards them (or empty defaults) to synchronized_callback.
+        Uses time.monotonic() as reference — same clock used by _cache_push.
+        """
+        t_now = time.monotonic()
+
+        entity_msg             = self._closest(self._entity_cache,             t_now) or EntityArray()
+        human_msg              = self._closest(self._human_cache,              t_now) or PersonArray()
+        human_detected_msg     = self._closest(self._human_detected_cache,     t_now) or EntityArray()
+        tips_identities_msg    = self._closest(self._tips_identities_cache,    t_now) or TipsObjectIdentityArray()
+        tips_embeddings_msg    = self._closest(self._tips_embeddings_cache,    t_now) or TipsEmbeddingArray()
+        tips_patch_matches_msg = self._closest(self._tips_patch_matches_cache, t_now) or TipsPatchMatchArray()
+
+        # Diagnostic: log cache sizes and match results
+        with self._cache_lock:
+            self.get_logger().info(
+                f"Cache state (mono={t_now:.3f}s) | "
+                f"entities={len(self._entity_cache)}(match={'YES' if entity_msg.entity_array else 'empty/no'}), "
+                f"humans={len(self._human_cache)}(match={'YES' if human_msg.persons else 'empty/no'}), "
+                f"human_detected={len(self._human_detected_cache)}(match={'YES' if human_detected_msg.entity_array else 'empty/no'}), "
+                f"tips_id={len(self._tips_identities_cache)}(match={'YES' if tips_identities_msg.identities else 'empty/no'}), "
+                f"tips_emb={len(self._tips_embeddings_cache)}(match={'YES' if tips_embeddings_msg.embeddings else 'empty/no'}), "
+                f"tips_pm={len(self._tips_patch_matches_cache)}(match={'YES' if tips_patch_matches_msg.matches else 'empty/no'})"
+            )
+
+        self.synchronized_callback(
+            image_msg,
+            entity_msg,
+            human_msg,
+            human_detected_msg,
+            tips_identities_msg,
+            tips_embeddings_msg,
+            tips_patch_matches_msg,
+        )
+
+
+    # ------------------------------------------------------------------
     # Synchronized callback
     # ------------------------------------------------------------------
     def synchronized_callback(
         self,
         image_msg,
         entity_msg,
+        human_msg,
+        human_detected_msg,
         tips_identities_msg,
         tips_embeddings_msg,
         tips_patch_matches_msg,
@@ -350,8 +440,41 @@ class MultiTopicListener(Node):
                         y_max = int(bbox.ymax * pixels_height)
 
                         # Build phrase with id, label and bounding box (absolute pixel coords).
-                        entities_info += f"- ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
+                        entities_info += f"- Entity ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
 
+                # -- Humans (Description) ----------------------------
+                humans_info = "Array of human characteristics related to user in this frame:\n"
+
+                if not human_msg.persons:
+                    humans_info += "No humans detected in this frame.\n"
+                else:
+                    for person in human_msg.persons:
+                        # Build phrase with id, voice id, gender (from SoftBiometrics), engagement level.
+                        humans_info += (
+                            f"- ID: {person.id}"
+                            f", Voice ID: {person.voice_id}"
+                            f", Gender: {person.anonymized_speech.gender}"
+                            f" (confidence: {person.anonymized_speech.gender_confidence:.2f})"
+                            f", Engagement Level: {person.engagement_status.level}\n"
+                        )
+
+                # -- Humans (Description) ----------------------------
+                human_detected_info = "List of humans detected in this frame (make reference to these exact bounding boxes):\n"
+
+                if not human_detected_msg.entity_array:
+                    human_detected_info += "No humans detected in this frame.\n"
+                else:
+                    for entity in human_detected_msg.entity_array:
+                        bbox = entity.bbox_xyxy
+
+                        # Denormalize bboxes
+                        x_min = int(bbox.xmin * pixels_width)
+                        y_min = int(bbox.ymin * pixels_height)
+                        x_max = int(bbox.xmax * pixels_width)
+                        y_max = int(bbox.ymax * pixels_height)
+
+                        # Build phrase with id, label and bounding box (absolute pixel coords).
+                        human_detected_info += f"- Human ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"       
                 # -- TIPS perception data ------------------------------------
                 tips_info = self._build_tips_info(
                     tips_identities_msg,
@@ -392,6 +515,14 @@ class MultiTopicListener(Node):
                 --- SENSOR DATA (IMAGE: {pixels_width}x{pixels_height} px) ---
                 {entities_info}
                 --------------------------------------------------------------
+
+                --- HUMAN DATA (IMAGE: {pixels_width}x{pixels_height} px)  ---
+                {human_detected_info}
+                --------------------------------------------------------------
+
+                --- HUMAN CHARACTERISTICS DATA ---
+                {humans_info}
+                ----------------------------------
 
                 --- TIPS PERCEPTUAL DATA ---
                 The TIPS block below comes from three complementary perception streams:
@@ -552,7 +683,12 @@ class MultiTopicListener(Node):
                 else:
                     response_data = response
                 if not isinstance(response_data, dict):
-                    raise ValueError(f"Expected dict JSON response, got {type(response_data)}")
+                    self.get_logger().warning(
+                        f"VLM returned a {type(response_data).__name__} instead of a dict "
+                        f"(likely a bare bounding-box array leaked before the scene graph). "
+                        f"Skipping frame {self.counter_}. RAW (first 300): {str(response)[:300]!r}"
+                    )
+                    return
 
                 # 7. Normalise tool output -> pipeline schema.
                 #    The simplified tool schema uses flat fields (box_2d at entity top-level,
