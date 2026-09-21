@@ -1,129 +1,105 @@
 {
     "frame_id": 8,
-    "timestamp_sec": 1783341333,
-    "timestamp_nanosec": 127564697,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342426,
+    "timestamp_nanosec": 6025879,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "bowl",
-                "type": "object",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "empty",
-                    "clean",
-                    "static"
+                    "standing",
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        241,
-                        425,
-                        428,
-                        690
+                        816,
+                        138,
+                        1182,
+                        1043
                     ]
                 },
-                "action_description": null
+                "action_description": "standing and giving a thumbs up",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "chair",
+                "label": "wall",
                 "type": "structural",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        6,
-                        245,
-                        219,
-                        492
+                        0,
+                        0,
+                        1920,
+                        560
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "shelf",
+                "label": "poster",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        1460,
+                        70,
+                        1840,
+                        520
+                    ]
+                },
+                "action_description": null,
+                "emotional_state": null
+            },
+            {
+                "id": 3,
+                "label": "floor",
                 "type": "structural",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        100,
-                        100,
-                        600,
-                        900
+                        0,
+                        560,
+                        1920,
+                        1080
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "pot",
-                "type": "object",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        100,
-                        650,
-                        250,
-                        850
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "plate",
-                "type": "object",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        450,
-                        250,
-                        600,
-                        550
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 2
+                "predicate": "in_front_of",
+                "object_id": 1
             },
             {
                 "subject_id": 0,
                 "predicate": "on_the_left_of",
-                "object_id": 3
+                "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "above",
-                "object_id": 4
-            },
-            {
-                "subject_id": 1,
-                "predicate": "behind",
-                "object_id": 2
+                "predicate": "on_top_of",
+                "object_id": 3
             }
         ]
     }

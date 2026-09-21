@@ -1,291 +1,82 @@
 {
     "frame_id": 11,
-    "timestamp_sec": 1783341343,
-    "timestamp_nanosec": 903793945,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342459,
+    "timestamp_nanosec": 226122314,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "table",
+                "label": "person",
+                "type": "human",
+                "states": [
+                    "standing",
+                    "neutral"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        211,
+                        730,
+                        1075,
+                        1507
+                    ]
+                },
+                "action_description": "standing and wearing headphones",
+                "emotional_state": "neutral"
+            },
+            {
+                "id": 1,
+                "label": "wall",
                 "type": "structural",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
                         0,
                         0,
-                        720,
-                        1280
+                        600,
+                        1920
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 1,
-                "label": "cup",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        224,
-                        607,
-                        370,
-                        715
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "cup",
+                "label": "poster",
                 "type": "object",
                 "states": [
-                    "empty",
-                    "static",
-                    "reachable"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        454,
-                        1010,
-                        624,
-                        1176
+                        50,
+                        1450,
+                        600,
+                        1920
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "bowl",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        283,
-                        1018,
-                        422,
-                        1181
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "keyboard",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        267,
-                        369,
-                        720,
-                        658
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 5,
-                "label": "mouse",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        609,
-                        705,
-                        717,
-                        895
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 6,
-                "label": "frying_pan",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        30,
-                        580,
-                        280,
-                        820
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 7,
-                "label": "plate",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        30,
-                        10,
-                        180,
-                        200
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 8,
-                "label": "orange",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        30,
-                        30,
-                        130,
-                        130
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 9,
-                "label": "green_ball",
-                "type": "object",
-                "states": [
-                    "static",
-                    "reachable"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        250,
-                        280,
-                        320,
-                        350
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 0
+                "subject_id": 0,
+                "predicate": "in_front_of",
+                "object_id": 1
             },
             {
                 "subject_id": 2,
                 "predicate": "on_top_of",
-                "object_id": 0
+                "object_id": 1
             },
             {
-                "subject_id": 3,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 4,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 6,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 8,
-                "predicate": "inside",
-                "object_id": 7
-            },
-            {
-                "subject_id": 9,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 1,
+                "subject_id": 0,
                 "predicate": "on_the_left_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "below",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_the_right_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 4,
-                "predicate": "below",
-                "object_id": 1
-            },
-            {
-                "subject_id": 5,
-                "predicate": "next_to",
-                "object_id": 4
-            },
-            {
-                "subject_id": 5,
-                "predicate": "on_the_right_of",
-                "object_id": 4
-            },
-            {
-                "subject_id": 6,
-                "predicate": "above",
-                "object_id": 3
-            },
-            {
-                "subject_id": 7,
-                "predicate": "on_the_left_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 9,
-                "predicate": "below",
-                "object_id": 1
-            },
-            {
-                "subject_id": 9,
-                "predicate": "on_the_left_of",
-                "object_id": 4
+                "object_id": 2
             }
         ]
     }

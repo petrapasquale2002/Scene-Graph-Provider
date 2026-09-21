@@ -1,121 +1,105 @@
 {
     "frame_id": 14,
-    "timestamp_sec": 1783341356,
-    "timestamp_nanosec": 916325195,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342467,
+    "timestamp_nanosec": 870888916,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "bowl",
-                "type": "object",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "static",
-                    "clean",
-                    "empty"
+                    "standing",
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        315,
-                        260,
-                        399,
-                        394
+                        215,
+                        451,
+                        1067,
+                        1501
                     ]
                 },
-                "action_description": null
+                "action_description": "making a thumbs-down gesture with right hand",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "bowl",
+                "label": "headphones",
                 "type": "object",
                 "states": [
-                    "static",
-                    "clean",
-                    "empty"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        291,
-                        394,
-                        365,
-                        507
+                        215,
+                        550,
+                        350,
+                        750
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "sink",
-                "type": "structural",
+                "label": "poster",
+                "type": "object",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        219,
-                        617,
-                        328,
-                        934
+                        50,
+                        750,
+                        550,
+                        1100
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 3,
-                "label": "counter",
+                "label": "wall",
                 "type": "structural",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        150,
                         0,
-                        450,
-                        1280
+                        0,
+                        600,
+                        1920
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 3
+                "predicate": "touching",
+                "object_id": 1
             },
             {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "embedded_in",
+                "subject_id": 0,
+                "predicate": "in_front_of",
                 "object_id": 3
             },
             {
                 "subject_id": 0,
-                "predicate": "on_the_left_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_the_right_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_the_left_of",
+                "predicate": "in_front_of",
                 "object_id": 2
             },
             {
                 "subject_id": 2,
-                "predicate": "on_the_right_of",
-                "object_id": 1
+                "predicate": "on_top_of",
+                "object_id": 3
             }
         ]
     }

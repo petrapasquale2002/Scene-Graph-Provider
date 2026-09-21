@@ -1,89 +1,82 @@
 {
     "frame_id": 9,
-    "timestamp_sec": 1783341336,
-    "timestamp_nanosec": 297623535,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342430,
+    "timestamp_nanosec": 75606201,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "bowl",
-                "type": "object",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "empty",
-                    "clean",
-                    "static",
-                    "stable"
+                    "standing",
+                    "gesturing"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        362,
-                        437,
-                        557,
-                        679
+                        814,
+                        138,
+                        1206,
+                        1047
                     ]
                 },
-                "action_description": null
+                "action_description": "pointing towards the banner",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "pot",
-                "type": "object",
+                "label": "partition_wall",
+                "type": "structural",
                 "states": [
-                    "clean",
-                    "static",
-                    "stable"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        180,
-                        650,
-                        380,
-                        880
+                        0,
+                        0,
+                        1920,
+                        560
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "shelf",
-                "type": "structural",
+                "label": "banner",
+                "type": "object",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        200,
-                        0,
-                        720,
-                        1280
+                        1460,
+                        75,
+                        1840,
+                        500
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 2
+                "predicate": "in_front_of",
+                "object_id": 1
             },
             {
                 "subject_id": 0,
                 "predicate": "on_the_left_of",
-                "object_id": 1
+                "object_id": 2
             },
             {
-                "subject_id": 1,
-                "predicate": "on_the_right_of",
-                "object_id": 0
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 1
             }
         ]
     }

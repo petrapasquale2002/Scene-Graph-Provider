@@ -627,11 +627,12 @@ class MultiTopicListener(Node):
                 ------------------------------------------------------------------------
                 1. Entity Identification: Detect all key entities (everyday objects, household architectural elements, humans, specific body parts if heavily interacting).
                 2. Physical Commonsense & Grounding: Ground your reasoning in physical reality. Furniture sits on the floor; food goes on plates or tables; humans sit on chairs/sofas or stand on the floor. Do not hallucinate floating or physically impossible states.
-                3. Human Pose Classification: For every human entity you MUST assign exactly one pose from the Human Pose States list (standing, sitting, walking, pointing, raising_right_hand, raising_left_hand, waving). Use the bounding box from /humans/detected together with the image to determine the correct pose. You may additionally add one or more Human Activity States.
-                4. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
-                5. TIPS data usage: Cross-reference entity identities (object_id from object_identities) with the detector track_id to confirm persistent identities across frames. Use patch_match cosine scores and matched queries to refine semantic labels and states. Use contour_px (when present) to sharpen occlusion and proximity relationships between overlapping entities.
-                6. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
-                7. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
+                3. Human Pose Classification: For every human entity you MUST assign exactly one pose from the Human Pose States list (standing, sitting, walking, pointing, raising_right_hand, raising_left_hand, waving, thumbs-up, thumbs-down, thumb-up, thumb-down, ok, halt).
+                4. Human labeling: Use also interaction states (reaching, looking_at, interacting, neutral, gesturing) when applicable. If a human is holding an object, include the "holding" relationship. Decode and label human emotional state from face expression (happy, neutral, angry, laughing).
+                5. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
+                6. TIPS data usage: Cross-reference entity identities (object_id from object_identities) with the detector track_id to confirm persistent identities across frames. Use patch_match cosine scores and matched queries to refine semantic labels and states. Use contour_px (when present) to sharpen occlusion and proximity relationships between overlapping entities.
+                7. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
+                8. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
 
                 ------------------------------------------------------------------------
                 OUTPUT JSON FORMAT
@@ -646,7 +647,8 @@ class MultiTopicListener(Node):
                     "spatial_info": {{
                         "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>]
                     }},
-                    "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork'), otherwise null>"
+                    "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork', 'waving'), otherwise null>"
+                    "emotional_state": "<string: specific label if human (e.g., 'happy', 'sad', 'angry', 'laughing'), otherwise null>"
                     }}
                 ],
                 "relationships": [

@@ -1,111 +1,54 @@
 {
     "frame_id": 2,
-    "timestamp_sec": 1783341356,
-    "timestamp_nanosec": 416620605,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342477,
+    "timestamp_nanosec": 406583252,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "bowl",
-                "type": "object",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "empty",
-                    "clean",
-                    "static"
+                    "walking",
+                    "moving"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        322,
-                        140,
-                        451,
-                        334
+                        1,
+                        786,
+                        1071,
+                        1558
                     ]
                 },
-                "action_description": null
+                "action_description": "walking past the camera",
+                "emotional_state": null
             },
             {
                 "id": 1,
-                "label": "bowl",
-                "type": "object",
-                "states": [
-                    "empty",
-                    "clean",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        277,
-                        324,
-                        380,
-                        477
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 2,
-                "label": "sink",
+                "label": "wall",
                 "type": "structural",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        156,
-                        597,
-                        309,
-                        940
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "counter",
-                "type": "structural",
-                "states": [
-                    "clean",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        100,
                         0,
-                        500,
-                        1280
+                        0,
+                        540,
+                        1400
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "part_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 0,
-                "predicate": "on_the_left_of",
+                "predicate": "in_front_of",
                 "object_id": 1
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_the_left_of",
-                "object_id": 2
             }
         ]
     }

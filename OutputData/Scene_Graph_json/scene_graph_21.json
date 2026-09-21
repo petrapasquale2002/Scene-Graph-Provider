@@ -1,108 +1,82 @@
 {
     "frame_id": 21,
-    "timestamp_sec": 1783341336,
-    "timestamp_nanosec": 230865479,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342419,
+    "timestamp_nanosec": 435014893,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "bowl",
-                "type": "object",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "empty",
-                    "clean",
-                    "static"
+                    "standing",
+                    "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        371,
-                        450,
-                        561,
-                        690
+                        126,
+                        803,
+                        1051,
+                        1103
                     ]
                 },
-                "action_description": null
+                "action_description": "standing and looking at the camera",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "pot",
-                "type": "object",
+                "label": "wall",
+                "type": "structural",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        200,
-                        680,
-                        420,
-                        880
+                        0,
+                        0,
+                        1080,
+                        1920
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "shelf",
-                "type": "structural",
+                "label": "banner",
+                "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
                         100,
-                        0,
-                        600,
-                        1280
+                        1450,
+                        950,
+                        1900
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "chair",
-                "type": "structural",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        0,
-                        300,
-                        450,
-                        700
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 2
+                "predicate": "in_front_of",
+                "object_id": 1
             },
             {
                 "subject_id": 0,
                 "predicate": "on_the_left_of",
-                "object_id": 1
-            },
-            {
-                "subject_id": 1,
-                "predicate": "on_the_right_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 3,
-                "predicate": "behind",
                 "object_id": 2
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 1
             }
         ]
     }

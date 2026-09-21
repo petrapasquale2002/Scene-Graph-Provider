@@ -1,144 +1,76 @@
 {
     "frame_id": 16,
-    "timestamp_sec": 1783341365,
-    "timestamp_nanosec": 383589600,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342473,
+    "timestamp_nanosec": 505860596,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "shelf",
-                "type": "structural",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "static",
-                    "clean"
+                    "raising_left_hand",
+                    "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        450,
-                        720
+                        197,
+                        696,
+                        1066,
+                        1663
                     ]
                 },
-                "action_description": null
+                "action_description": "raising left hand with open palm",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "oven",
+                "label": "wall",
                 "type": "structural",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        700,
-                        200,
-                        1280,
-                        720
+                        0,
+                        0,
+                        500,
+                        1920
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "cup",
+                "label": "poster",
                 "type": "object",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        397,
-                        274,
-                        497,
-                        404
+                        50,
+                        1400,
+                        450,
+                        1900
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "cup",
-                "type": "object",
-                "states": [
-                    "static",
-                    "clean"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        761,
-                        261,
-                        845,
-                        371
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 4,
-                "label": "bottle",
-                "type": "object",
-                "states": [
-                    "static",
-                    "clean"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        100,
-                        0,
-                        200,
-                        200
-                    ]
-                },
-                "action_description": null
-            },
-            {
-                "id": 5,
-                "label": "pot",
-                "type": "object",
-                "states": [
-                    "static",
-                    "clean"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        100,
-                        500,
-                        300,
-                        700
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
-                "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 3,
-                "predicate": "on_top_of",
+                "subject_id": 0,
+                "predicate": "in_front_of",
                 "object_id": 1
             },
             {
-                "subject_id": 4,
+                "subject_id": 2,
                 "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 5,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 0,
-                "predicate": "next_to",
                 "object_id": 1
             }
         ]

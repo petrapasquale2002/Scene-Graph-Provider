@@ -1,105 +1,82 @@
 {
     "frame_id": 24,
-    "timestamp_sec": 1783341337,
-    "timestamp_nanosec": 767352539,
-    "width": 1280,
-    "height": 720,
+    "timestamp_sec": 1783342435,
+    "timestamp_nanosec": 946095459,
+    "width": 1920,
+    "height": 1080,
     "scene_graph": {
         "entities": [
             {
                 "id": 0,
-                "label": "table",
-                "type": "structural",
+                "label": "person",
+                "type": "human",
                 "states": [
-                    "clean",
-                    "static"
+                    "walking",
+                    "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        337,
-                        411,
-                        531,
-                        654
+                        0,
+                        711,
+                        1060,
+                        1261
                     ]
                 },
-                "action_description": null
+                "action_description": "walking past a banner",
+                "emotional_state": "neutral"
             },
             {
                 "id": 1,
-                "label": "keyboard",
+                "label": "banner",
                 "type": "object",
                 "states": [
-                    "clean",
-                    "static",
-                    "reachable"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        380,
-                        450,
-                        500,
-                        600
+                        50,
+                        1250,
+                        650,
+                        1920
                     ]
                 },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             },
             {
                 "id": 2,
-                "label": "cabinet",
+                "label": "partition_wall",
                 "type": "structural",
                 "states": [
-                    "clean",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
                         0,
                         0,
-                        400,
-                        500
+                        550,
+                        1920
                     ]
                 },
-                "action_description": null
-            },
-            {
-                "id": 3,
-                "label": "floor",
-                "type": "structural",
-                "states": [
-                    "clean",
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        0,
-                        300,
-                        720,
-                        720
-                    ]
-                },
-                "action_description": null
+                "action_description": null,
+                "emotional_state": null
             }
         ],
         "relationships": [
             {
-                "subject_id": 1,
-                "predicate": "on_top_of",
-                "object_id": 0
-            },
-            {
-                "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
                 "subject_id": 0,
                 "predicate": "in_front_of",
                 "object_id": 2
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 1
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_the_right_of",
+                "object_id": 0
             }
         ]
     }

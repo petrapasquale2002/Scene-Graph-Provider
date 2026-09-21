@@ -320,6 +320,18 @@ const POSE_EMOJI = {
   raising_left_hand:  "🙋",
   waving:             "👋",
 };
+const EMOTION_EMOJI = {
+  happy:     "😊",
+  sad:       "😢",
+  angry:     "😠",
+  surprised: "😲",
+  fearful:   "😨",
+  disgusted: "🤢",
+  neutral:   "😐",
+  confused:  "😕",
+  excited:   "🤩",
+  bored:     "😑",
+};
 
 // ── vis.js setup ──────────────────────────────────────────────────────────
 const nodesDS = new vis.DataSet([]);
@@ -368,7 +380,7 @@ function buildVisNodes(entities) {
     // ── Human nodes: split pose vs activity states ──────────────────────
     let nodeLabel = e.label;
     let tooltip =
-      `<b>${e.label}</b><br>` +
+      `<b>${e.label}</b><br>` + 
       `Type: ${e.type}<br>` +
       `States: ${allStates.join(", ") || "—"}<br>` +
       `BBox: [${box || "—"}]` +
@@ -378,9 +390,13 @@ function buildVisNodes(entities) {
       const poses      = allStates.filter(st => HUMAN_POSES.has(st));
       const activities = allStates.filter(st => !HUMAN_POSES.has(st));
       const poseStr    = poses.map(p => (POSE_EMOJI[p] || "🧍") + " " + p).join(" · ");
+      const emotion    = (e.emotional_state && e.emotional_state !== "null") ? e.emotional_state : null;
+      const emotionStr = emotion ? (EMOTION_EMOJI[emotion.toLowerCase()] || "🫀") + " " + emotion : null;
 
-      // Node label: name on first line, pose on second line
-      nodeLabel = poseStr ? `${e.label}\n${poseStr}` : e.label;
+      // Node label: name / pose / emotional state — usa \\n come il codice originale
+      nodeLabel = e.label;
+      if (poseStr)    nodeLabel = `${nodeLabel}\\n${poseStr}`;
+      if (emotionStr) nodeLabel = `${nodeLabel}\\n${emotionStr}`;
 
       // Richer tooltip for humans
       tooltip =
@@ -388,6 +404,7 @@ function buildVisNodes(entities) {
         `Type: human<br>` +
         (poses.length      ? `<b>Pose:</b> ${poses.join(", ")}<br>`       : "") +
         (activities.length ? `<b>Activity:</b> ${activities.join(", ")}<br>` : "") +
+        (emotion           ? `<b>Emotional state:</b> ${emotionStr}<br>`  : "") +
         `BBox: [${box || "—"}]` +
         (action ? `<br><i>${action}</i>` : "");
     }
