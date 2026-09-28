@@ -1,7 +1,7 @@
 {
     "frame_id": 14,
-    "timestamp_sec": 1783342467,
-    "timestamp_nanosec": 870888916,
+    "timestamp_sec": 1790248407,
+    "timestamp_nanosec": 845327148,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -12,93 +12,137 @@
                 "type": "human",
                 "states": [
                     "standing",
-                    "gesturing"
+                    "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        215,
-                        451,
-                        1067,
-                        1501
+                        34,
+                        525,
+                        1071,
+                        1094
                     ]
                 },
-                "action_description": "making a thumbs-down gesture with right hand",
-                "emotional_state": "neutral"
+                "id_confirmation": true,
+                "Target User ID": "U20",
+                "action_description": "standing in the room",
+                "emotional_state": "startle_response",
+                "speech_transcript": "No speech"
             },
             {
                 "id": 1,
-                "label": "headphones",
+                "label": "chair",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        215,
-                        550,
-                        350,
-                        750
+                        727,
+                        421,
+                        1073,
+                        885
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             },
             {
                 "id": 2,
-                "label": "poster",
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        87,
+                        1379,
+                        212,
+                        1572
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 3,
+                "label": "vase",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        50,
-                        750,
-                        550,
-                        1100
+                        24,
+                        1557,
+                        206,
+                        1625
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             },
             {
-                "id": 3,
-                "label": "wall",
-                "type": "structural",
+                "id": 4,
+                "label": "potted plant",
+                "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        600,
-                        1920
+                        222,
+                        1197,
+                        631,
+                        1440
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "touching",
+                "predicate": "near",
                 "object_id": 1
             },
             {
-                "subject_id": 0,
-                "predicate": "in_front_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 0,
-                "predicate": "in_front_of",
-                "object_id": 2
+                "subject_id": 1,
+                "predicate": "on_the_left_of",
+                "object_id": 0
             },
             {
                 "subject_id": 2,
-                "predicate": "on_top_of",
+                "predicate": "on_the_right_of",
+                "object_id": 0
+            },
+            {
+                "subject_id": 3,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "below",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "next_to",
                 "object_id": 3
             }
         ]

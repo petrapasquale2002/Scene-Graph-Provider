@@ -1,7 +1,7 @@
 {
     "frame_id": 5,
-    "timestamp_sec": 1783342414,
-    "timestamp_nanosec": 667381348,
+    "timestamp_sec": 1790248434,
+    "timestamp_nanosec": 796813721,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -11,72 +11,175 @@
                 "label": "person",
                 "type": "human",
                 "states": [
-                    "waving",
+                    "crouching",
                     "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        138,
-                        702,
-                        1036,
-                        1088
+                        462,
+                        552,
+                        1045,
+                        925
                     ]
                 },
-                "action_description": "waving at the camera",
-                "emotional_state": "neutral"
+                "id_confirmation": true,
+                "Target User ID": "U20",
+                "action_description": "crouching on the floor and looking at the camera",
+                "emotional_state": "nervous",
+                "speech_transcript": "No speech"
             },
             {
                 "id": 1,
-                "label": "wall",
-                "type": "structural",
-                "states": [
-                    "static"
-                ],
-                "spatial_info": {
-                    "box_2d": [
-                        0,
-                        0,
-                        550,
-                        1920
-                    ]
-                },
-                "action_description": null,
-                "emotional_state": null
-            },
-            {
-                "id": 2,
-                "label": "poster",
+                "label": "bowl",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        50,
-                        1450,
-                        520,
-                        1850
+                        725,
+                        870,
+                        794,
+                        956
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 2,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        87,
+                        1380,
+                        217,
+                        1573
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 3,
+                "label": "vase",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        22,
+                        1549,
+                        206,
+                        1627
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 4,
+                "label": "potted plant",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        219,
+                        1197,
+                        629,
+                        1439
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 5,
+                "label": "potted plant",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        243,
+                        996,
+                        679,
+                        1076
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 6,
+                "label": "chair",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        783,
+                        870,
+                        894,
+                        983
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "near",
                 "object_id": 1
+            },
+            {
+                "subject_id": 1,
+                "predicate": "on_top_of",
+                "object_id": 6
             },
             {
                 "subject_id": 2,
-                "predicate": "on_top_of",
-                "object_id": 1
+                "predicate": "next_to",
+                "object_id": 3
+            },
+            {
+                "subject_id": 3,
+                "predicate": "next_to",
+                "object_id": 4
             },
             {
                 "subject_id": 0,
-                "predicate": "on_the_left_of",
-                "object_id": 2
+                "predicate": "in_front_of",
+                "object_id": 4
             }
         ]
     }

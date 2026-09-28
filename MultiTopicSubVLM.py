@@ -59,6 +59,18 @@ class SceneGraphSchema(BaseModel):
     entities: List[EntityNode]
     relationships: List[Relationship]
 
+# Map from numeric ID to label for BodyPosture
+POSTURE_MAP = {
+    0: "OTHER",
+    1: "STANDING",
+    2: "SITTING",
+    3: "CROUCHING",
+    4: "LAYING",
+    5: "BENDING",
+    6: "KNEELING",
+    7: "WALKING"
+}
+
 # ---------------------------------------------------------------------------
 
 # Maximum number of contour points to include in the prompt (to keep it concise)
@@ -132,47 +144,47 @@ class MultiTopicListener(Node):
         # -- Image: primary trigger (always published) -----------------------
         self.create_subscription(
             CompressedImage,
-            "/camera/image_raw/compressed",
+            "/camera/camera/color/image_raw/compressed",
             self._on_image,
-            qos_profile=sensor_qos,
+            sensor_qos
         )
 
         # -- Optional topics: fill caches ------------------------------------
         self.create_subscription(
             EntityArray,
             "/entities/detected",
-            lambda msg: self._cache_push(self._entity_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_entities_detected,
+            sensor_qos
         )
         self.create_subscription(
             PersonArray,
             "/humans/unified",
-            lambda msg: self._cache_push(self._human_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_humans_unified,
+            sensor_qos 
         )
         self.create_subscription(
             EntityArray,
             "/humans/detected",
-            lambda msg: self._cache_push(self._human_detected_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_humans_detected,
+            sensor_qos 
         )
         self.create_subscription(
             TipsObjectIdentityArray,
             "/tips/object_identities",
-            lambda msg: self._cache_push(self._tips_identities_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_tips_object_identities,
+            sensor_qos 
         )
         self.create_subscription(
             TipsEmbeddingArray,
             "/tips/embeddings",
-            lambda msg: self._cache_push(self._tips_embeddings_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_tips_embeddings,
+            sensor_qos 
         )
         self.create_subscription(
             TipsPatchMatchArray,
             "/tips/patch_matches",
-            lambda msg: self._cache_push(self._tips_patch_matches_cache, msg),
-            qos_profile=sensor_qos,
+            self._on_tips_patch_matches,
+            sensor_qos 
         )
         # --------------------------------------------------------------------
 
@@ -327,6 +339,24 @@ class MultiTopicListener(Node):
         with self._cache_lock:
             cache.append((t_received, msg))
 
+    def _on_entities_detected(self, msg) -> None:
+        self._cache_push(self._entity_cache, msg)
+
+    def _on_humans_unified(self, msg) -> None:
+        self._cache_push(self._human_cache, msg)
+
+    def _on_humans_detected(self, msg) -> None:
+        self._cache_push(self._human_detected_cache, msg)
+
+    def _on_tips_object_identities(self, msg) -> None:
+        self._cache_push(self._tips_identities_cache, msg)
+
+    def _on_tips_embeddings(self, msg) -> None:
+        self._cache_push(self._tips_embeddings_cache, msg)
+
+    def _on_tips_patch_matches(self, msg) -> None:
+        self._cache_push(self._tips_patch_matches_cache, msg)
+
 
     def _closest(self, cache: deque, t_ref: float):
         """
@@ -373,7 +403,7 @@ class MultiTopicListener(Node):
             self.get_logger().info(
                 f"Cache state (mono={t_now:.3f}s) | "
                 f"entities={len(self._entity_cache)}(match={'YES' if entity_msg.entity_array else 'empty/no'}), "
-                f"humans={len(self._human_cache)}(match={'YES' if human_msg.persons else 'empty/no'}), "
+                f"humans={len(self._human_cache)}(match={'YES' if human_msg.person_array else 'empty/no'}), "
                 f"human_detected={len(self._human_detected_cache)}(match={'YES' if human_detected_msg.entity_array else 'empty/no'}), "
                 f"tips_id={len(self._tips_identities_cache)}(match={'YES' if tips_identities_msg.identities else 'empty/no'}), "
                 f"tips_emb={len(self._tips_embeddings_cache)}(match={'YES' if tips_embeddings_msg.embeddings else 'empty/no'}), "
@@ -443,21 +473,44 @@ class MultiTopicListener(Node):
                         entities_info += f"- Entity ID: {entity.track_id}, Label: {entity.label}, inside bbox: {x_min}, {y_min}, {x_max}, {y_max}\n"
 
                 # -- Humans (Description) ----------------------------
-                humans_info = "Array of human characteristics related to user in this frame:\n"
+                humans_info = "Array of human characteristics related to user in this frame:\n"                                                       
+                                                                                                                                                                                                 
+                if not human_msg.person_array:                                                                                                        
+                    humans_info += "No humans detected in this frame.\n"                                                                              
+                else: 
+                    #Iterate over the array to get information                                                                                                                                
+                    for person in human_msg.person_array:                                                                                             
+                        
+                        # 1. Gesture
+                        gestures_list = [f"{g.gesture}:{g.gesture_id}" for g in person.gestures if g.gesture_id]
+                        gestures_str = ", ".join(gestures_list) if gestures_list else "None"
+                        
+                        # 2. Stress indicator / Wearable derived states
+                        wearable_states_list = [f"{state.name}: {state.state}" for state in person.physiology.states]
+                        wearable_states_str = ", ".join(wearable_states_list) if wearable_states_list else "None"
+                        
+                        # 3. Speech Result 
+                        transcript = person.speech_result.transcript if person.speech_result.transcript else "No speech"
+                        
+                        # 4. Facial Recognition 
+                        recognized_face = person.face_recognition.recognized_face_id if person.face_recognition.recognized_face_id else "Unknown"     
+                        face_confidence = person.face_recognition.confidence
 
-                if not human_msg.persons:
-                    humans_info += "No humans detected in this frame.\n"
-                else:
-                    for person in human_msg.persons:
-                        # Build phrase with id, voice id, gender (from SoftBiometrics), engagement level.
+                        # 5. Body Posture (Posa del corpo)
+                        posture_value = person.posture.posture
+                        posture_str = POSTURE_MAP.get(posture_value, "UNKNOWN")
+                        posture_confidence = person.posture.confidence
+                        
+                        # Build the string message
                         humans_info += (
-                            f"- ID: {person.id}"
-                            f", Voice ID: {person.voice_id}"
-                            f", Gender: {person.anonymized_speech.gender}"
-                            f" (confidence: {person.anonymized_speech.gender_confidence:.2f})"
-                            f", Engagement Level: {person.engagement_status.level}\n"
-                        )
-
+                            f"  - Person ID: {person.person_id}\n"
+                            f"  - Posture: {posture_value}:{posture_str} (confidence: {posture_confidence:.2f})\n"
+                            f"  - Recognized Face: {person.face_recognition.recognized_face_id}\n"
+                            f"  - Gestures: {gestures_str}\n"
+                            f"  - Wearable States (Stress, etc.): {wearable_states_str}\n"
+                            f"  - Speech Transcript: {transcript}\n"
+                            )
+             
                 # -- Humans (Description) ----------------------------
                 human_detected_info = "List of humans detected in this frame (make reference to these exact bounding boxes):\n"
 
@@ -570,7 +623,7 @@ class MultiTopicListener(Node):
                 - fork (type: object, states: clean, reachable, static | relationship: next_to -> plate)
                 - apple (type: object, states: clean, reachable, static | relationship: inside -> plate)
                 - book (type: object, states: closed, static, reachable | relationship: on_top_of -> sofa)
-                - human_user (type: human, states: sitting, interacting | relationship: near -> dining_table)
+                - human_user (type: human, position: sitting, interacting | relationship: near -> dining_table)
 
                 Example Scene Graph JSON:
                 {{
@@ -627,12 +680,11 @@ class MultiTopicListener(Node):
                 ------------------------------------------------------------------------
                 1. Entity Identification: Detect all key entities (everyday objects, household architectural elements, humans, specific body parts if heavily interacting).
                 2. Physical Commonsense & Grounding: Ground your reasoning in physical reality. Furniture sits on the floor; food goes on plates or tables; humans sit on chairs/sofas or stand on the floor. Do not hallucinate floating or physically impossible states.
-                3. Human Pose Classification: For every human entity you MUST assign exactly one pose from the Human Pose States list (standing, sitting, walking, pointing, raising_right_hand, raising_left_hand, waving, thumbs-up, thumbs-down, thumb-up, thumb-down, ok, halt).
-                4. Human labeling: Use also interaction states (reaching, looking_at, interacting, neutral, gesturing) when applicable. If a human is holding an object, include the "holding" relationship. Decode and label human emotional state from face expression (happy, neutral, angry, laughing).
-                5. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
-                6. TIPS data usage: Cross-reference entity identities (object_id from object_identities) with the detector track_id to confirm persistent identities across frames. Use patch_match cosine scores and matched queries to refine semantic labels and states. Use contour_px (when present) to sharpen occlusion and proximity relationships between overlapping entities.
-                7. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
-                8. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
+                3. Human labeling: Use posture, gestures and states labels from {humans_info}. If the info related to gesture, posture or wearable states is missing, use the image to infer the most likely human pose and activity. If a human is interacting with an object, assign the appropriate relationship (e.g., holding, looking_at, operating). Always pass the tracked speech to the scenegraph in the dedicated space.
+                4. Spatial & Relative Relationships: Deduce precise relative positions. If Object A is to the left of Object B from the camera perspective, log [A -> on_the_left_of -> B]. If Bounding Box data is deducible, ensure relationships strictly mirror the spatial vectors.
+                5. TIPS data usage: Cross-reference entity identities (object_id from object_identities) with the detector track_id to confirm persistent identities across frames. Use patch_match cosine scores and matched queries to refine semantic labels and states. Use contour_px (when present) to sharpen occlusion and proximity relationships between overlapping entities.
+                6. JSON Formatting: The final output must be a single, valid JSON object starting with {{ and ending with }}. Do not include any markdown block formatting (like ```json) around the JSON.
+                7. Reasoning: If you must reason or explain, do it in a <think>...</think> block at the very beginning of your response, or do it as plain text before the JSON block. Do not include any text, reasoning, or explanations after the closing brace }} of the JSON block.
 
                 ------------------------------------------------------------------------
                 OUTPUT JSON FORMAT
@@ -647,8 +699,11 @@ class MultiTopicListener(Node):
                     "spatial_info": {{
                         "box_2d": [<int: ymin>, <int: xmin>, <int: ymax>, <int: xmax>]
                     }},
-                    "action_description": "<string: specific action verb if human (e.g., 'reading a book', 'pointing at the fork', 'waving'), otherwise null>"
-                    "emotional_state": "<string: specific label if human (e.g., 'happy', 'sad', 'angry', 'laughing'), otherwise null>"
+                    "id_confirmation ('Recognized Face ID' = 'Target User ID')": <bool: true if 'Recognized Face ID' from {humans_info} matches the 'Target User ID', false otherwise. null if entity is not human>,
+                    "Target User ID": "<string: the ID of the target user if entity is human AND id_confirmation is true, otherwise null>",
+                    "action_description": "<string: specific action verb if human, combining info from image and {humans_info}, otherwise null>"
+                    "emotional_state": "<string: specific label if human from {humans_info}, otherwise null>"
+                    "speech_transcript": "<string: if human, the tracked speech from {humans_info}, otherwise null>"
                     }}
                 ],
                 "relationships": [

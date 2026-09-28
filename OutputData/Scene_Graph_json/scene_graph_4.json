@@ -1,7 +1,7 @@
 {
     "frame_id": 4,
-    "timestamp_sec": 1783342411,
-    "timestamp_nanosec": 428740723,
+    "timestamp_sec": 1790248430,
+    "timestamp_nanosec": 226775391,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -11,102 +11,192 @@
                 "label": "person",
                 "type": "human",
                 "states": [
-                    "walking",
+                    "crouching",
                     "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        30,
-                        1339,
-                        1075,
-                        1725
+                        471,
+                        554,
+                        1062,
+                        938
                     ]
                 },
-                "action_description": "walking past a banner",
-                "emotional_state": "neutral"
+                "id_confirmation": true,
+                "Target User ID": "U20",
+                "action_description": "crouching on the floor and looking at the camera",
+                "emotional_state": "nervous",
+                "speech_transcript": "No speech"
             },
             {
                 "id": 1,
-                "label": "partition_wall",
-                "type": "structural",
+                "label": "bowl",
+                "type": "object",
                 "states": [
                     "static",
                     "clean"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        550,
-                        1350
+                        727,
+                        877,
+                        794,
+                        956
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             },
             {
                 "id": 2,
-                "label": "banner",
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static",
+                    "clean"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        87,
+                        1382,
+                        215,
+                        1573
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 3,
+                "label": "vase",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        60,
-                        1650,
-                        550,
-                        1920
+                        21,
+                        1544,
+                        205,
+                        1626
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             },
             {
-                "id": 3,
-                "label": "floor",
-                "type": "structural",
+                "id": 4,
+                "label": "potted plant",
+                "type": "object",
                 "states": [
-                    "static",
-                    "clean"
+                    "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        550,
+                        221,
+                        1200,
+                        624,
+                        1442
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 5,
+                "label": "shelving unit",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
                         0,
+                        1150,
                         1080,
                         1920
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 6,
+                "label": "stool",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        700,
+                        850,
+                        850,
+                        1000
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "near",
                 "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
-                "object_id": 2
-            },
-            {
-                "subject_id": 0,
-                "predicate": "on_top_of",
-                "object_id": 3
-            },
-            {
-                "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 1
+                "predicate": "on_the_left_of",
+                "object_id": 5
             },
             {
                 "subject_id": 1,
                 "predicate": "on_top_of",
-                "object_id": 3
+                "object_id": 6
+            },
+            {
+                "subject_id": 2,
+                "predicate": "on_top_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 3,
+                "predicate": "next_to",
+                "object_id": 2
+            },
+            {
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 5
+            },
+            {
+                "subject_id": 4,
+                "predicate": "below",
+                "object_id": 2
             }
         ]
     }

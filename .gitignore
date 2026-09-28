@@ -221,6 +221,7 @@ GroqAPI.env
 NebiusAPI.env
 fireCrawlKey.env
 FireCrawl.py
+test.py
 lib/
 lib64/
 bin/

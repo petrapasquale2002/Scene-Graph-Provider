@@ -42,28 +42,29 @@ graph TD
 ### 1. Multi-Topic Subscription & Synchronization
 The camera frame is the **sole trigger** of the processing pipeline. Every time a new frame arrives, the node performs a reception-time lookup over circular caches (one per optional topic) to assemble the best-available data packet for that frame.
 
-> **Synchronization clock**: all caches store messages keyed by `time.monotonic()` (wall-clock reception time), not the message header timestamp. This makes the matching robust regardless of rosbag playback speed or VLM inference delay: messages that arrive at the node at the same wall-clock instant are considered temporally consistent, regardless of their original recording timestamp.
+> **Synchronization clock**: all caches store messages keyed by `time.monotonic()` (wall-clock reception time), not the message header timestamp. This makes the matching robust regardless of rosbag playback speed or VLM inference delay.
 
 **Required topic (always published):**
 * **Camera stream** (`/camera/image_raw/compressed`): Compressed JPEG frames. Every incoming frame fires `_on_image()`.
 
 **Optional topics (cache-based, may have gaps):**
-* **Entities detected** (`/entities/detected`): Standard 2D bounding boxes and tracking IDs for all scene objects. May be absent if no object is in the scene.
-* **Humans detected** (`/humans/detected`): 2D bounding boxes and tracking IDs for human bodies specifically. Used for human pose grounding in the VLM prompt. May be absent if no person is visible.
-* **Unified persons** (`/humans/unified`): Rich HRI person descriptors including voice ID, engagement status, and soft biometrics (gender, age). May be absent if no person is tracked.
-* **TIPS Object Identities** (`/tips/object_identities`): Stable physical identity keys (`object_id`) from the re-ID database. May be absent if no tracked object is visible.
-* **TIPS Dense Embeddings** (`/tips/embeddings`): Visual ViT features and bounding boxes. May be absent if no object is currently being tracked.
-* **TIPS Patch Matches** (`/tips/patch_matches`): Fine-grained spatial matching of ViT patches against text queries. May be absent if no query matches are found.
+Each of the following topics has a dedicated system callback (e.g., `_on_entities_detected()`, `_on_humans_unified()`, etc.) that pushes incoming messages into its respective cache:
+* **Entities detected** (`/entities/detected`): Standard 2D bounding boxes and tracking IDs for all scene objects.
+* **Humans detected** (`/humans/detected`): 2D bounding boxes and tracking IDs for human bodies specifically.
+* **Unified persons** (`/humans/unified`): Rich HRI person descriptors including gestures, body postures (mapped via `POSTURE_MAP`), voice ID, and soft biometrics.
+* **TIPS Object Identities** (`/tips/object_identities`): Stable physical identity keys (`object_id`) from the re-ID database.
+* **TIPS Dense Embeddings** (`/tips/embeddings`): Visual ViT features and bounding boxes.
+* **TIPS Patch Matches** (`/tips/patch_matches`): Fine-grained spatial matching of ViT patches against text queries.
 
-Each optional topic stores its messages in a thread-safe `deque(maxlen=10)`. On every frame, `_closest()` retrieves the entry whose reception time is nearest to the current image reception time within a `slop=0.5 s` window. If no match is found, an empty default message is used, so the pipeline **always continues** regardless of which topics are silent.
+Each optional topic stores its messages in a thread-safe `deque(maxlen=10)`. On every frame, `_closest()` retrieves the entry whose reception time is nearest to the current image reception time within a `slop=0.5 s` window. If no match is found, an empty default message is used, so the pipeline **always continues**.
 
 ### 2. Coordinate Conversion & Prompt Construction
 Incoming normalized coordinates `[0.0, 1.0]` for bounding boxes are denormalized to absolute pixel coordinates based on the frame resolution. If segmentation masks (contours) are present, they are sub-sampled and formatted as `contour_px=[(x1, y1), ...]` (max 12 points).
-All TIPS features are injected as a structured `{tips ...}` payload into the VLM prompt.
+Human characteristics (like postures and gestures) are parsed to include both their numeric IDs and string labels (e.g., `1:STANDING`, `6:waving`) directly in the prompt. All TIPS features are injected as a structured `{tips ...}` payload.
 
 ### 3. VLM Inference & Scene Graph Generation
 The VLM (Qwen3.6-27b via Groq) uses the prompt to output a JSON scene graph containing:
-* **Entities:** ID, semantic label, type (`object` | `human` | `structural`), states (including human pose states: `standing`, `sitting`, `walking`, etc.), and `box_2d`.
+* **Entities:** ID, semantic label, type (`object` | `human` | `structural`), states (including human pose states and gestures derived from the unified persons topic), `id_confirmation`, `action_description`, `emotional_state`, and `box_2d`.
 * **Relationships:** Strictly directed links (e.g. `[cup] --(on_top_of)--> [table]`).
 
 ---

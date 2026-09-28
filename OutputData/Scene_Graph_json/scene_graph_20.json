@@ -1,7 +1,7 @@
 {
     "frame_id": 20,
-    "timestamp_sec": 1783342415,
-    "timestamp_nanosec": 900338135,
+    "timestamp_sec": 1790248433,
+    "timestamp_nanosec": 95274414,
     "width": 1920,
     "height": 1080,
     "scene_graph": {
@@ -11,77 +11,181 @@
                 "label": "person",
                 "type": "human",
                 "states": [
-                    "standing",
+                    "sitting",
                     "neutral"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        130,
-                        761,
-                        1047,
-                        1092
+                        462,
+                        551,
+                        1042,
+                        904
                     ]
                 },
-                "action_description": "standing in front of a partition wall",
-                "emotional_state": "neutral"
+                "id_confirmation": true,
+                "Target User ID": "U20",
+                "action_description": "crouching on the floor and holding a bowl",
+                "emotional_state": "nervous",
+                "speech_transcript": "No speech"
             },
             {
                 "id": 1,
-                "label": "wall",
-                "type": "structural",
+                "label": "bowl",
+                "type": "object",
                 "states": [
+                    "held_by",
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        0,
-                        0,
-                        550,
-                        1920
+                        725,
+                        866,
+                        796,
+                        957
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
             },
             {
                 "id": 2,
-                "label": "banner",
+                "label": "chair",
                 "type": "object",
                 "states": [
                     "static"
                 ],
                 "spatial_info": {
                     "box_2d": [
-                        70,
-                        1250,
-                        530,
-                        1650
+                        783,
+                        870,
+                        897,
+                        983
                     ]
                 },
+                "id_confirmation": null,
+                "Target User ID": null,
                 "action_description": null,
-                "emotional_state": null
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 3,
+                "label": "potted plant",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        212,
+                        1199,
+                        624,
+                        1440
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 4,
+                "label": "bowl",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        90,
+                        1381,
+                        199,
+                        1572
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 5,
+                "label": "vase",
+                "type": "object",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        21,
+                        1543,
+                        205,
+                        1627
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
+            },
+            {
+                "id": 6,
+                "label": "shelf",
+                "type": "structural",
+                "states": [
+                    "static"
+                ],
+                "spatial_info": {
+                    "box_2d": [
+                        20,
+                        1150,
+                        650,
+                        1700
+                    ]
+                },
+                "id_confirmation": null,
+                "Target User ID": null,
+                "action_description": null,
+                "emotional_state": null,
+                "speech_transcript": null
             }
         ],
         "relationships": [
             {
                 "subject_id": 0,
-                "predicate": "in_front_of",
+                "predicate": "holding",
                 "object_id": 1
             },
             {
                 "subject_id": 0,
-                "predicate": "on_the_left_of",
+                "predicate": "next_to",
                 "object_id": 2
             },
             {
-                "subject_id": 2,
-                "predicate": "on_the_right_of",
-                "object_id": 0
+                "subject_id": 3,
+                "predicate": "on_top_of",
+                "object_id": 6
             },
             {
-                "subject_id": 2,
-                "predicate": "next_to",
-                "object_id": 1
+                "subject_id": 4,
+                "predicate": "on_top_of",
+                "object_id": 6
+            },
+            {
+                "subject_id": 5,
+                "predicate": "on_top_of",
+                "object_id": 6
+            },
+            {
+                "subject_id": 0,
+                "predicate": "on_the_left_of",
+                "object_id": 6
             }
         ]
     }
